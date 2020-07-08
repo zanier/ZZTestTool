@@ -66,11 +66,10 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.row == 0) {
-        [self.navigationController pushViewController:[[HsPlistBrowerPage alloc] init] animated:YES];
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"];
+        [self.navigationController pushViewController:[[HsPlistBrowerPage alloc] initWithPlistFilePath:path] animated:YES];
     } else if (indexPath.row == 1) {
-        
         [self.navigationController pushViewController:[[HsFileBrowerController alloc] init] animated:YES];
-        //[self.navigationController pushViewController:[[HsFileBrowerPage alloc] init] animated:YES];
     }
 
 }

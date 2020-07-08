@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "HsFileBrowerDefine.h"
+#import "HsTestToolDefine.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -32,13 +32,17 @@ static NSString *const HsFileBrowerActionPage_Share     = @"共享";
 + (NSString *)imageNameWithType:(NSString *)typeString;
 + (UIImage *)imageNameWithItem:(HsFileBrowerItem *)item;
 
+/// 获取item的子文件数据
+/// @param parent 文件夹item
++ (NSArray<HsFileBrowerItem *> *)contentItemsOfItem:(HsFileBrowerItem *)parent;
+
 /// MARK: deal with path
 
 /// 创建文件夹
 /// 返回是否创建成功，若路径已存在则不创建并返回 NO。
 /// @param path 目标路径
 /// @param error 错误
-+ (BOOL)createDirectoryAtPath:(NSString *)path  error:(NSError **)error;
++ (BOOL)createDirectoryAtPath:(NSString *)path error:(NSError **)error;
 
 /// 删除文件
 /// @param path 文件路径

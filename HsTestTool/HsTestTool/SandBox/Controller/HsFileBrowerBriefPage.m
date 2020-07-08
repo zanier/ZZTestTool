@@ -7,7 +7,7 @@
 //
 
 #import "HsFileBrowerBriefPage.h"
-#import "HsFileBrowerDefine.h"
+#import "HsTestToolDefine.h"
 #import "HsFileBrowerManager.h"
 #import "HsFileBrowerItem.h"
 

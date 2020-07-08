@@ -1,13 +1,13 @@
 //
-//  HsFileBrowerDefine.h
+//  HsTestToolDefine.h
 //  HsTestTool
 //
 //  Created by handsome on 2020/7/3.
 //  Copyright © 2020 Hundsun. All rights reserved.
 //
 
-#ifndef HsFileBrowerDefine_h
-#define HsFileBrowerDefine_h
+#ifndef HsTestToolDefine_h
+#define HsTestToolDefine_h
 
 //MARK: - 屏幕高度、宽度
 #ifndef kScreenWidth
@@ -23,13 +23,25 @@
 #define HsFileBrower_iPhoneX (([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1125,2436), [[UIScreen mainScreen] currentMode].size) : NO) || ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1242,2688), [[UIScreen mainScreen] currentMode].size) : NO) || ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(828,1792), [[UIScreen mainScreen] currentMode].size) : NO))
 #endif
 
+
+#ifndef HsFileBrower_StatusBarHeight
+#define HsFileBrower_StatusBarHeight [UIApplication sharedApplication].statusBarFrame.size.height
+#endif
+
 #ifndef HsFileBrower_SafeStatusBarHeight
 #define HsFileBrower_SafeStatusBarHeight ([UIApplication sharedApplication].statusBarFrame.size.height == 40 ? 20 : 0)
 #endif
 
-#ifndef HsFileBrower_NavBarHeight
-#define HsFileBrower_NavBarHeight (HsFileBrower_iPhoneX ? 88.0f + HsFileBrower_SafeStatusBarHeight : 64.0f + HsFileBrower_SafeStatusBarHeight)
+#ifndef HsFileBrower_NavBarBottom
+#define HsFileBrower_NavBarBottom (HsFileBrower_iPhoneX ? 88.0f + HsFileBrower_SafeStatusBarHeight : 64.0f + HsFileBrower_SafeStatusBarHeight)
 #endif
 
+#ifndef HsFileBrower_NavBarHeight
+#define HsFileBrower_NavBarHeight 44.0f
+#endif
 
-#endif /* HsFileBrowerDefine_h */
+#ifndef HsFileBrower_SearchBarHeight
+#define HsFileBrower_SearchBarHeight 52.0f
+#endif
+
+#endif /* HsTestToolDefine_h */

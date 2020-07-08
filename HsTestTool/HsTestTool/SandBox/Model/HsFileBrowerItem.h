@@ -23,7 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) NSString *modifyDateString;
 @property (nonatomic, strong, readonly) NSString *lastOpenDateString;
 
-@property (nonatomic, nullable, weak, readonly) HsFileBrowerItem *parent;
+@property (nonatomic, nullable, weak) HsFileBrowerItem *parent;
+@property (nonatomic, nullable, copy) NSArray<HsFileBrowerItem *> *children;
 
 @property (readonly) NSString *accessoryType;
 @property (readonly) NSString *detailText;

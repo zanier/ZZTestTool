@@ -28,9 +28,8 @@ static NSString *const HsPlistBrowerPagePlsitFilePathCreateKey = @"HsPlistBrower
 /// @param path plist文件路径
 - (instancetype)initWithPlistFilePath:(NSString *)path;
 
+/// plist 根节点数据
 @property (nonatomic, strong) id object;
-
-@property (nonatomic, nullable, copy) NSString *name;
 
 @end
 

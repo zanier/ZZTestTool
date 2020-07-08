@@ -93,6 +93,27 @@ static dispatch_once_t onceToken;
     return imageName;
 }
 
+/// 获取item的子文件数据
+/// @param parent 文件夹item
++ (NSArray<HsFileBrowerItem *> *)contentItemsOfItem:(HsFileBrowerItem *)parent {
+    NSError *error = nil;
+    NSString *childPath = nil;
+    NSArray<NSString *> *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:parent.path error:nil];
+    NSMutableArray *items = [NSMutableArray arrayWithCapacity:contents.count];
+    for (NSString *content in contents) {
+        childPath = [parent.path stringByAppendingPathComponent:content];
+        NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:childPath error:&error];
+        if (error) {
+            NSLog(@"error: %@", error);
+            continue;
+        }
+        HsFileBrowerItem *childItem = [[HsFileBrowerItem alloc] initWithPath:childPath name:content attributes:attributes parent:parent];
+        [items addObject:childItem];
+    }
+    return items;
+}
+
+
 /// MARK: deal with path
 
 /// 检查路径是否有效
@@ -108,7 +129,7 @@ static dispatch_once_t onceToken;
 /// 返回是否创建成功，若路径已存在则不创建并返回 NO。
 /// @param path 目标路径
 /// @param error 错误
-+ (BOOL)createDirectoryAtPath:(NSString *)path  error:(NSError **)error {
++ (BOOL)createDirectoryAtPath:(NSString *)path error:(NSError **)error {
     return [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:error];
 }
 

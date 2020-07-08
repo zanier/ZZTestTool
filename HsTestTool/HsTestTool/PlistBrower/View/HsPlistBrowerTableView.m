@@ -89,6 +89,7 @@ static const CGFloat HsPlistBrowerPageTypeViewWidth = 90.0f;
     _tableView.delegate = self;
     _tableView.backgroundColor = UIColor.clearColor;
     _tableView.tableFooterView = [[UIView alloc] init];
+    _tableView.rowHeight = 45.0f;
     //_tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.showsVerticalScrollIndicator = NO;
     return _tableView;
@@ -103,6 +104,7 @@ static const CGFloat HsPlistBrowerPageTypeViewWidth = 90.0f;
     _typeTableView.delegate = self;
     _typeTableView.tableFooterView = [[UIView alloc] init];
     _typeTableView.backgroundColor = UIColor.clearColor;
+    _typeTableView.rowHeight = 45.0f;
     //_typeTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _typeTableView.allowsSelection = NO;
     return _typeTableView;
@@ -160,7 +162,23 @@ static const CGFloat HsPlistBrowerPageTypeViewWidth = 90.0f;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *cellIdentifer = @"cell";
-    if (tableView == self.typeTableView) {
+    if (tableView == self.tableView) {
+        HsPlistBrowerPageCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifer];
+        if (!cell) {
+            cell = [[HsPlistBrowerPageCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifer];
+            cell.indentationWidth = HsPlistBrowerPageIndentationWidth;
+            cell.backgroundColor = self.backgroundColor;
+            /// long press
+            UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(cellLongPressAction:)];
+            [cell.contentView addGestureRecognizer:longPress];
+        }
+        cell.node = self.dataSource[indexPath.row];
+        // 高亮选择文本
+        if (_searchText) {
+            [cell highlightSearchText:_searchText];
+        }
+        return cell;
+    } else {
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifer];
         if (!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifer];
@@ -175,19 +193,6 @@ static const CGFloat HsPlistBrowerPageTypeViewWidth = 90.0f;
         }
         UILabel *label = [cell.contentView viewWithTag:123];
         label.text = self.dataSource[indexPath.row].typeString;
-        return cell;
-    } else {
-        HsPlistBrowerPageCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifer];
-        if (!cell) {
-            cell = [[HsPlistBrowerPageCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifer];
-            cell.indentationWidth = HsPlistBrowerPageIndentationWidth;
-            cell.backgroundColor = self.backgroundColor;
-        }
-        cell.node = self.dataSource[indexPath.row];
-        // 高亮选择文本
-        if (_searchText) {
-            [cell highlightSearchText:_searchText];
-        }
         return cell;
     }
 }
@@ -290,8 +295,24 @@ static const CGFloat HsPlistBrowerPageTypeViewWidth = 90.0f;
     }
 }
 
+/// long press
+
+- (void)cellLongPressAction:(UILongPressGestureRecognizer *)longPress {
+    if (longPress.state == UIGestureRecognizerStateBegan) {
+        if ([_delegate respondsToSelector:@selector(plistTableView:didLongPressWithNode:location:)]) {
+            UITableViewCell *cell = (UITableViewCell *)longPress.view;
+            NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+            HsPlistBrowerNode *node = self.dataSource[indexPath.row];
+            CGPoint location = [longPress locationInView:self];
+            [_delegate plistTableView:self didLongPressWithNode:node location:location];
+        }
+    }
+}
+
 /// MARK: - search
 
+/// 根据搜索字符串筛选显示结点
+/// @param text 搜索字符串
 - (void)searchText:(NSString *)text {
     if (!text || text.length == 0) {
         [_dataSource removeAllObjects];

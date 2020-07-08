@@ -9,6 +9,7 @@
 #import "HsPlistBrowerSearchResultPage.h"
 #import "HsPlistBrowerTableView.h"
 #import "HsPlistBrowerNode.h"
+#import "HsTestToolDefine.h"
 
 @interface HsPlistBrowerSearchResultPage ()
 
@@ -27,10 +28,9 @@
 
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
-    CGFloat searBarBottom = 0;
-    if (_searchController) {
-        CGRect rect = [_searchController.searchBar convertRect:_searchController.searchBar.frame toView:self.view];
-        searBarBottom = CGRectGetMaxY(rect);
+    CGFloat searBarBottom = HsFileBrower_StatusBarHeight + HsFileBrower_SearchBarHeight;
+    if (self.navigationController.isBeingPresented) {
+        searBarBottom = HsFileBrower_SearchBarHeight;
     }
     self.browerTableView.frame = CGRectMake(0, searBarBottom, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - searBarBottom);
 }
@@ -41,7 +41,7 @@
     if (_browerTableView) {
         return _browerTableView;
     }
-    _browerTableView = [[HsPlistBrowerTableView alloc] init];
+    _browerTableView = [[HsPlistBrowerTableView alloc] initWithFrame:self.view.bounds];
     return _browerTableView;
 }
 
@@ -56,9 +56,6 @@
     self.browerTableView.rootNode = rootNode;
     [self.browerTableView reloadData];
 }
-//- (void)setRootNode:(HsPlistBrowerNode *)rootNode {
-//    self.browerTableView.rootNode = rootNode;
-//}
 
 /// MARK: - <UISearchResultsUpdating>
 

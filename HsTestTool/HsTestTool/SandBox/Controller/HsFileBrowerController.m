@@ -9,11 +9,11 @@
 #import "HsFileBrowerController.h"
 #import "HsFileBrowerScrollHeader.h"
 #import "HsFileBrowerManager.h"
-#import "HsFileBrowerDefine.h"
+#import "HsTestToolDefine.h"
 #import "HsFileBrowerItem.h"
 #import "HsFileBrowerPage.h"
 
-@interface HsFileBrowerController () <HsFileBrowerScrollHeaderDelegate, HsFileBrowerPageDelegate>
+@interface HsFileBrowerController () <HsFileBrowerScrollHeaderDelegate, HsFileBrowerPageDelegate, UINavigationControllerDelegate>
 
 @property (nonatomic, strong) UINavigationController *navigation;
 @property (nonatomic, strong) HsFileBrowerPage *rootPage;
@@ -31,23 +31,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-//    _rootPage = [[HsFileBrowerPage alloc] init];
-//    _rootPage.delegate = self;
-    //    _rootPage.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(pop)];
-    //    self.navigation = [[UINavigationController alloc] initWithRootViewController:_rootPage];
-    self.navigation = [[UINavigationController alloc] init];
-
-    
-    [self addChildViewController:_navigation];
-    [self.view addSubview:_navigation.view];
-//    [self.navigation.navigationBar addSubview:self.headerToolBar];
     [self.view addSubview:self.headerToolBar];
     [self.headerToolBar addSubview:self.scrollHeader];
 
     self.navigationController.navigationBar.hidden = YES;
-    [self.navigation.navigationBar setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
-    self.navigation.navigationBar.shadowImage = [[UIImage alloc] init];
-    self.navigationController.navigationBar.shadowImage = [[UIImage alloc] init];
     
     [self enterSandBox];
 }
@@ -63,12 +50,9 @@
     [super viewWillLayoutSubviews];
     CGPoint topPoint = [self.view convertPoint:CGPointZero toView:[UIApplication sharedApplication].windows.firstObject];
     CGRect frame = self.scrollHeader.bounds;
-//    frame.origin.y = CGRectGetHeight(self.navigation.navigationBar.bounds) - topPoint.y;
-    frame.origin.y = HsFileBrower_NavBarHeight - topPoint.y;
+    frame.origin.y = HsFileBrower_NavBarBottom - topPoint.y;
     self.headerToolBar.frame = frame;
     self.scrollHeader.frame = self.headerToolBar.bounds;
-//    CGFloat scrollBottom = CGRectGetMaxY(_headerToolBar.frame);
-//    _collectionView.frame = CGRectMake(0, scrollBottom, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - scrollBottom);
 }
 
 
@@ -77,10 +61,6 @@
 }
 
 - (void)enterSandBox {
-    //NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"HsFileBrower" ofType:@"bundle"];
-    //NSBundle *idBundle = [NSBundle bundleWithIdentifier:@"com.hundsun.HsBusinessEngine"];
-    //NSURL *url = [[NSBundle bundleForClass:[self class]] URLForResource:@"HsFileBrower" withExtension:@"bundle"];
-    //NSString *docsdir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *homeDirectory = NSHomeDirectory();
     NSString *homeName = [homeDirectory lastPathComponent];
     NSLog(@"homeDirectory: \n%@", homeDirectory);
@@ -91,7 +71,25 @@
     }
     _currentItem = [[HsFileBrowerItem alloc] initWithPath:homeDirectory name:homeName attributes:attributes parent:nil];
 //    [_rootPage reloadAtDirectoryWithItem:_currentItem];
-    [self enterDirectoryWithItem:_currentItem];
+//    [self enterDirectoryWithItem:_currentItem];
+    
+    // root page
+    _rootPage = [[HsFileBrowerPage alloc] init];
+    _rootPage.delegate = self;
+    [_rootPage reloadAtDirectoryWithItem:_currentItem];
+    _rootPage.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(pop)];
+    // push
+    self.navigation = [[UINavigationController alloc] initWithRootViewController:_rootPage];
+    self.navigation.delegate = self;
+    [self addChildViewController:_navigation];
+    [self.navigation.navigationBar setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
+    self.navigation.navigationBar.shadowImage = [[UIImage alloc] init];
+    [self.view addSubview:_navigation.view];
+    // 进入下级目录
+    [self.pathNavigation addObject:_currentItem];
+    // 移动到当前目录
+    [self.scrollHeader push:_currentItem.name];
+    [self.view bringSubviewToFront:self.headerToolBar];
 }
 
 /// 进入文件夹
@@ -107,25 +105,23 @@
     _currentItem = item;
     if ([self.pathNavigation containsObject:item]) {
         NSInteger idx = [self.pathNavigation indexOfObject:item];
-        HsFileBrowerPage *page = _navigation.viewControllers[idx];
-        [_navigation popToViewController:page animated:YES];
         // 返回到上级的目录
         if (idx >= self.pathNavigation.count - 1) {
             return NO;
         }
+        // pop
+        HsFileBrowerPage *page = _navigation.viewControllers[idx];
+        [_navigation popToViewController:page animated:YES];
         // 移除目录后面的路径
         [self.pathNavigation removeObjectsInRange:NSMakeRange(idx + 1, self.pathNavigation.count - idx - 1)];
         // 头部移动到当前目录，
         [self.scrollHeader popToIndex:idx];
     } else {
+        // push
         HsFileBrowerPage *filePage = [[HsFileBrowerPage alloc] init];
         filePage.delegate = self;
         [filePage reloadAtDirectoryWithItem:item];
-        if (_navigation.viewControllers.count == 0) {
-            [_navigation pushViewController:filePage animated:NO];
-        } else {
-            [_navigation pushViewController:filePage animated:YES];
-        }
+        [_navigation pushViewController:filePage animated:YES];
         // 进入下级目录
         [self.pathNavigation addObject:item];
         // 移动到当前目录
@@ -164,6 +160,19 @@
     return _scrollHeader;
 }
 
+/// MARK: - <UINavigationControllerDelegate>
+
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    NSInteger idx = [self.navigation.viewControllers indexOfObject:viewController];
+    if (idx == NSNotFound) {
+        return;
+    }
+    // 移除目录后面的路径
+    [self.pathNavigation removeObjectsInRange:NSMakeRange(idx + 1, self.pathNavigation.count - idx - 1)];
+    // 头部移动到当前目录，
+    [self.scrollHeader popToIndex:idx];
+}
+
 /// MARK: - <WBSelectionScrollHeaderDelegate>
 
 /// 是否允许选择某一级，默认YES允许
@@ -185,11 +194,25 @@
 /// MARK: - <HsFileBrowerScrollHeaderDelegate>
 
 - (void)filePage:(HsFileBrowerPage *)page didSlectItem:(HsFileBrowerItem *)item {
-//    HsFileBrowerPage *filePage = [[HsFileBrowerPage alloc] init];
-//    filePage.delegate = self;
-//    [filePage reloadAtDirectoryWithItem:item];
-    [self enterDirectoryWithItem:item];
-//    [_navigation pushViewController:filePage animated:YES];
+    if (item.isDir) {
+        [self enterDirectoryWithItem:item];
+//    } else if (item.typeString) {
+        
+    } else {
+        Class plistBrowerPagCls = NSClassFromString(@"HsPlistBrowerPage");
+        if (plistBrowerPagCls) {
+            id plistBrowerPage = [plistBrowerPagCls alloc];
+            SEL initSelector = NSSelectorFromString(@"initWithPlistFilePath:");
+            if ([plistBrowerPage respondsToSelector:initSelector]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                [plistBrowerPage performSelector:initSelector withObject:item.path];
+#pragma clang diagnostic pop
+                UINavigationController *navi = [[UINavigationController alloc] initWithRootViewController:plistBrowerPage];
+                [self presentViewController:navi animated:YES completion:nil];
+            }
+        }
+    }
 }
 
 @end

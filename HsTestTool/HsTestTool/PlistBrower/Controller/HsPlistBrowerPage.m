@@ -7,11 +7,12 @@
 //
 
 #import "HsPlistBrowerPage.h"
+#import "HsTestToolDefine.h"
 #import "HsPlistBrowerSearchResultPage.h"
 #import "HsPlistBrowerNode.h"
 #import "HsPlistBrowerTableView.h"
 
-@interface HsPlistBrowerPage () <UISearchControllerDelegate> {
+@interface HsPlistBrowerPage () <UISearchControllerDelegate, HsPlistBrowerTableViewDelegate> {
     BOOL _showInRawString;
 }
 
@@ -65,43 +66,51 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"Plist";
+    self.view.backgroundColor = UIColor.whiteColor;
+    [self setupBarButtonItem];
+    [self.view addSubview:self.browerTableView];
     if (@available(iOS 10.0, *)) {
     } else {
         self.automaticallyAdjustsScrollViewInsets = NO;
     }
-    
-    [self setupRightBarButtonItem];
-    [self.view addSubview:self.browerTableView];
-    [self.view addSubview:self.searchController.searchBar];
-    self.view.backgroundColor = UIColor.groupTableViewBackgroundColor;
-    //[self testData];
+    if (@available(iOS 11.0, *)) {
+        self.navigationItem.searchController = self.searchController;
+        self.navigationItem.hidesSearchBarWhenScrolling = NO;
+    } else {
+        [self.view addSubview:self.searchController.searchBar];
+    }
 }
 
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
-    UISearchBar *searchBar = self.searchController.searchBar;
-    CGFloat searBarBottom = 0;
-    if (searchBar) {
-        CGRect rect = [searchBar convertRect:searchBar.frame toView:self.view];
-        searBarBottom = CGRectGetMaxY(rect);
+    CGFloat navigationBarBottom = HsFileBrower_NavBarBottom;
+    if (self.navigationController.isBeingPresented) {
+        navigationBarBottom = 56;
     }
-    self.searchController.searchBar.center = CGPointMake(CGRectGetWidth(self.view.bounds) / 2, CGRectGetHeight([UINavigationBar appearance].bounds) + CGRectGetHeight(searchBar.bounds) / 2);
+    CGFloat searBarBottom = navigationBarBottom + 52.0f;
     self.browerTableView.frame = CGRectMake(0, searBarBottom, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - searBarBottom);
 }
 
 /// MARK: right bar button
 
-- (void)setupRightBarButtonItem {
+- (void)setupBarButtonItem {
     if (_showInRawString) {
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Plist" style:(UIBarButtonItemStylePlain) target:self action:@selector(testData)];
     } else {
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"XML" style:(UIBarButtonItemStylePlain) target:self action:@selector(testData)];
     }
+    if (self.navigationController.isBeingPresented) {
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:(UIBarButtonSystemItemDone) target:self action:@selector(leftBarButtonItemAction:)];
+    }
+}
+
+- (void)leftBarButtonItemAction:(UIBarButtonItem *)item {
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)rightBarButtonItemAction:(UIBarButtonItem *)item {
     _showInRawString = !_showInRawString;
-    [self setupRightBarButtonItem];
+    [self setupBarButtonItem];
 }
 
 /// MARK: - load data
@@ -137,6 +146,7 @@
         return _browerTableView;
     }
     _browerTableView = [[HsPlistBrowerTableView alloc] init];
+    _browerTableView.delegate = self;
     return _browerTableView;
 }
 
@@ -168,5 +178,69 @@
     HsPlistBrowerNode *rootNode = [[HsPlistBrowerNode alloc] initWithKey:nil value:_object];
     self.searchResultController.browerTableView.rootNode = rootNode;
 }
+
+/// MARK: - <HsPlistBrowerTableViewDelegate>
+
+/// 长按单元格代理
+/// @param plsitTableView plist 视图
+/// @param node 结点
+/// @param location 在 plist 视图上的长按位置
+- (void)plistTableView:(HsPlistBrowerTableView *)plsitTableView
+  didLongPressWithNode:(HsPlistBrowerNode *)node
+              location:(CGPoint)location {
+    [self showMenuControllerAtPoint:[plsitTableView convertPoint:location toView:self.view]];
+}
+
+- (void)showMenuControllerAtPoint:(CGPoint)location {
+    [self becomeFirstResponder];
+    UIMenuController *menu = [UIMenuController sharedMenuController];
+    UIMenuItem *pasteItem = [[UIMenuItem alloc] initWithTitle:@"复制" action:@selector(_paste:)];
+    UIMenuItem *editItem = [[UIMenuItem alloc] initWithTitle:@"编辑" action:@selector(_paste:)];
+    UIMenuItem *createDirItem = [[UIMenuItem alloc] initWithTitle:@"删除" action:@selector(_createDirectory:)];
+    menu.menuItems = @[
+        pasteItem,
+        editItem,
+        createDirItem,
+    ];
+    if (@available(iOS 13.0, *)) {
+        [menu showMenuFromView:self.view rect:CGRectMake(location.x, location.y, 0, 0)];
+    } else {
+        [menu setTargetRect:CGRectMake(location.x, location.y, 0, 0) inView:self.view];
+    }
+}
+
+- (BOOL)canBecomeFirstResponder {
+    [super canBecomeFirstResponder];
+    return YES;
+}
+
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender {
+    if (action == @selector(_paste:) ||
+        action == @selector(_selectAll:) ||
+        action == @selector(_showBrief:) ||
+        action == @selector(_createDirectory:)) {
+        return YES;
+    }
+    return NO;
+}
+
+- (void)_paste:(UIMenuController *)menu {
+    
+}
+
+- (void)_selectAll:(UIMenuController *)menu {
+    
+}
+
+- (void)_createDirectory:(UIMenuController *)menu {
+    
+}
+
+- (void)_showBrief:(UIMenuController *)menu {
+    
+}
+
+
+
 
 @end
