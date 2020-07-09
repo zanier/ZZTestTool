@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "HsTestToolDefine.h"
+#import "HsFileBrowerHeader.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -29,7 +30,9 @@ static NSString *const HsFileBrowerActionPage_Share     = @"共享";
 
 @property (readonly) BOOL hasDealtPath;
 
-+ (NSString *)imageNameWithType:(NSString *)typeString;
+//+ (NSString *)imageNameWithType:(NSString *)typeString;
++ (HsFileBrowerFileType)fileTypeWithExtension:(NSString *)extension;
++ (NSString *)imageNameWithType:(HsFileBrowerFileType)type;
 + (UIImage *)imageNameWithItem:(HsFileBrowerItem *)item;
 
 /// 获取item的子文件数据

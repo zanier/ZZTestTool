@@ -9,7 +9,8 @@
 /* Begin PBXBuildFile section */
 		3A60914A24B2FC5F009D5BB1 /* HsPlistBrowerEditPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A60914924B2FC5F009D5BB1 /* HsPlistBrowerEditPage.m */; };
 		3A60914E24B30C13009D5BB1 /* swift.gif in Resources */ = {isa = PBXBuildFile; fileRef = 3A60914D24B30C13009D5BB1 /* swift.gif */; };
-		3A60915224B30C6F009D5BB1 /* TestPlsit.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3A60915124B30C6F009D5BB1 /* TestPlsit.plist */; };
+		AC2A650024B6A65900FF8D6B /* TestPlist.plist in Resources */ = {isa = PBXBuildFile; fileRef = AC2A64FF24B6A65900FF8D6B /* TestPlist.plist */; };
+		AC2A650524B71BF100FF8D6B /* TestBundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = AC2A650424B71BF100FF8D6B /* TestBundle.bundle */; };
 		AC8E904E24AC1B340086E3A7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AC8E904D24AC1B340086E3A7 /* AppDelegate.m */; };
 		AC8E905424AC1B340086E3A7 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AC8E905324AC1B340086E3A7 /* ViewController.m */; };
 		AC8E905724AC1B340086E3A7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AC8E905524AC1B340086E3A7 /* Main.storyboard */; };
@@ -43,7 +44,9 @@
 		3A60914924B2FC5F009D5BB1 /* HsPlistBrowerEditPage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HsPlistBrowerEditPage.m; sourceTree = "<group>"; };
 		3A60914C24B30C05009D5BB1 /* image01.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = image01.psd; sourceTree = "<group>"; };
 		3A60914D24B30C13009D5BB1 /* swift.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = swift.gif; sourceTree = "<group>"; };
-		3A60915124B30C6F009D5BB1 /* TestPlsit.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TestPlsit.plist; sourceTree = "<group>"; };
+		AC2A64FF24B6A65900FF8D6B /* TestPlist.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = TestPlist.plist; path = HsTestTool/TestPlist.plist; sourceTree = SOURCE_ROOT; };
+		AC2A650424B71BF100FF8D6B /* TestBundle.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TestBundle.bundle; sourceTree = "<group>"; };
+		AC2A650624B73F4400FF8D6B /* HsFileBrowerHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HsFileBrowerHeader.h; sourceTree = "<group>"; };
 		AC8E904924AC1B340086E3A7 /* HsTestTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HsTestTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC8E904C24AC1B340086E3A7 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		AC8E904D24AC1B340086E3A7 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -112,9 +115,17 @@
 			children = (
 				3A60914C24B30C05009D5BB1 /* image01.psd */,
 				3A60914D24B30C13009D5BB1 /* swift.gif */,
-				3A60915124B30C6F009D5BB1 /* TestPlsit.plist */,
+				AC2A64FF24B6A65900FF8D6B /* TestPlist.plist */,
+				AC2A650424B71BF100FF8D6B /* TestBundle.bundle */,
 			);
 			path = testFile;
+			sourceTree = "<group>";
+		};
+		AC2A650124B6A76000FF8D6B /* ConfigReader */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ConfigReader;
 			sourceTree = "<group>";
 		};
 		AC8E904024AC1B340086E3A7 = {
@@ -144,6 +155,7 @@
 				AC8E908924AC1BB30086E3A7 /* HsHiddenFunctionPage.h */,
 				AC8E908824AC1BB30086E3A7 /* HsHiddenFunctionPage.m */,
 				AC8E90AC24AC23990086E3A7 /* Common */,
+				AC2A650124B6A76000FF8D6B /* ConfigReader */,
 				AC8E907B24AC1BB30086E3A7 /* PlistBrower */,
 				AC8E906624AC1BB30086E3A7 /* SandBox */,
 				AC8E905524AC1B340086E3A7 /* Main.storyboard */,
@@ -220,6 +232,7 @@
 			children = (
 				AC8E906924AC1BB30086E3A7 /* HsFileBrowerManager.h */,
 				AC8E907524AC1BB30086E3A7 /* HsFileBrowerManager.m */,
+				AC2A650624B73F4400FF8D6B /* HsFileBrowerHeader.h */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -331,8 +344,9 @@
 			files = (
 				AC8E905C24AC1B370086E3A7 /* LaunchScreen.storyboard in Resources */,
 				AC8E905924AC1B370086E3A7 /* Assets.xcassets in Resources */,
+				AC2A650524B71BF100FF8D6B /* TestBundle.bundle in Resources */,
 				AC8E905724AC1B340086E3A7 /* Main.storyboard in Resources */,
-				3A60915224B30C6F009D5BB1 /* TestPlsit.plist in Resources */,
+				AC2A650024B6A65900FF8D6B /* TestPlist.plist in Resources */,
 				AC8E90B124AC24B20086E3A7 /* HsTestTool.bundle in Resources */,
 				3A60914E24B30C13009D5BB1 /* swift.gif in Resources */,
 			);

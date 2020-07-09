@@ -35,13 +35,6 @@
     return page;
 }
 
-//- (instancetype)initWithPath:(NSString *)path {
-//    if (self = [super init]) {
-//
-//    }
-//    return self;
-//}
-
 - (instancetype)initWithItem:(HsFileBrowerItem *)item actionNames:(NSArray<NSArray<NSString *> *> *)actionNames sourceView:(UIView *)sourceView {
     if (self = [super init]) {
         _item = item;
@@ -50,14 +43,6 @@
     }
     return self;
 }
-
-//- (instancetype)initWithItem:(HsFileBrowerItem *)item sourceView:(UIView *)sourceView {
-//    if (self = [super init]) {
-//        _item = item;
-//        _sourceView = sourceView;
-//    }
-//    return self;
-//}
 
 /// MARK: life cycle
 

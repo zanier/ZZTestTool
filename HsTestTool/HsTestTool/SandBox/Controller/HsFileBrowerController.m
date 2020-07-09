@@ -33,10 +33,11 @@
     
     [self.view addSubview:self.headerToolBar];
     [self.headerToolBar addSubview:self.scrollHeader];
-
+    
     self.navigationController.navigationBar.hidden = YES;
     
-    [self enterSandBox];
+    //[self enterSandBox];
+    [self enterMainBundle];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -60,18 +61,25 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+- (void)enterMainBundle {
+    NSString *homeDirectory = [[NSBundle mainBundle] bundlePath];
+    [self loadRootPath:homeDirectory];
+}
+
 - (void)enterSandBox {
     NSString *homeDirectory = NSHomeDirectory();
-    NSString *homeName = [homeDirectory lastPathComponent];
-    NSLog(@"homeDirectory: \n%@", homeDirectory);
+    [self loadRootPath:homeDirectory];
+}
+
+- (void)loadRootPath:(NSString *)rootPath {
+    NSLog(@"Root Path: \n%@", rootPath);
     NSError *error = nil;
-    NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:homeDirectory error:&error];
+    NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:rootPath error:&error];
     if (error) {
         return;
     }
-    _currentItem = [[HsFileBrowerItem alloc] initWithPath:homeDirectory name:homeName attributes:attributes parent:nil];
-//    [_rootPage reloadAtDirectoryWithItem:_currentItem];
-//    [self enterDirectoryWithItem:_currentItem];
+    _currentItem = [[HsFileBrowerItem alloc] initWithPath:rootPath];
+    _currentItem.attributes = attributes;
     
     // root page
     _rootPage = [[HsFileBrowerPage alloc] init];

@@ -9,6 +9,8 @@
 #ifndef HsTestToolDefine_h
 #define HsTestToolDefine_h
 
+#import "NSBundle+HsTestTool.h"
+
 //MARK: - 屏幕高度、宽度
 #ifndef kScreenWidth
 #define kScreenWidth ([[UIScreen mainScreen] bounds].size.width)

@@ -14,8 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)hs_testToolBundle;
 
-+ (UIImage *)hs_imageNamed:(NSString *)imageName;
-+ (UIImage *)hs_imageNamed:(NSString *)imageName type:(NSString *)type;
++ (UIImage *)hs_imageNamed:(NSString *)imageName
+                      type:(NSString *)type
+               inDirectory:(NSString *)directory;
 
 @end
 

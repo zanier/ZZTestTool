@@ -15,6 +15,18 @@
 
 @implementation HsFileBrowerItem
 
+/// MARK - init
+
+- (instancetype)initWithPath:(NSString *)path {
+    if (self = [super init]) {
+        _path = [path copy];
+        _name = path.lastPathComponent;
+        _extension = [_name pathExtension];
+        _type = HsFileTypeWithExtension(_extension);
+    }
+    return self;
+}
+
 - (instancetype)initWithPath:(NSString *)path name:(NSString *)name attributes:(NSDictionary *)attributes {
     return [self initWithPath:path name:name attributes:attributes parent:nil];
 }
@@ -25,9 +37,22 @@
         _name = [name copy];
         _attributes = [attributes copy];
         _parent = parent;
-        _isDir = [NSFileTypeDirectory isEqualToString:_attributes[NSFileType]];
+//        _isDir = [NSFileTypeDirectory isEqualToString:_attributes[NSFileType]];
     }
     return self;
+}
+
+/// MARK: -
+
+- (BOOL)isDir {
+    return [NSFileTypeDirectory isEqualToString:_attributes[NSFileType]];;
+}
+
+- (NSURL *)url {
+    if (_path) {
+        return [NSURL URLWithString:_path];
+    }
+    return nil;
 }
 
 - (NSString *)modificationDate {
@@ -41,19 +66,13 @@
     return dateString;
 }
 
-- (NSString *)detailText {
-    NSString *date = _attributes[NSFileModificationDate];
-    return [NSString stringWithFormat:@"上次修改 \n%@", date];
+- (NSString *)imageName {
+    return HsImageNameWithType(_type);
 }
 
-- (NSString *)typeString {
-    return _attributes.fileType;
-//    NSArray *array = [_name componentsSeparatedByString:@"."];
-//    if (array.count >= 2) {
-//        return array.lastObject;
-//    }
-//    return @"";
-}
+//- (NSString *)typeString {
+//    return _path.pathExtension;
+//}
 
 - (NSString *)sizeString {
     return [HsFileBrowerManager sizeStringFromSize:_attributes.fileSize];
@@ -102,5 +121,4 @@
  FOUNDATION_EXPORT NSFileAttributeKey const NSFileGroupOwnerAccountID;
  FOUNDATION_EXPORT NSFileAttributeKey const NSFileBusy;
  FOUNDATION_EXPORT NSFileAttributeKey const NSFileProtectionKey API_AVAILABLE(ios(4.0), watchos(2.0), tvos(9.0)) API_UNAVAILABLE(macos);
- 
  */

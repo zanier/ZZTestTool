@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isPresented;
 
 @property (nonatomic, strong) UIView *sourceView;
+@property (nonatomic, strong) UIView *menuView;
 
 @end
 

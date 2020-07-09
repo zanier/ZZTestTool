@@ -26,38 +26,36 @@
     UIView *containerView = transitionContext.containerView;
     UIViewController *fromVC = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
     UIViewController *toVC = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
-    
+    UIView *fromView = [transitionContext viewForKey:UITransitionContextFromViewKey];
+    UIView *toView = [transitionContext viewForKey:UITransitionContextToViewKey];
+
     NSTimeInterval duration = [self transitionDuration:nil];
     
-    if (_isPresented) {
-        /// present
-        toVC.view.frame = UIScreen.mainScreen.bounds;
-        UIView *fromView = _sourceView;
-        //CGRect oldFrame = [fromView convertRect:fromView.bounds toView:containerView];
-        CGRect newFrame = UIScreen.mainScreen.bounds;
+    if (1 || _isPresented) {
         /// tempView
-        UIView *tempView = [[UIView alloc] init];
-        tempView.frame = UIScreen.mainScreen.bounds;
+        UIView *tempView = [_sourceView snapshotViewAfterScreenUpdates:YES];
         /// blurEffectView
         UIVisualEffectView *blurEffectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
         blurEffectView.frame = UIScreen.mainScreen.bounds;
         [tempView addSubview:blurEffectView];
-        /// toVC
-        toVC.view.hidden = YES;
+//        /// toVC
+//        toVC.view.hidden = YES;
         /// add subviews
         [containerView addSubview:tempView];
         [containerView addSubview:toVC.view];
-        /// hide from imageView
-        fromView.hidden = YES;
+//        /// hide from imageView
+//        fromView.hidden = YES;
+        blurEffectView.alpha = 0.0f;
+
         /// animation
         [UIView animateWithDuration:duration animations:^{
-            tempView.frame = newFrame;
-        } completion:^(BOOL finished) {
-            if (finished) {
-                toVC.view.hidden = NO;
-                fromView.hidden = NO;
-            }
+            blurEffectView.alpha = 1.0f;
             
+        } completion:^(BOOL finished) {
+//            if (finished) {
+//                toVC.view.hidden = NO;
+//                fromView.hidden = NO;
+//            }
         }];
         
     } else {

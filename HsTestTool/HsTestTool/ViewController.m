@@ -14,14 +14,24 @@
 @interface ViewController () <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) NSArray<NSString *> *dataSource;
 
 @end
 
 @implementation ViewController
 
+static NSString *const ViewController_Plist = @"Plist";
+static NSString *const ViewController_Sandbox = @"Sand box";
+static NSString *const ViewController_testFile = @"测试文件";
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.view addSubview:self.tableView];
+    _dataSource = @[
+        ViewController_Plist,
+        ViewController_Sandbox,
+        ViewController_testFile,
+    ];
 }
 
 - (UITableView *)tableView {
@@ -44,7 +54,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 2;
+    return _dataSource.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -53,11 +63,7 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifer];
     }
-    if (indexPath.row == 0) {
-        cell.textLabel.text = @"plist";
-    } else if (indexPath.row == 1) {
-        cell.textLabel.text = @"sand box";
-    }
+    cell.textLabel.text = _dataSource[indexPath.row];
     return cell;
 }
 
@@ -65,13 +71,15 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.row == 0) {
+    NSString *title = _dataSource[indexPath.row];
+    if ([ViewController_Plist isEqualToString:title]) {
         NSString *path = [[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"];
         [self.navigationController pushViewController:[[HsPlistBrowerPage alloc] initWithPlistFilePath:path] animated:YES];
-    } else if (indexPath.row == 1) {
+    } else if ([ViewController_Sandbox isEqualToString:title]) {
         [self.navigationController pushViewController:[[HsFileBrowerController alloc] init] animated:YES];
+    } else if ([ViewController_testFile isEqualToString:title]) {
+        
     }
-
 }
 
 

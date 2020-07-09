@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HsFileBrowerController : UIViewController
 
+- (void)enterSandBox;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -11,8 +11,6 @@
 
 @interface HsFileBrowerItemCell () <UITextViewDelegate>
 
-@property (nonatomic, strong) UIButton *button;
-
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) UILabel *textLabel;
 @property (nonatomic, strong) UILabel *detailLabel;
@@ -29,25 +27,88 @@
     return self;
 }
 
-- (void)setupSubviews {
-    [self.contentView addSubview:self.imageView];
-    [self.contentView addSubview:self.textLabel];
-    [self.contentView addSubview:self.detailLabel];
-    //_imageView.backgroundColor = [UIColor grayColor];
-    //_textLabel.backgroundColor = UIColor.lightTextColor;
-    //_detailLabel.backgroundColor = UIColor.orangeColor;
-    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressAction:)];
-//    longPress.minimumPressDuration = 0.5;
-    [self.contentView addGestureRecognizer:longPress];
+- (void)setItem:(HsFileBrowerItem *)item {
+    _item = item;
+    [self reloadItem];
+    [self.contentView setNeedsLayout];
+}
+
+- (void)reloadItem {
+    self.textLabel.text = _item.name;
+    self.detailLabel.text = [NSString stringWithFormat:@"%@", _item.modificationDate];
+    NSString *typeString = [_item.extension lowercaseString];
+    if ([typeString isEqualToString:@"png"] || [typeString isEqualToString:@"jpeg"] || [typeString isEqualToString:@"gif"] || [typeString isEqualToString:@"psd"] || [typeString isEqualToString:@"jpg"]) {
+        NSData *imageData = [NSData dataWithContentsOfFile:_item.path options:NSDataReadingMappedIfSafe error:nil];
+        _imageView.image = [UIImage imageWithData:imageData];
+    } else {
+        self.imageView.image = [NSBundle hs_imageNamed:_item.imageName type:@"png" inDirectory:@"FileType"];
+    }
     
 }
 
+/// MARK: - rename
+
+- (void)beginRenamingItem {
+    self.textLabel.hidden = YES;
+    self.detailLabel.hidden = YES;
+    self.renameTextView.hidden = NO;
+    self.renameTextView.text = self.textLabel.text;
+    [self textViewDidChange:self.renameTextView];
+    [self.renameTextView becomeFirstResponder];
+}
+
+- (void)endRenamingItem {
+    [self.renameTextView resignFirstResponder];
+    self.renameTextView.hidden = YES;
+    self.textLabel.hidden = NO;
+    self.detailLabel.hidden = NO;
+}
+
+/// 长按单元格，代理回调
 - (void)longPressAction:(UILongPressGestureRecognizer *)longPress {
     if (longPress.state == UIGestureRecognizerStateBegan) {
         if ([_delegate respondsToSelector:@selector(cellDidLongPressed:)]) {
             [_delegate cellDidLongPressed:self];
         }
     }
+}
+
+/// MARK: - <UITextViewDelegate>
+
+/// 文字改变
+- (void)textViewDidChange:(UITextView *)textView {
+    /// 改变输入框布局
+    [textView sizeToFit];
+    CGRect frame = self.renameTextView.frame;
+    frame.origin.x = (CGRectGetWidth(self.contentView.bounds) - CGRectGetWidth(self.renameTextView.bounds)) / 2;
+    self.renameTextView.frame = frame;
+}
+
+/// 文字是否允许改变
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    if ([@"\n" isEqualToString:text]) {
+        /// return 键换行，结束编辑
+        [textView resignFirstResponder];
+        /// 代理回调
+        if ([_delegate respondsToSelector:@selector(cell:shouldEndRenamingWithName:)]) {
+            [_delegate cell:self shouldEndRenamingWithName:self.renameTextView.text];
+        }
+        return NO;
+    }
+    return YES;
+}
+
+
+/// MARK: - layout
+
+- (void)setupSubviews {
+    [self.contentView addSubview:self.imageView];
+    [self.contentView addSubview:self.textLabel];
+    [self.contentView addSubview:self.detailLabel];
+    [self.contentView addSubview:self.renameTextView];
+    self.renameTextView.hidden = YES;
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressAction:)];
+    [self.contentView addGestureRecognizer:longPress];
 }
 
 - (void)layoutSubviews {
@@ -60,60 +121,12 @@
     CGSize detailFitedSize = [_detailLabel sizeThatFits:CGSizeMake(labelWidth, 42)];
     CGFloat textHeight = fitedSize.height < 42 ? fitedSize.height : 42;
     CGFloat detailHeight = detailFitedSize.height < 42 ? detailFitedSize.height : 42;
-    _textLabel.frame = CGRectMake(8, CGRectGetMaxY(_imageView.frame) + 10, labelWidth, textHeight);
-    _detailLabel.frame = CGRectMake(8, CGRectGetMaxY(_textLabel.frame), labelWidth, detailHeight);
+    _textLabel.frame = CGRectMake(8, CGRectGetMaxY(_imageView.frame) + 10, labelWidth, textHeight + 0);
+    _detailLabel.frame = CGRectMake(8, CGRectGetMaxY(_textLabel.frame), labelWidth, detailHeight + 0);
+    _renameTextView.frame = _textLabel.frame;
 }
 
-- (void)setItem:(HsFileBrowerItem *)item {
-    _item = item;
-    [self reloadItem];
-    [self setNeedsLayout];
-}
-
-- (void)reloadItem {
-    self.textLabel.text = _item.name;
-    self.detailLabel.text = [NSString stringWithFormat:@"%@", _item.modificationDate];
-    _imageView.image = [HsFileBrowerManager imageNameWithItem:_item];
-}
-
-- (void)beginRenamingItem {
-    self.textLabel.hidden = YES;
-    self.detailLabel.hidden = YES;
-    self.renameTextView.hidden = NO;
-    self.renameTextView.text = _item.name;
-    if (!self.renameTextView.superview) {
-        [self.contentView addSubview:self.renameTextView];
-    }
-    [self.renameTextView becomeFirstResponder];
-}
-
-- (void)endRenamingItem {
-    [self.renameTextView resignFirstResponder];
-    self.renameTextView.hidden = YES;
-    self.textLabel.hidden = NO;
-    self.detailLabel.hidden = NO;
-}
-
-/// MARK: - <UITextViewDelegate>
-
-- (BOOL)textViewShouldEndEditing:(UITextView *)textView {
-    if ([_delegate respondsToSelector:@selector(cell:shouldEndRenamingWithName:)]) {
-        return [_delegate cell:self shouldEndRenamingWithName:textView.text];
-    }
-    return YES;;
-}
-
-/// MARK: - button
-
-//- (UIButton *)button {
-//    if (_button) {
-//        return _button;
-//    }
-//    _button = [UIButton buttonWithType:UIButtonTypeSystem];
-//    [_button addTarget:self action:@selector(image) forControlEvents:UIControlEventTouchDown];
-//
-//    return _button;
-//}
+/// MARK: - getter
 
 - (UIImageView *)imageView {
     if (_imageView) {
@@ -155,12 +168,16 @@
         return _renameTextView;
     }
     _renameTextView = [[UITextView alloc] init];
-    _renameTextView.backgroundColor = UIColor.lightGrayColor;
+    _renameTextView.delegate = self;
+    _renameTextView.font = [UIFont systemFontOfSize:15.0f];
+    _renameTextView.textColor = [UIColor darkTextColor];
+    _renameTextView.returnKeyType = UIReturnKeyDone;
+    _renameTextView.textAlignment = NSTextAlignmentCenter;
     _renameTextView.layer.cornerRadius = 5.0f;
     _renameTextView.layer.masksToBounds = YES;
     _renameTextView.showsVerticalScrollIndicator = YES;
     _renameTextView.showsHorizontalScrollIndicator = NO;
-    _renameTextView.delegate = self;
+    _renameTextView.backgroundColor = [UIColor colorWithWhite:(222.0/255) alpha:1.0];
     return _renameTextView;
 }
 

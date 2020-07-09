@@ -19,12 +19,8 @@
     return testToolBundle;
 }
 
-+ (UIImage *)hs_imageNamed:(NSString *)imageName type:(NSString *)type {
-    return [[UIImage imageWithContentsOfFile:[[self hs_testToolBundle] pathForResource:imageName ofType:type]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-}
-
-+ (UIImage *)hs_imageNamed:(NSString *)imageName {
-    return [[UIImage imageWithContentsOfFile:[[self hs_testToolBundle] pathForResource:imageName ofType:@"png"]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
++ (UIImage *)hs_imageNamed:(NSString *)imageName type:(NSString *)type inDirectory:(NSString *)directory {
+    return [[UIImage imageWithContentsOfFile:[[self hs_testToolBundle] pathForResource:imageName ofType:type inDirectory:directory]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
 }
 
 @end

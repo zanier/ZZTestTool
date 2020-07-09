@@ -17,6 +17,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface HsTestBaseViewController : UIViewController
 #endif
 
+/// MARK: - alert
+
+- (void)alertWithTitle:(NSString *)title message:(NSString *)massage;
+
 @end
 
 NS_ASSUME_NONNULL_END

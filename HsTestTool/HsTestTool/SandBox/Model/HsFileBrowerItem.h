@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "HsFileBrowerHeader.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -14,26 +15,26 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) NSString *name;
 @property (nonatomic, strong, readonly) NSString *path;
-@property (nonatomic, strong, readonly) NSDictionary *attributes;
+@property (nonatomic, copy, readonly) NSString *extension;
+@property (nonatomic, assign, readonly) HsFileBrowerFileType type;
+@property (nonatomic, strong) NSDictionary *attributes;
 @property (nonatomic, assign, readonly) BOOL isDir;
 
-@property (nonatomic, strong, readonly) NSString *typeString;
-@property (nonatomic, strong, readonly) NSString *sizeString;
-@property (nonatomic, strong, readonly) NSString *createDateString;
-@property (nonatomic, strong, readonly) NSString *modifyDateString;
-@property (nonatomic, strong, readonly) NSString *lastOpenDateString;
+@property (nullable, readonly) NSURL *url;
+@property (nullable, readonly) NSString *imageName;
+//@property (nullable, readonly) NSString *typeString;
+@property (nullable, readonly) NSString *sizeString;
+@property (nullable, readonly) NSString *createDateString;
+@property (nullable, readonly) NSString *modifyDateString;
+@property (nullable, readonly) NSString *lastOpenDateString;
 
 @property (nonatomic, nullable, weak) HsFileBrowerItem *parent;
 @property (nonatomic, nullable, copy) NSArray<HsFileBrowerItem *> *children;
 
 @property (readonly) NSString *accessoryType;
-@property (readonly) NSString *detailText;
 @property (readonly) NSString *modificationDate;
 
-- (instancetype)initWithPath:(NSString *)path
-                        name:(NSString *)name
-                  attributes:(NSDictionary *)attributes
-                      parent:(nullable HsFileBrowerItem *)parent;
+- (instancetype)initWithPath:(NSString *)path;
 
 @end
 

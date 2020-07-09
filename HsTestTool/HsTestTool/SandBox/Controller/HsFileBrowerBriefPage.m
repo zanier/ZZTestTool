@@ -184,7 +184,7 @@ static NSString *const HsFileBrowerBriefCell_Location = @"位置";
     NSString *title = _dataSource[indexPath.row];
     cell.textLabel.text = title;
     if ([HsFileBrowerBriefCell_Type isEqualToString:title]) {
-        cell.detailTextLabel.text = _item.typeString;
+        cell.detailTextLabel.text = _item.extension;
     } else if ([HsFileBrowerBriefCell_Size isEqualToString:title]) {
         cell.detailTextLabel.text = _item.sizeString;
     } else if ([HsFileBrowerBriefCell_CreateDate isEqualToString:title]) {
