@@ -20,20 +20,21 @@
 
 @interface HsFileBrowerPage () <HsFileBrowerScrollHeaderDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UIViewControllerTransitioningDelegate, UIPopoverPresentationControllerDelegate, HsFileBrowerItemCellDelegate, HsFileBrowerActionPageDelegate, UINavigationControllerDelegate> {
     
-    UIView *_sourceViewInPresentation;
-    NSIndexPath *_indexPathInEditing;
-    NSInteger _actionRowCount;
-    __weak HsFileBrowerItem *_currentItem;
+//    UIView *_sourceViewInPresentation;
+//    NSIndexPath *_indexPathInEditing;
+//    NSInteger _actionRowCount;
+    BOOL _isSelecting;
     UICollectionViewFlowLayout *_layout;
 }
 
 @property (nonatomic, strong) NSMutableArray<HsFileBrowerItem *> *dataSource;
 @property (nonatomic, strong) NSMutableArray<HsFileBrowerItem *> *pathNavigation;
 
-@property (nonatomic, strong) UIToolbar *headerToolBar; //
-@property (nonatomic, strong) HsFileBrowerScrollHeader *scrollHeader; // 顶部滑动式图
+@property (nonatomic, strong) UIToolbar *headerToolBar; // 顶部滑动父视图
+@property (nonatomic, strong) HsFileBrowerScrollHeader *scrollHeader; // 顶部滑动视图
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) UIView *emptyView;
+@property (nonatomic, strong) UILabel *emptylabel;
 
 @end
 
@@ -48,7 +49,7 @@
 
 - (instancetype)initWithItem:(HsFileBrowerItem *)item delegate:(id <HsFileBrowerPageDelegate>)delegate {
     if (self = [super init]) {
-        _currentItem = item;
+        _item = item;
         _delegate = delegate;
     }
     return self;
@@ -56,7 +57,7 @@
 
 - (instancetype)initWithItem:(HsFileBrowerItem *)item {
     if (self = [super init]) {
-        _currentItem = item;
+        _item = item;
     }
     return self;
 }
@@ -65,14 +66,17 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"文件";
     self.view.backgroundColor = UIColor.whiteColor;
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"file_w"] style:(UIBarButtonItemStylePlain) target:self action:@selector(_reload:)];
+    UIImage *moreBtnImage = [NSBundle hs_imageNamed:@"icon_barBtn_more@2x" type:@"png" inDirectory:nil];
+    UIButton *barButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    barButton.tintColor = [UIColor systemBlueColor];
+    [barButton setImage:moreBtnImage forState:UIControlStateNormal];
+    barButton.frame = CGRectMake(200, 200, 25, 25);
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:barButton];
+    
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressAction:)];
     [self.view addGestureRecognizer:longPress];
     [self.view addSubview:self.collectionView];
-    [self.view addSubview:self.emptyView];
-    self.emptyView.hidden = YES;
     if (@available(iOS 11.0, *)) {
         self.collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     } else {
@@ -84,6 +88,8 @@
     [super viewWillLayoutSubviews];
     CGFloat scrollBottom = HsFileBrower_NavBarBottom + [HsFileBrowerScrollHeader defaultHeight];
     self.collectionView.frame = CGRectMake(0, scrollBottom, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - scrollBottom);
+    _emptyView.frame = self.collectionView.bounds;
+    _emptylabel.center = _emptyView.center;
 }
 
 - (void)setItem:(HsFileBrowerItem *)item {
@@ -95,21 +101,25 @@
 
 /// 刷新显示指定文件夹下的文件，返回是否刷新
 /// @param item 文件夹数据
-- (BOOL)reloadAtDirectoryWithItem:(HsFileBrowerItem *)item {
+- (void)reloadAtDirectoryWithItem:(HsFileBrowerItem *)item {
     _item = item;
     [self setTitle:_item.name];
     NSString *path = item.path;
     BOOL isDir = NO;
-    // 路径不存在
-    if (![[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]) return NO;
-    // 非文件夹
-    if (!isDir) return NO;
-    _item.children = [HsFileBrowerManager contentItemsOfItem:_item];
-    _dataSource = _item.children.mutableCopy;
-    // 刷新
-    [self.collectionView reloadData];
-    self.emptyView.hidden = (self.dataSource.count != 0);
-    return YES;
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]) {
+        if (isDir) {
+            _item.children = [HsFileBrowerManager contentItemsOfItem:_item];
+            _dataSource = _item.children.mutableCopy;
+            [self.collectionView reloadData];
+        }
+    }
+    BOOL isEmptyDataSource = (!_dataSource || _dataSource.count == 0);
+    if (isEmptyDataSource) {
+        if (!self.emptyView.superview) {
+            [self.collectionView addSubview:self.emptyView];
+        }
+    }
+    _emptyView.hidden = !isEmptyDataSource;
 }
 
 /// MARK: view long press action
@@ -201,7 +211,7 @@
 }
 
 - (void)_showBrief:(UIMenuController *)menu {
-    [self presentFileBriefWithItem:_currentItem];
+    [self presentFileBriefWithItem:_item];
 }
 
 - (void)_deleteItem:(HsFileBrowerItem *)item {
@@ -210,17 +220,13 @@
     if (error) {
         NSLog(@"%@", error);
         [self alertWithTitle:@"删除失败" message:error.description];
-    } else {
-        NSUInteger idx = [_dataSource indexOfObject:item];
-        [_dataSource removeObjectAtIndex:idx];
-        [self.collectionView performBatchUpdates:^{
-            [self.collectionView deleteItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:idx inSection:0]]];
-        } completion:^(BOOL finished) {
-            if (finished) {
-                [self.collectionView reloadData];
-            }
-        }];
+        return;
     }
+    NSUInteger idx = [_dataSource indexOfObject:item];
+    [_dataSource removeObjectAtIndex:idx];
+    [self.collectionView performBatchUpdates:^{
+        [self.collectionView deleteItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:idx inSection:0]]];
+    } completion:nil];
 }
 
 - (void)_renameItem:(HsFileBrowerItem *)item {
@@ -248,13 +254,13 @@
         return _emptyView;
     }
     _emptyView = [[UIView alloc] initWithFrame:self.view.bounds];
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 21)];
-    label.center = _emptyView.center;
-    label.text = @"文件夹为空";
-    label.font = [UIFont boldSystemFontOfSize:21.0f];
-    label.textColor = [UIColor grayColor];
-    label.textAlignment = NSTextAlignmentCenter;
-    [_emptyView addSubview:label];
+    _emptylabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 21)];
+    _emptylabel.text = @"文件夹为空";
+    _emptylabel.font = [UIFont boldSystemFontOfSize:21.0f];
+    _emptylabel.textColor = [UIColor colorWithWhite:0.5f alpha:1.0f];
+    _emptylabel.textAlignment = NSTextAlignmentCenter;
+    _emptyView.hidden = YES;
+    [_emptyView addSubview:_emptylabel];
     return _emptyView;
 }
 
@@ -262,14 +268,17 @@
     if (_collectionView) {
         return _collectionView;
     }
-    CGFloat itemWidth = [UIScreen mainScreen].bounds.size.width / 3;
-    itemWidth = (CGFloat)((int)itemWidth) - 0;
+    CGFloat margin = 16.0f;
+    CGFloat column = 3;
+    CGFloat itemWidth = ([UIScreen mainScreen].bounds.size.width - margin * (column + 1)) / column;
+    itemWidth = (CGFloat)((int)itemWidth);
     itemWidth = itemWidth > 125.0f ? 125.0f : itemWidth;
     _layout = [[UICollectionViewFlowLayout alloc] init];
-    _layout.itemSize = CGSizeMake(itemWidth, itemWidth * 1.3);
-    _layout.minimumLineSpacing = 0;
-    _layout.minimumInteritemSpacing = 0;
+    _layout.itemSize = CGSizeMake(itemWidth, itemWidth * 1.5);
+    _layout.minimumLineSpacing = margin;
+    //_layout.minimumInteritemSpacing = margin;
     _layout.scrollDirection = UICollectionViewScrollDirectionVertical;
+    _layout.sectionInset = UIEdgeInsetsMake(0, margin, 0, margin);
     _collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:_layout];
     _collectionView.dataSource = self;
     _collectionView.delegate = self;
@@ -307,14 +316,27 @@
 /// MARK: - <HsFileBrowerItemCellDelegate>
 
 - (BOOL)cell:(HsFileBrowerItemCell *)cell shouldEndRenamingWithName:(NSString *)name {
-    if (!name || name.length == 0) {
-        NSLog(@"Invalid name");
+    NSError *error;
+    [HsFileBrowerManager renameItemAtPath:cell.item.path name:name error:&error];
+    if (error) {
+        [self alertWithTitle:@"重命名失败" message:error.description];
         return NO;
     }
+    [self reloadAtDirectoryWithItem:_item];
     return YES;
 }
 
 - (void)cellDidLongPressed:(HsFileBrowerItemCell *)cell {
+    if (@available(iOS 10.0, *)) {
+        UIImpactFeedbackGenerator *generator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleMedium];
+        [generator prepare];
+        [generator impactOccurred];
+        //                UISelectionFeedbackGenerator *generator = [[UISelectionFeedbackGenerator alloc] init];
+        //                [generator prepare];
+        //                [generator selectionChanged];
+    } else {
+        // Fallback on earlier versions
+    }
     [self presentFileActionWithItem:cell.item fromCell:cell];
 }
 
@@ -353,16 +375,16 @@
             ],
         ];
     }
-
     HsFileBrowerActionPage *testVC = [[HsFileBrowerActionPage alloc] initWithItem:item actionNames:dataSource sourceView:cell];
     testVC.delegate = self;
     //testVC.preferredContentSize = testVC.preferredContentSize;
+    //testVC.preferredContentSize = CGSizeMake(180, 300);
     testVC.modalPresentationStyle = UIModalPresentationPopover;
     testVC.popoverPresentationController.delegate = self;
-    testVC.popoverPresentationController.sourceView = cell;
-    testVC.popoverPresentationController.sourceRect = [cell convertRect:cell.frame toView:self.view];
+    testVC.popoverPresentationController.sourceView = cell.imageView;
+    testVC.popoverPresentationController.sourceRect = cell.imageView.bounds;
     testVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionAny;
-    //testVC.popoverPresentationController.backgroundColor = [UIColor clearColor];
+    //testVC.popoverPresentationController.backgroundColor = [UIColor redColor];
     testVC.popoverPresentationController.canOverlapSourceViewRect = NO;
     [self presentViewController:testVC animated:YES completion:nil];
 }
@@ -431,7 +453,7 @@
 
 /// MARK: - <UIPopoverPresentationControllerDelegate>
 - (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller {
-    return UIModalPresentationPopover;
+    return UIModalPresentationNone;
 }
 
 //- (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC {

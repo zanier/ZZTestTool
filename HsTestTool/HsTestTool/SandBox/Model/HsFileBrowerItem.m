@@ -57,6 +57,16 @@
     self.type == HsFileBrowerFileTypeNSBundle;
 }
 
+- (BOOL)isImage {
+    return
+    self.type == HsFileBrowerFileTypeJPG ||
+    self.type == HsFileBrowerFileTypePNG ||
+    self.type == HsFileBrowerFileTypeGIF ||
+    self.type == HsFileBrowerFileTypeSVG ||
+    self.type == HsFileBrowerFileTypeBMP ||
+    self.type == HsFileBrowerFileTypeTIF;
+}
+
 - (NSURL *)url {
     if (_path) {
         return [NSURL fileURLWithPath:_path isDirectory:self.isDir];

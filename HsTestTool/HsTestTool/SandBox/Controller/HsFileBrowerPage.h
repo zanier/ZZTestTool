@@ -28,9 +28,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 当前页面数据
 @property (nonatomic, strong) HsFileBrowerItem *item;
 
-/// 刷新显示指定文件夹下的文件，返回是否刷新
+/// 刷新显示指定文件夹下的文件
 /// @param item 文件夹数据
-- (BOOL)reloadAtDirectoryWithItem:(HsFileBrowerItem *)item;
+- (void)reloadAtDirectoryWithItem:(HsFileBrowerItem *)item;
 
 @end
 

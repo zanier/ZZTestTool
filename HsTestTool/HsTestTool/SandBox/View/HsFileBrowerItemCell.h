@@ -29,8 +29,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, nullable, weak) id<HsFileBrowerItemCellDelegate> delegate;
 
+/// 是否是选择模式
+@property (nonatomic, assign, getter=isSelecting) BOOL selecting;
+///// 是否已选中
+//@property (nonatomic, assign, getter=isSelected) BOOL selected;
+
 @property (readonly) UIImageView *imageView;
 
+/// 进入、退出重命名编辑名称模式，通过代理回调结果
 - (void)beginRenamingItem;
 - (void)endRenamingItem;
 

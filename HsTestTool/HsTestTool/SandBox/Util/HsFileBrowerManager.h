@@ -37,6 +37,18 @@ static NSString *const HsFileBrowerActionPage_Share     = @"共享";
 + (UIImage *)imageWithFileType:(HsFileBrowerFileType)type;
 + (UIImage *)imageWithFileType:(HsFileBrowerFileType)type scale:(NSInteger)scale;
 
+/// 检查路径是否有效
+/// @param path 文件路径
++ (BOOL)isLegalPath:(NSString *)path;
+
+/// 判断文件名是否合法
+/// @param name 文件名
++ (BOOL)isLegalFileName:(NSString *)name;
+
+/// 获取子文件的个数
+/// @param item 文件数据
++ (NSUInteger)contentCountWithDirectoryItem:(HsFileBrowerItem *)item;
+
 /// 获取item的子文件数据
 /// @param parent 文件夹item
 + (NSArray<HsFileBrowerItem *> *)contentItemsOfItem:(HsFileBrowerItem *)parent;
@@ -54,10 +66,11 @@ static NSString *const HsFileBrowerActionPage_Share     = @"共享";
 /// @param error 错误
 + (void)removeItemAtPath:(NSString *)path error:(NSError **)error;
 
-/// 重命名文件
+///  重命名文件
 /// @param path 文件路径
+/// @param name 新文件名
 /// @param error 错误
-+ (void)renameItemAtPath:(NSString *)path error:(NSError **)error;
++ (void)renameItemAtPath:(NSString *)path name:(NSString *)name error:(NSError **)error;
 
 /// 记录待处理文件路径，由于粘贴、移动等
 /// @param path 文件路径

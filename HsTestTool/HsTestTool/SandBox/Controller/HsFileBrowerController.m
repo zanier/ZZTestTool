@@ -38,8 +38,8 @@
     
     self.navigationController.navigationBar.hidden = YES;
     
-//    [self enterSandBox];
-    [self enterMainBundle];
+    [self enterSandBox];
+//    [self enterMainBundle];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

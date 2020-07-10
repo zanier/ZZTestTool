@@ -56,14 +56,17 @@
 //    }
 //
 //    [self.view addSubview:self.blurEffectView];
+    
     [self setupItem];
     CGFloat tableWidth = 240.0f;
     CGFloat headerHeight = [self tableView:self.tableView heightForHeaderInSection:1];
+//    headerHeight = 0;
     CGFloat tableHeight = _rowCount * self.tableView.rowHeight + (_dataSource.count - 1) * headerHeight;
     //self.tableView.frame = CGRectMake(0, 0, tableWidth, tableHeight);
     self.preferredContentSize = CGSizeMake(tableWidth, tableHeight);
 //    [self.view addSubview:self.imageView];
     [self.view addSubview:self.tableView];
+//    [self.tableView reloadData];
 }
 
 //- (CGSize)preferredContentSize {
@@ -159,6 +162,7 @@
     _tableView.tableFooterView = [[UIView alloc] init];
     _tableView.bounces = NO;
     _tableView.rowHeight = 45.0f;
+    _tableView.scrollEnabled = NO;
     //_tableView.layer.cornerRadius = 10.0f;
     //_tableView.layer.masksToBounds = YES;
     return _tableView;
@@ -178,7 +182,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:(UITableViewCellStyleValue1) reuseIdentifier:@"cell"];
-        cell.backgroundColor = UIColor.clearColor;
+        cell.backgroundColor = UIColor.whiteColor;
         cell.separatorInset = UIEdgeInsetsZero;
     }
     NSString *text = _dataSource[indexPath.section][indexPath.row];
@@ -197,19 +201,14 @@
     if (section == 0) {
         return 0;
     } else {
-        return 8;
+        return 8.0;
     }
 }
 
-//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-//    if (section == 0) {
-//        return [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
-//    } else {
-//        return [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 8)];
-//    }
-//
-//    //return [[UIView alloc] init];
-//}
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    CGFloat height = [self tableView:tableView heightForHeaderInSection:section];
+    return [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, height)];
+}
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     return 0.01;

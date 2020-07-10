@@ -13,7 +13,9 @@
 #import "HsPlistBrowerTableView.h"
 
 @interface HsPlistBrowerPage () <UISearchControllerDelegate, HsPlistBrowerTableViewDelegate> {
-    BOOL _showInRawString;
+    BOOL _showInRawText;
+    NSString *_rawText;
+    HsPlistBrowerNode *_focusNode;
 }
 
 @property (nonatomic, copy) NSString *path;
@@ -22,6 +24,7 @@
 
 @property (nonatomic, strong) HsPlistBrowerNode *rootNode;
 @property (nonatomic, strong) HsPlistBrowerTableView *browerTableView;
+@property (nonatomic, strong) UITextView *rawTextView;
 
 @end
 
@@ -55,8 +58,10 @@
 - (instancetype)initWithPlistFilePath:(NSString *)path {
     if (self == [super init]) {
         _path = [path copy];
-        id userList = [NSDictionary dictionaryWithContentsOfFile:_path];
-        [self setObject:userList];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:nil]) {
+            id userList = [NSDictionary dictionaryWithContentsOfFile:_path];
+            [self setObject:userList];
+        }
     }
     return self;
 }
@@ -94,10 +99,12 @@
 /// MARK: right bar button
 
 - (void)setupBarButtonItem {
-    if (_showInRawString) {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Plist" style:(UIBarButtonItemStylePlain) target:self action:@selector(testData)];
-    } else {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"XML" style:(UIBarButtonItemStylePlain) target:self action:@selector(testData)];
+    if (_path) {
+        if (_showInRawText) {
+            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Plist" style:(UIBarButtonItemStylePlain) target:self action:@selector(rightBarButtonItemAction:)];
+        } else {
+            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"XML" style:(UIBarButtonItemStylePlain) target:self action:@selector(rightBarButtonItemAction:)];
+        }
     }
     if (self.navigationController.isBeingPresented) {
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:(UIBarButtonSystemItemDone) target:self action:@selector(leftBarButtonItemAction:)];
@@ -109,25 +116,27 @@
 }
 
 - (void)rightBarButtonItemAction:(UIBarButtonItem *)item {
-    _showInRawString = !_showInRawString;
+    _showInRawText = !_showInRawText;
+    if (_showInRawText) {
+        if (!self.rawTextView.superview) {
+            [self.view addSubview:self.rawTextView];
+        }
+        NSStringEncoding encoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingMacChineseTrad);
+        NSError *error;
+        self.rawTextView.text = [NSString stringWithContentsOfFile:_path encoding:encoding error:&error];
+        if (error) {
+            [self alertWithTitle:@"" message:error.description];
+        }
+        self.rawTextView.hidden = NO;
+        self.browerTableView.hidden = YES;
+    } else {
+        self.rawTextView.hidden = YES;
+        self.browerTableView.hidden = NO;
+    }
     [self setupBarButtonItem];
 }
 
 /// MARK: - load data
-
-- (void)testData {
-//    // 设定pList文件路径
-//    NSString *dataPath = [[NSBundle mainBundle] pathForResource:@"JF-info.plist.encode" ofType:nil];
-//    id userList = [NSDictionary dictionaryWithContentsOfFile:dataPath];
-//    if (!userList) {
-//        dataPath = [[NSBundle mainBundle] pathForResource:@"Info.plist" ofType:nil];
-//        userList = [NSDictionary dictionaryWithContentsOfFile:dataPath];
-//    }
-    
-    NSString *dataPath = [[NSBundle mainBundle] pathForResource:@"Info.plist" ofType:nil];
-    id userList = [NSDictionary dictionaryWithContentsOfFile:dataPath];
-    [self setObject:userList];
-}
 
 - (void)setObject:(id)object {
     if (_object == object) {
@@ -148,6 +157,15 @@
     _browerTableView = [[HsPlistBrowerTableView alloc] init];
     _browerTableView.delegate = self;
     return _browerTableView;
+}
+
+- (UITextView *)rawTextView {
+    if (_rawTextView) {
+       return _rawTextView;
+    }
+    _rawTextView = [[UITextView alloc] initWithFrame:self.view.bounds];
+    _rawTextView.font = [UIFont systemFontOfSize:15.0f];
+    return _rawTextView;
 }
 
 - (UISearchController *)searchController {
@@ -188,18 +206,23 @@
 - (void)plistTableView:(HsPlistBrowerTableView *)plsitTableView
   didLongPressWithNode:(HsPlistBrowerNode *)node
               location:(CGPoint)location {
+    _focusNode = node;
     [self showMenuControllerAtPoint:[plsitTableView convertPoint:location toView:self.view]];
 }
 
 - (void)showMenuControllerAtPoint:(CGPoint)location {
     [self becomeFirstResponder];
     UIMenuController *menu = [UIMenuController sharedMenuController];
-    UIMenuItem *pasteItem = [[UIMenuItem alloc] initWithTitle:@"复制" action:@selector(_paste:)];
-    UIMenuItem *editItem = [[UIMenuItem alloc] initWithTitle:@"编辑" action:@selector(_paste:)];
+    UIMenuItem *copyKeyItem = [[UIMenuItem alloc] initWithTitle:@"复制键" action:@selector(_copyKey:)];
+    UIMenuItem *copyValueItem = [[UIMenuItem alloc] initWithTitle:@"复制值" action:@selector(_copyValue:)];
+    //UIMenuItem *editItem = [[UIMenuItem alloc] initWithTitle:@"编辑" action:@selector(_paste:)];
+    UIMenuItem *addRowItem = [[UIMenuItem alloc] initWithTitle:@"添加" action:@selector(_addRow:)];
     UIMenuItem *createDirItem = [[UIMenuItem alloc] initWithTitle:@"删除" action:@selector(_createDirectory:)];
     menu.menuItems = @[
-        pasteItem,
-        editItem,
+        copyKeyItem,
+        copyValueItem,
+        //editItem,
+        addRowItem,
         createDirItem,
     ];
     if (@available(iOS 13.0, *)) {
@@ -215,16 +238,34 @@
 }
 
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender {
-    if (action == @selector(_paste:) ||
-        action == @selector(_selectAll:) ||
-        action == @selector(_showBrief:) ||
+    if (action == @selector(_copyKey:) ||
+        action == @selector(_copyValue:) ||
+        action == @selector(_addRow:) ||
+        //action == @selector(_selectAll:) ||
+        //action == @selector(_showBrief:) ||
         action == @selector(_createDirectory:)) {
         return YES;
     }
     return NO;
 }
 
+- (void)_copyKey:(UIMenuController *)menu {
+    if (_focusNode) {
+        [UIPasteboard generalPasteboard].string = _focusNode.key;
+    }
+}
+
+- (void)_copyValue:(UIMenuController *)menu {
+    if (_focusNode) {
+        [UIPasteboard generalPasteboard].string = _focusNode.value;
+    }
+}
+
 - (void)_paste:(UIMenuController *)menu {
+    
+}
+
+- (void)_addRow:(UIMenuController *)menu {
     
 }
 

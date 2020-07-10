@@ -78,7 +78,7 @@ static NSString *const ViewController_testFile = @"测试文件";
     } else if ([ViewController_Sandbox isEqualToString:title]) {
         [self.navigationController pushViewController:[[HsFileBrowerController alloc] init] animated:YES];
     } else if ([ViewController_testFile isEqualToString:title]) {
-        
+        [self move];
     }
 }
 
@@ -90,19 +90,18 @@ static NSString *const ViewController_testFile = @"测试文件";
     NSString *path = documentDirectory;//XXX文件名
     
     NSLog(@"path = %@", path);
-    NSArray *resources = @[
-        
-    ];
-    for (NSString *resource in resources) {
-        if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
-            NSString *filePath = [[NSBundle mainBundle] pathForResource:resource ofType:nil];
-            NSLog(@"数据库本地filePath --- %@", filePath);
-            [[NSFileManager defaultManager] copyItemAtPath:filePath toPath:path error:nil];
+    NSBundle *testToolBundle = [NSBundle bundleWithPath:[[NSBundle bundleForClass:[HsTestBaseViewController class]] pathForResource:@"TestBundle" ofType:@"bundle"]];
+    path = [path stringByAppendingPathComponent:@"TestBundle.bundle"];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        //NSString *filePath = [[NSBundle mainBundle] pathForResource:resource ofType:nil];
+        //NSLog(@"数据库本地filePath --- %@", filePath);
+        NSError *error;
+        [[NSFileManager defaultManager] copyItemAtPath:testToolBundle.bundlePath toPath:path error:&error];
+        if (error) {
+            NSLog(@"%@", error.description);
         }
     }
     
-    NSBundle *testToolBundle = [NSBundle bundleWithPath:[[NSBundle bundleForClass:[HsTestBaseViewController class]] pathForResource:@"TestBundle" ofType:@"bundle"]];
-//    testToolBundle.all
 }
 
 @end

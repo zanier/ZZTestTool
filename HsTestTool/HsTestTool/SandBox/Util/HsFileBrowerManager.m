@@ -10,9 +10,7 @@
 #import "HsFileBrowerItem.h"
 #import "NSBundle+HsTestTool.h"
 
-@interface HsFileBrowerManager () {
-    
-}
+@interface HsFileBrowerManager ()
 
 @property (nonatomic, copy, readwrite) NSString *dealtPath;
 
@@ -44,7 +42,33 @@ static dispatch_once_t onceToken;
     return [[self class] isLegalPath:_dealtPath];
 }
 
+static NSString *const HsFileBrowerErrorDomin = @"HsFileBrowerErrorDomin";
+
++ (NSError *)error_invalidFilePath:(NSString *)path {
+    NSString *desc = [NSString stringWithFormat:@"Invalid file path: %@", path];
+    return [NSError errorWithDomain:HsFileBrowerErrorDomin code:-1 userInfo:@{
+        NSLocalizedDescriptionKey : desc,
+    }];
+}
+
++ (NSError *)error_invalidFileName:(NSString *)name {
+    NSString *desc = [NSString stringWithFormat:@"Invalid file name: %@", name];
+    return [NSError errorWithDomain:HsFileBrowerErrorDomin code:-1 userInfo:@{
+        NSLocalizedDescriptionKey : desc,
+    }];
+}
+
 /// MARK: - create item
+
+/// 获取子文件的个数
+/// @param item 文件数据
++ (NSUInteger)contentCountWithDirectoryItem:(HsFileBrowerItem *)item {
+    if (item.isDir) {
+        NSArray<NSString *> *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:item.path error:nil];
+        return contents.count;
+    }
+    return 0;
+}
 
 /// 获取item的子文件数据
 /// @param parent 文件夹item
@@ -60,10 +84,11 @@ static dispatch_once_t onceToken;
             NSLog(@"error: %@", error);
             continue;
         }
-        HsFileBrowerItem *childItem = [[HsFileBrowerItem alloc] initWithPath:childPath];
-        childItem.attributes = attributes;
-        childItem.parent = parent;
-        [items addObject:childItem];
+        HsFileBrowerItem *child = [[HsFileBrowerItem alloc] initWithPath:childPath];
+        child.attributes = attributes;
+        child.parent = parent;
+        child.childrenCount = [self contentCountWithDirectoryItem:child];
+        [items addObject:child];
     }
     parent.children = items;
     return items;
@@ -87,15 +112,16 @@ static dispatch_once_t onceToken;
 /// @param path 文件路径
 + (BOOL)isLegalPath:(NSString *)path {
     if (!path || ![path isKindOfClass:[NSString class]] || path.length == 0) return NO;
-    NSString *regex = @"[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\\.?";
+    NSString *regex = @"(^//.|^/|^[a-zA-Z])?:?/.+(/$)?";
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regex];
     return [predicate evaluateWithObject:path];
 }
 
 /// 判断文件名是否合法
+/// @param name 文件名
 + (BOOL)isLegalFileName:(NSString *)name {
     if (!name || ![name isKindOfClass:[NSString class]] || name.length == 0) return NO;
-    NSString *regex = @"^[\u4E00-\u9FA5A-Za-z0-9_]+$";
+    NSString *regex = @"^[\u4E00-\u9FA5A-Za-z0-9_ ]+$";
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regex];
     return [predicate evaluateWithObject:name];
 }
@@ -112,16 +138,27 @@ static dispatch_once_t onceToken;
 /// @param path 文件路径
 /// @param error 错误
 + (void)removeItemAtPath:(NSString *)path error:(NSError **)error {
-    if (![self isLegalPath:path]) return;
+    if (![self isLegalPath:path]) {
+        *error = [self error_invalidFilePath:path];
+        return;
+    }
     [[NSFileManager defaultManager] removeItemAtPath:path error:error];
 }
 
 /// 重命名文件
 /// @param path 文件路径
 /// @param error 错误
-+ (void)renameItemAtPath:(NSString *)path error:(NSError **)error {
-    if (![self isLegalPath:path]) return;
-
++ (void)renameItemAtPath:(NSString *)path name:(NSString *)name error:(NSError **)error {
+    if (![self isLegalPath:path]) {
+        *error = [self error_invalidFilePath:path];
+        return;
+    }
+    if (![self isLegalFileName:name]) {
+        *error = [self error_invalidFileName:name];
+        return;
+    }
+    NSString *newPath = [[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:name];
+    [[NSFileManager defaultManager] moveItemAtPath:path toPath:newPath error:error];
 }
 
 /// 记录待处理文件路径，由于粘贴、移动等
@@ -175,8 +212,8 @@ static dispatch_once_t onceToken;
     [self removeItemAtPath:item.path error:error];
 }
 
-+ (void)renameItem:(HsFileBrowerItem *)item error:(NSError **)error {
-    [self renameItemAtPath:item.path error:error];
++ (void)renameItem:(HsFileBrowerItem *)item name:(NSString *)name error:(NSError **)error {
+    [self renameItemAtPath:item.path name:name error:error];
 }
 
 + (void)copyItem:(HsFileBrowerItem *)item {

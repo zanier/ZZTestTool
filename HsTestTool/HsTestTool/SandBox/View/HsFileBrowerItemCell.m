@@ -30,20 +30,22 @@
 - (void)setItem:(HsFileBrowerItem *)item {
     _item = item;
     [self reloadItem];
-    [self.contentView setNeedsLayout];
+    [self setNeedsLayout];
 }
 
 - (void)reloadItem {
     self.textLabel.text = _item.name;
-    self.detailLabel.text = [NSString stringWithFormat:@"%@", _item.modificationDate];
-    NSString *typeString = [_item.extension lowercaseString];
-    if ([typeString isEqualToString:@"png"] || [typeString isEqualToString:@"jpeg"] || [typeString isEqualToString:@"gif"] || [typeString isEqualToString:@"psd"] || [typeString isEqualToString:@"jpg"]) {
+    if (_item.isDir) {
+        self.imageView.image = [HsFileBrowerManager imageWithFileType:_item.type];
+        self.detailLabel.text = [NSString stringWithFormat:@"%li 项", _item.childrenCount];
+    } else if (_item.isImage) {
         NSData *imageData = [NSData dataWithContentsOfFile:_item.path options:NSDataReadingMappedIfSafe error:nil];
-        _imageView.image = [UIImage imageWithData:imageData];
+        self.imageView.image = [UIImage imageWithData:imageData];
+        self.detailLabel.text = [NSString stringWithFormat:@"%@", _item.sizeString];
     } else {
         self.imageView.image = [HsFileBrowerManager imageWithFileType:_item.type];
+        self.detailLabel.text = [NSString stringWithFormat:@"%@", _item.modificationDate];
     }
-    
 }
 
 /// MARK: - rename
@@ -73,31 +75,67 @@
     }
 }
 
-/// MARK: - <UITextViewDelegate>
-
-/// 文字改变
-- (void)textViewDidChange:(UITextView *)textView {
-    /// 改变输入框布局
-    [textView sizeToFit];
-    CGRect frame = self.renameTextView.frame;
-    frame.origin.x = (CGRectGetWidth(self.contentView.bounds) - CGRectGetWidth(self.renameTextView.bounds)) / 2;
-    self.renameTextView.frame = frame;
+- (void)setSelected:(BOOL)selected {
+    [super setSelected:selected];
+//    if (selected) {
+//        self.contentView.backgroundColor = [UIColor grayColor];
+//    } else {
+//        self.contentView.backgroundColor = [UIColor clearColor];
+//    }
 }
 
-/// 文字是否允许改变
+- (void)setHighlighted:(BOOL)highlighted {
+    [super setHighlighted:highlighted];
+    if (highlighted) {
+        //self.contentView.backgroundColor = [UIColor grayColor];
+        if ([self.imageView.layer animationForKey:@"animation"]) {
+            return;
+        }
+        CAKeyframeAnimation *keyFrameAniamtion = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
+        keyFrameAniamtion.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+        keyFrameAniamtion.values = @[
+            @(CGSizeMake(1.0, 1.0)),
+            @(CGSizeMake(0.9, 0.9)),
+            @(CGSizeMake(1.0, 1.0)),
+        ];
+        keyFrameAniamtion.repeatCount = 1;
+        keyFrameAniamtion.duration = 0.5;
+        keyFrameAniamtion.removedOnCompletion = YES;
+        [self.imageView.layer addAnimation:keyFrameAniamtion forKey:@"animation"];
+    } else {
+        //self.contentView.backgroundColor = [UIColor lightGrayColor];
+    }
+}
+
+/// MARK: - <UITextViewDelegate>
+
+/// 文字即将改变
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     if ([@"\n" isEqualToString:text]) {
         /// return 键换行，结束编辑
-        [textView resignFirstResponder];
         /// 代理回调
+        BOOL shouldEnd = YES;
         if ([_delegate respondsToSelector:@selector(cell:shouldEndRenamingWithName:)]) {
-            [_delegate cell:self shouldEndRenamingWithName:self.renameTextView.text];
+            shouldEnd = [_delegate cell:self shouldEndRenamingWithName:self.renameTextView.text];
         }
-        return NO;
+        if (shouldEnd) {
+            [self endRenamingItem];
+            [textView resignFirstResponder];
+        }
+        return shouldEnd;
     }
     return YES;
 }
 
+/// 文字发生改变
+- (void)textViewDidChange:(UITextView *)textView {
+    /// 改变输入框布局
+    CGSize fitedSize = [textView sizeThatFits:CGSizeMake(CGRectGetWidth(self.contentView.bounds), 42)];
+    CGRect frame = self.renameTextView.frame;
+    frame.size = fitedSize;
+    frame.origin.x = (CGRectGetWidth(self.contentView.bounds) - fitedSize.width) / 2;
+    self.renameTextView.frame = frame;
+}
 
 /// MARK: - layout
 
@@ -108,21 +146,22 @@
     [self.contentView addSubview:self.renameTextView];
     self.renameTextView.hidden = YES;
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressAction:)];
+    longPress.minimumPressDuration = 0.3f;
     [self.contentView addGestureRecognizer:longPress];
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
     CGFloat contentWidth = CGRectGetWidth(self.contentView.bounds);
-    CGFloat labelWidth = contentWidth - 16.0f;
+    CGFloat labelWidth = contentWidth;
     CGFloat imageWidth = 65.0f;
     _imageView.frame = CGRectMake((contentWidth - imageWidth) / 2, 10, imageWidth, imageWidth);
     CGSize fitedSize = [_textLabel sizeThatFits:CGSizeMake(labelWidth, 42)];
     CGSize detailFitedSize = [_detailLabel sizeThatFits:CGSizeMake(labelWidth, 42)];
     CGFloat textHeight = fitedSize.height < 42 ? fitedSize.height : 42;
     CGFloat detailHeight = detailFitedSize.height < 42 ? detailFitedSize.height : 42;
-    _textLabel.frame = CGRectMake(8, CGRectGetMaxY(_imageView.frame) + 10, labelWidth, textHeight + 0);
-    _detailLabel.frame = CGRectMake(8, CGRectGetMaxY(_textLabel.frame), labelWidth, detailHeight + 0);
+    _textLabel.frame = CGRectMake(0, CGRectGetMaxY(_imageView.frame) + 10, labelWidth, textHeight + 0);
+    _detailLabel.frame = CGRectMake(0, CGRectGetMaxY(_textLabel.frame) + 5, labelWidth, detailHeight + 0);
     _renameTextView.frame = _textLabel.frame;
 }
 

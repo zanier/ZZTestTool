@@ -18,8 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) NSString *path;
 @property (nonatomic, copy, readonly) NSString *extension;
 @property (nonatomic, assign, readonly) HsFileBrowerFileType type;
-@property (nonatomic, assign, readonly) BOOL isDir;
 @property (nonatomic, strong) NSDictionary *attributes;
+@property (readonly) BOOL isDir;
+@property (readonly) BOOL isImage;
 
 @property (nullable, readonly) NSURL *url;
 @property (nullable, readonly) NSString *sizeString;
@@ -29,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, nullable, weak) HsFileBrowerItem *parent;
 @property (nonatomic, nullable, copy) NSArray<HsFileBrowerItem *> *children;
+@property (nonatomic, assign) NSUInteger childrenCount;
 
 @property (readonly) NSString *accessoryType;
 @property (readonly) NSString *modificationDate;
