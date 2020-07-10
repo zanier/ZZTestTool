@@ -21,7 +21,7 @@ typedef NS_ENUM(NSUInteger, HsFileBrowerFileType) {
     // Video
     HsFileBrowerFileTypeMP4, HsFileBrowerFileTypeAVI, HsFileBrowerFileTypeFLV, HsFileBrowerFileTypeMIDI, HsFileBrowerFileTypeMOV, HsFileBrowerFileTypeMPG, HsFileBrowerFileTypeWMV,
     // Apple
-    HsFileBrowerFileTypeDMG, HsFileBrowerFileTypeIPA, HsFileBrowerFileTypeNumbers, HsFileBrowerFileTypePages, HsFileBrowerFileTypeKeynote,
+    HsFileBrowerFileTypeNSBundle, HsFileBrowerFileTypeDMG, HsFileBrowerFileTypeIPA, HsFileBrowerFileTypeNumbers, HsFileBrowerFileTypePages, HsFileBrowerFileTypeKeynote,
     // Google
     HsFileBrowerFileTypeAPK,
     // Microsoft
@@ -42,6 +42,8 @@ typedef NS_ENUM(NSUInteger, HsFileBrowerFileType) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-function"
 
+/// 通过文件扩展名获取文件类型
+/// @param extension 文件扩展名
 static HsFileBrowerFileType HsFileTypeWithExtension(NSString *extension) {
     HsFileBrowerFileType type = HsFileBrowerFileTypeUnknown;
     if (!extension || ![extension isKindOfClass:[NSString class]] || extension.length == 0) {
@@ -88,7 +90,9 @@ static HsFileBrowerFileType HsFileTypeWithExtension(NSString *extension) {
         type = HsFileBrowerFileTypeWMV;
     }
     /// - Apple
-    else if ([extension compare:@"dmg" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+    else if ([extension compare:@"bundle" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+        type = HsFileBrowerFileTypeNSBundle;
+    } else if ([extension compare:@"dmg" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
         type = HsFileBrowerFileTypeDMG;
     } else if ([extension compare:@"ipa" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
         type = HsFileBrowerFileTypeIPA;
@@ -184,6 +188,8 @@ static HsFileBrowerFileType HsFileTypeWithExtension(NSString *extension) {
     return type;
 }
 
+/// 获取文件类型对应的图片名
+/// @param type 文件类型
 static NSString *HsImageNameWithType(HsFileBrowerFileType type) {
     NSString *typeImageName;
     switch (type) {
@@ -210,6 +216,7 @@ static NSString *HsImageNameWithType(HsFileBrowerFileType type) {
         case HsFileBrowerFileTypeMPG: typeImageName = @"icon_file_type_mpg"; break;
         case HsFileBrowerFileTypeWMV: typeImageName = @"icon_file_type_wmv"; break;
             // Apple
+        case HsFileBrowerFileTypeNSBundle: typeImageName = @"icon_file_type_folder_not_empty"; break;
         case HsFileBrowerFileTypeDMG: typeImageName = @"icon_file_type_dmg"; break;
         case HsFileBrowerFileTypeIPA: typeImageName = @"icon_file_type_ipa"; break;
         case HsFileBrowerFileTypeNumbers: typeImageName = @"icon_file_type_numbers"; break;

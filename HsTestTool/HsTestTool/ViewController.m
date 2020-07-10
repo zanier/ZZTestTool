@@ -82,5 +82,27 @@ static NSString *const ViewController_testFile = @"测试文件";
     }
 }
 
+- (void)move {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    // 获取document目录
+    NSString *documentDirectory = [paths objectAtIndex:0];
+    // 追加文件系统路径
+    NSString *path = documentDirectory;//XXX文件名
+    
+    NSLog(@"path = %@", path);
+    NSArray *resources = @[
+        
+    ];
+    for (NSString *resource in resources) {
+        if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+            NSString *filePath = [[NSBundle mainBundle] pathForResource:resource ofType:nil];
+            NSLog(@"数据库本地filePath --- %@", filePath);
+            [[NSFileManager defaultManager] copyItemAtPath:filePath toPath:path error:nil];
+        }
+    }
+    
+    NSBundle *testToolBundle = [NSBundle bundleWithPath:[[NSBundle bundleForClass:[HsTestBaseViewController class]] pathForResource:@"TestBundle" ofType:@"bundle"]];
+//    testToolBundle.all
+}
 
 @end

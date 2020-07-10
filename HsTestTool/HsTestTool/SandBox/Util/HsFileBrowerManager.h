@@ -30,10 +30,12 @@ static NSString *const HsFileBrowerActionPage_Share     = @"共享";
 
 @property (readonly) BOOL hasDealtPath;
 
-//+ (NSString *)imageNameWithType:(NSString *)typeString;
-+ (HsFileBrowerFileType)fileTypeWithExtension:(NSString *)extension;
-+ (NSString *)imageNameWithType:(HsFileBrowerFileType)type;
-+ (UIImage *)imageNameWithItem:(HsFileBrowerItem *)item;
+////+ (NSString *)imageNameWithType:(NSString *)typeString;
+//+ (HsFileBrowerFileType)fileTypeWithExtension:(NSString *)extension;
+//+ (NSString *)imageNameWithType:(HsFileBrowerFileType)type;
+//+ (UIImage *)imageNameWithItem:(HsFileBrowerItem *)item;
++ (UIImage *)imageWithFileType:(HsFileBrowerFileType)type;
++ (UIImage *)imageWithFileType:(HsFileBrowerFileType)type scale:(NSInteger)scale;
 
 /// 获取item的子文件数据
 /// @param parent 文件夹item
@@ -83,17 +85,11 @@ static NSString *const HsFileBrowerActionPage_Share     = @"共享";
 /// @param error 错误
 + (void)moveAtPath:(NSString *)path toPath:(NSString *)toPath error:(NSError **)error;
 
-///// MARK: deal with item
-//+ (void)removeItem:(HsFileBrowerItem *)item error:(NSError **)error;
-//+ (void)renameItem:(HsFileBrowerItem *)item error:(NSError **)error;
-//+ (void)copyItem:(HsFileBrowerItem *)item;
-
-
 /// 文件大小转换为字符串
 /// @param size 文件大小
 + (NSString *)sizeStringFromSize:(long long)size;
 
-
+/// 日期格式化字符串
 + (NSString *)stringFromDateByDateAndTime:(NSDate *)date;
 + (NSString *)stringFromDateByDate:(NSDate *)date;
 + (NSString *)stringFromDateByTime:(NSDate *)date;

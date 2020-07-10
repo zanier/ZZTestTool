@@ -11,6 +11,7 @@
 		3A60914E24B30C13009D5BB1 /* swift.gif in Resources */ = {isa = PBXBuildFile; fileRef = 3A60914D24B30C13009D5BB1 /* swift.gif */; };
 		AC2A650024B6A65900FF8D6B /* TestPlist.plist in Resources */ = {isa = PBXBuildFile; fileRef = AC2A64FF24B6A65900FF8D6B /* TestPlist.plist */; };
 		AC2A650524B71BF100FF8D6B /* TestBundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = AC2A650424B71BF100FF8D6B /* TestBundle.bundle */; };
+		AC2A650B24B8082B00FF8D6B /* HsFileBrowerPreviewPage.m in Sources */ = {isa = PBXBuildFile; fileRef = AC2A650A24B8082B00FF8D6B /* HsFileBrowerPreviewPage.m */; };
 		AC8E904E24AC1B340086E3A7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AC8E904D24AC1B340086E3A7 /* AppDelegate.m */; };
 		AC8E905424AC1B340086E3A7 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AC8E905324AC1B340086E3A7 /* ViewController.m */; };
 		AC8E905724AC1B340086E3A7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AC8E905524AC1B340086E3A7 /* Main.storyboard */; };
@@ -47,6 +48,8 @@
 		AC2A64FF24B6A65900FF8D6B /* TestPlist.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = TestPlist.plist; path = HsTestTool/TestPlist.plist; sourceTree = SOURCE_ROOT; };
 		AC2A650424B71BF100FF8D6B /* TestBundle.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TestBundle.bundle; sourceTree = "<group>"; };
 		AC2A650624B73F4400FF8D6B /* HsFileBrowerHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HsFileBrowerHeader.h; sourceTree = "<group>"; };
+		AC2A650924B8082B00FF8D6B /* HsFileBrowerPreviewPage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HsFileBrowerPreviewPage.h; sourceTree = "<group>"; };
+		AC2A650A24B8082B00FF8D6B /* HsFileBrowerPreviewPage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HsFileBrowerPreviewPage.m; sourceTree = "<group>"; };
 		AC8E904924AC1B340086E3A7 /* HsTestTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HsTestTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC8E904C24AC1B340086E3A7 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		AC8E904D24AC1B340086E3A7 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -223,6 +226,8 @@
 				AC8E906F24AC1BB30086E3A7 /* HsFileBrowerActionPage.m */,
 				AC8E907024AC1BB30086E3A7 /* HsFileBrowerBriefPage.h */,
 				AC8E907A24AC1BB30086E3A7 /* HsFileBrowerBriefPage.m */,
+				AC2A650924B8082B00FF8D6B /* HsFileBrowerPreviewPage.h */,
+				AC2A650A24B8082B00FF8D6B /* HsFileBrowerPreviewPage.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -382,6 +387,7 @@
 				AC8E909924AC1BB40086E3A7 /* HsPlistBrowerNodeView.m in Sources */,
 				AC8E909A24AC1BB40086E3A7 /* HsPlistBrowerTableView.m in Sources */,
 				AC8E905F24AC1B370086E3A7 /* main.m in Sources */,
+				AC2A650B24B8082B00FF8D6B /* HsFileBrowerPreviewPage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

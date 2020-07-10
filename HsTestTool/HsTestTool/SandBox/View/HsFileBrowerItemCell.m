@@ -41,7 +41,7 @@
         NSData *imageData = [NSData dataWithContentsOfFile:_item.path options:NSDataReadingMappedIfSafe error:nil];
         _imageView.image = [UIImage imageWithData:imageData];
     } else {
-        self.imageView.image = [NSBundle hs_imageNamed:_item.imageName type:@"png" inDirectory:@"FileType"];
+        self.imageView.image = [HsFileBrowerManager imageWithFileType:_item.type];
     }
     
 }

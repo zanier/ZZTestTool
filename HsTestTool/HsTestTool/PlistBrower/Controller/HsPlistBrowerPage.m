@@ -134,7 +134,7 @@
         return;
     }
     _object = object;
-    _rootNode = [[HsPlistBrowerNode alloc] initWithKey:nil value:_object];
+    _rootNode = [[HsPlistBrowerNode alloc] initWithKey:@"Root" value:_object];
     self.browerTableView.rootNode = _rootNode;
     [self.browerTableView reloadData];
 }

@@ -88,9 +88,8 @@ static const CGFloat HsPlistBrowerPageTypeViewWidth = 90.0f;
     _tableView.dataSource = self;
     _tableView.delegate = self;
     _tableView.backgroundColor = UIColor.clearColor;
-    _tableView.tableFooterView = [[UIView alloc] init];
+    _tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 64)];
     _tableView.rowHeight = 45.0f;
-    //_tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.showsVerticalScrollIndicator = NO;
     return _tableView;
 }
@@ -102,10 +101,9 @@ static const CGFloat HsPlistBrowerPageTypeViewWidth = 90.0f;
     _typeTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     _typeTableView.dataSource = self;
     _typeTableView.delegate = self;
-    _typeTableView.tableFooterView = [[UIView alloc] init];
+    _typeTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 64)];
     _typeTableView.backgroundColor = UIColor.clearColor;
     _typeTableView.rowHeight = 45.0f;
-    //_typeTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _typeTableView.allowsSelection = NO;
     return _typeTableView;
 }

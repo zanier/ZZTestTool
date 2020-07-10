@@ -150,7 +150,7 @@ static NSString *const HsFileBrowerBriefCell_Location = @"位置";
 }
 
 - (void)setupItem {
-    _headerImageView.image = [HsFileBrowerManager imageNameWithItem:_item];
+    _headerImageView.image = [HsFileBrowerManager imageWithFileType:_item.type scale:3];
     _headerNameLabel.text = _item.name;
     _headerTypeLabel.text = _item.isDir ? @"文件夹" : @"文件";
     [self.view setNeedsLayout];

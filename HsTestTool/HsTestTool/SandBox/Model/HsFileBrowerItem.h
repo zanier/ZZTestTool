@@ -8,21 +8,20 @@
 
 #import <Foundation/Foundation.h>
 #import "HsFileBrowerHeader.h"
+#import <QuickLook/QuickLook.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HsFileBrowerItem : NSObject
+@interface HsFileBrowerItem : NSObject <QLPreviewItem>
 
 @property (nonatomic, strong, readonly) NSString *name;
 @property (nonatomic, strong, readonly) NSString *path;
 @property (nonatomic, copy, readonly) NSString *extension;
 @property (nonatomic, assign, readonly) HsFileBrowerFileType type;
-@property (nonatomic, strong) NSDictionary *attributes;
 @property (nonatomic, assign, readonly) BOOL isDir;
+@property (nonatomic, strong) NSDictionary *attributes;
 
 @property (nullable, readonly) NSURL *url;
-@property (nullable, readonly) NSString *imageName;
-//@property (nullable, readonly) NSString *typeString;
 @property (nullable, readonly) NSString *sizeString;
 @property (nullable, readonly) NSString *createDateString;
 @property (nullable, readonly) NSString *modifyDateString;
@@ -33,6 +32,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (readonly) NSString *accessoryType;
 @property (readonly) NSString *modificationDate;
+
+@property(readonly, nullable, nonatomic) NSURL *previewItemURL;
+@property(readonly, nullable, nonatomic) NSString *previewItemTitle;
 
 - (instancetype)initWithPath:(NSString *)path;
 

@@ -17,6 +17,9 @@ static CGFloat const HsFileBrowerScrollHeaderHeight = 49.0f;
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) NSMutableArray<NSString *> *mutableTextArray;
+
+//@property (nonatomic, nullable, copy) NSArray<NSString *> *textArray;
+//@property (nonatomic, nullable, copy) NSArray<NSString *> *imageArray;
 @property (nonatomic, strong) NSMutableArray<UIButton *> *buttonArray;
 @property (nonatomic, strong) NSMutableArray<UIView *> *nextImgArray;
 
@@ -24,15 +27,15 @@ static CGFloat const HsFileBrowerScrollHeaderHeight = 49.0f;
 
 @implementation HsFileBrowerScrollHeader
 
-@dynamic textArray;
+//@dynamic textArray;
 
-+ (instancetype)viewWithextArray:(NSArray<NSString *> *)textArray {
++ (instancetype)viewWithextArray:(NSArray<NSString *> *)textArray imageArray:(NSArray<UIImage *> *)imageArray {
     CGFloat width = [UIScreen mainScreen].bounds.size.width;
-    HsFileBrowerScrollHeader *view = [[HsFileBrowerScrollHeader alloc] initWithFrame:CGRectMake(0, 0, width, HsFileBrowerScrollHeaderHeight) textArray:textArray];
+    HsFileBrowerScrollHeader *view = [[HsFileBrowerScrollHeader alloc] initWithFrame:CGRectMake(0, 0, width, HsFileBrowerScrollHeaderHeight) textArray:textArray imageArray:imageArray];
     return view;
 }
 
-- (instancetype)initWithFrame:(CGRect)frame textArray:(NSArray<NSString *> *)textArray {
+- (instancetype)initWithFrame:(CGRect)frame textArray:(NSArray<NSString *> *)textArray imageArray:(NSArray<UIImage *> *)imageArray {
     if (self = [super initWithFrame:frame]) {
         _title = @"当前路径：";
         [self addSubview:self.scrollView];
@@ -42,7 +45,11 @@ static CGFloat const HsFileBrowerScrollHeaderHeight = 49.0f;
         _nextImgArray = [NSMutableArray array];
         // 添加各级
         [_mutableTextArray enumerateObjectsUsingBlock:^(NSString * _Nonnull text, NSUInteger idx, BOOL * _Nonnull stop) {
-            [self pushText:text];
+            UIImage *image;
+            if (idx < imageArray.count) {
+                image = imageArray[idx];
+            }
+            [self _pushText:text image:image];
         }];
         [self reloadAnimated:NO];
     }
@@ -64,7 +71,7 @@ static CGFloat const HsFileBrowerScrollHeaderHeight = 49.0f;
         _nextImgArray = [NSMutableArray array];
         // 添加各级
         [_mutableTextArray enumerateObjectsUsingBlock:^(NSString * _Nonnull text, NSUInteger idx, BOOL * _Nonnull stop) {
-            [self pushText:text];
+            [self _pushText:text image:nil];
         }];
         [self reloadAnimated:YES];
     }
@@ -93,12 +100,17 @@ static CGFloat const HsFileBrowerScrollHeaderHeight = 49.0f;
 
 /// MARK: public push
 - (void)push:(NSString *)text {
-    [self pushText:text];
+    [self _pushText:text image:nil];
+    [self reloadAnimated:YES];
+}
+
+- (void)push:(NSString *)text image:(UIImage *)image {
+    [self _pushText:text image:image];
     [self reloadAnimated:YES];
 }
 
 /// private push
-- (void)pushText:(NSString *)text {
+- (void)_pushText:(NSString *)text image:(UIImage *)image {
     if (!text) return;
     CGFloat left;
     NSInteger idx = self.buttonArray.count;
@@ -117,7 +129,7 @@ static CGFloat const HsFileBrowerScrollHeaderHeight = 49.0f;
         left += CGRectGetWidth(nextImageView.bounds);
     }
     /// 添加 button
-    UIButton *button = [self buttonWithText:text];
+    UIButton *button = [self buttonWithText:text image:image];
     CGRect frame = button.frame;
     frame.origin.x = left;
     button.frame = frame;
@@ -235,13 +247,19 @@ static CGFloat const HsFileBrowerScrollHeaderHeight = 49.0f;
     return HsFileBrowerScrollHeaderHeight;
 }
 
-- (UIButton *)buttonWithText:(NSString *)text {
+- (UIButton *)buttonWithText:(NSString *)text image:(UIImage *)image {
     UIColor *btnBlue = [UIColor colorWithRed:(0x0D/255.0) green:(0x86/255.0) blue:(0xFF/255.0) alpha:1];
     UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
     [button setTitle:text forState:UIControlStateNormal];
     [button setTitleColor:btnBlue forState:UIControlStateNormal];
     [button setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
-        CGSize fitedSize = [button sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width, HsFileBrowerScrollHeaderHeight)];
+    [button setImage:image forState:UIControlStateNormal];
+    button.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    [button setImageEdgeInsets:UIEdgeInsetsMake(15, 0, 15, 0)]; //上左下右
+//    CGRect frame = button.imageView.frame;
+//    frame.size.width = HsFileBrowerScrollHeaderHeight - 15 * 2;
+//    button.imageView.frame = frame;
+    CGSize fitedSize = [button sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width, HsFileBrowerScrollHeaderHeight)];
     button.frame = CGRectMake(0, 0, fitedSize.width, CGRectGetHeight(self.bounds));
     [button addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
     return button;

@@ -30,18 +30,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HsFileBrowerScrollHeader : UIView
 
-+ (instancetype)viewWithextArray:(nullable NSArray<NSString *> *)textArray;
-- (instancetype)initWithFrame:(CGRect)frame textArray:(nullable NSArray<NSString *> *)textArray;
++ (instancetype)viewWithextArray:(nullable NSArray<NSString *> *)textArray imageArray:(nullable NSArray<UIImage *> *)imageArray;
+- (instancetype)initWithFrame:(CGRect)frame textArray:(nullable NSArray<NSString *> *)textArray imageArray:(nullable NSArray<UIImage *> *)imageArray;
 
 @property (nonatomic, nullable, copy) NSString *title;  /// 标题文字，默认为 "当前路径："
 
-@property (nonatomic, nullable, copy) NSArray<NSString *> *textArray;
-
 @property (nonatomic, nullable, weak) id<HsFileBrowerScrollHeaderDelegate> delegate;
+
+- (NSArray<NSString *> *)textArray;
 
 /// 添加新的一级
 /// @param text 新一级的文字
 - (void)push:(NSString *)text;
+- (void)push:(NSString *)text image:(UIImage *)image;
 
 /// 弹出最后一级
 - (void)pop;

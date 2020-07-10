@@ -27,30 +27,39 @@
     return self;
 }
 
-- (instancetype)initWithPath:(NSString *)path name:(NSString *)name attributes:(NSDictionary *)attributes {
-    return [self initWithPath:path name:name attributes:attributes parent:nil];
+- (void)setAttributes:(NSDictionary *)attributes {
+    _attributes = [attributes copy];
+    if ([NSFileTypeDirectory isEqualToString:_attributes[NSFileType]]) {
+        _type = HsFileBrowerFileTypeDirectory;
+    }
 }
 
-- (instancetype)initWithPath:(NSString *)path name:(NSString *)name attributes:(NSDictionary *)attributes parent:(HsFileBrowerItem *)parent {
-    if (self = [super init]) {
-        _path = [path copy];
-        _name = [name copy];
-        _attributes = [attributes copy];
-        _parent = parent;
-//        _isDir = [NSFileTypeDirectory isEqualToString:_attributes[NSFileType]];
-    }
-    return self;
-}
+//- (instancetype)initWithPath:(NSString *)path name:(NSString *)name attributes:(NSDictionary *)attributes {
+//    return [self initWithPath:path name:name attributes:attributes parent:nil];
+//}
+//
+//- (instancetype)initWithPath:(NSString *)path name:(NSString *)name attributes:(NSDictionary *)attributes parent:(HsFileBrowerItem *)parent {
+//    if (self = [super init]) {
+//        _path = [path copy];
+//        _name = [name copy];
+//        _attributes = [attributes copy];
+//        _parent = parent;
+////        _isDir = [NSFileTypeDirectory isEqualToString:_attributes[NSFileType]];
+//    }
+//    return self;
+//}
 
 /// MARK: -
 
 - (BOOL)isDir {
-    return [NSFileTypeDirectory isEqualToString:_attributes[NSFileType]];;
+    return
+    self.type == HsFileBrowerFileTypeDirectory ||
+    self.type == HsFileBrowerFileTypeNSBundle;
 }
 
 - (NSURL *)url {
     if (_path) {
-        return [NSURL URLWithString:_path];
+        return [NSURL fileURLWithPath:_path isDirectory:self.isDir];
     }
     return nil;
 }
@@ -70,10 +79,6 @@
     return HsImageNameWithType(_type);
 }
 
-//- (NSString *)typeString {
-//    return _path.pathExtension;
-//}
-
 - (NSString *)sizeString {
     return [HsFileBrowerManager sizeStringFromSize:_attributes.fileSize];
 }
@@ -90,6 +95,15 @@
     return [HsFileBrowerManager stringFromDateByDateAndTime:_attributes.fileModificationDate];
 }
 
+/// MARK: - <QLPreviewItem>
+
+- (NSURL *)previewItemURL {
+    return self.url;
+}
+
+- (NSString *)previewItemTitle {
+    return self.name;
+}
 
 @end
 
