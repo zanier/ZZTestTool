@@ -29,7 +29,7 @@
 
 - (void)setAttributes:(NSDictionary *)attributes {
     _attributes = [attributes copy];
-    if ([NSFileTypeDirectory isEqualToString:_attributes[NSFileType]]) {
+    if (!_type && [NSFileTypeDirectory isEqualToString:_attributes[NSFileType]]) {
         _type = HsFileBrowerFileTypeDirectory;
     }
 }

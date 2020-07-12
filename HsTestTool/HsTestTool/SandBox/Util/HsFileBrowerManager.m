@@ -304,40 +304,25 @@ static NSString *const HsFileBrowerErrorDomin = @"HsFileBrowerErrorDomin";
     NSString *x2ImageName = [NSString stringWithFormat:@"%@@2x", imageName];
     NSString *x3ImageName = [NSString stringWithFormat:@"%@@3x", imageName];
     NSInteger scale = (NSInteger)[UIScreen mainScreen].scale;
+    UIImage *image;
     switch (scale) {
         case 1:
-            imageName = x1ImageName;
-            if (!imageName) {
-                imageName = x2ImageName;
-            }
-            if (!imageName) {
-                imageName = x3ImageName;
-            }
-            break;
+            image = [NSBundle hs_imageNamed:x1ImageName type:@"png" inDirectory:@"FileType"];
+            if (image) return image;
         case 2:
-            imageName = x2ImageName;
-            if (!imageName) {
-                imageName = x3ImageName;
-            }
-            if (!imageName) {
-                imageName = x1ImageName;
-            }
-            break;
+            image = [NSBundle hs_imageNamed:x2ImageName type:@"png" inDirectory:@"FileType"];
+            if (image) return image;
         case 3:
-            imageName = x3ImageName;
-            if (!imageName) {
-                imageName = x2ImageName;
-            }
-            if (!imageName) {
-                imageName = x1ImageName;
-            }
-            break;
+            image = [NSBundle hs_imageNamed:x3ImageName type:@"png" inDirectory:@"FileType"];
+            if (image) return image;
         default:
-            // 默认选择 @2x 的
-            imageName = x2ImageName;
-            break;
+            image = [NSBundle hs_imageNamed:x1ImageName type:@"png" inDirectory:@"FileType"];
+            if (image) return image;
+            image = [NSBundle hs_imageNamed:x2ImageName type:@"png" inDirectory:@"FileType"];
+            if (image) return image;
+            image = [NSBundle hs_imageNamed:x3ImageName type:@"png" inDirectory:@"FileType"];
+            if (image) return image;
     }
-    UIImage *image = [NSBundle hs_imageNamed:imageName type:@"png" inDirectory:@"FileType"];
     return image;
 }
 

@@ -12,7 +12,7 @@
 #import <Foundation/Foundation.h>
 
 typedef NS_ENUM(NSUInteger, HsFileBrowerFileType) {
-    HsFileBrowerFileTypeUnknown,
+    HsFileBrowerFileTypeUnknown = 0,
     HsFileBrowerFileTypeDirectory,
     // Image
     HsFileBrowerFileTypeJPG, HsFileBrowerFileTypePNG, HsFileBrowerFileTypeGIF, HsFileBrowerFileTypeSVG, HsFileBrowerFileTypeBMP, HsFileBrowerFileTypeTIF,
@@ -216,7 +216,7 @@ static NSString *HsImageNameWithType(HsFileBrowerFileType type) {
         case HsFileBrowerFileTypeMPG: typeImageName = @"icon_file_type_mpg"; break;
         case HsFileBrowerFileTypeWMV: typeImageName = @"icon_file_type_wmv"; break;
             // Apple
-        case HsFileBrowerFileTypeNSBundle: typeImageName = @"icon_file_type_folder_not_empty"; break;
+        case HsFileBrowerFileTypeNSBundle: typeImageName = @"icon_file_type_bundle"; break;
         case HsFileBrowerFileTypeDMG: typeImageName = @"icon_file_type_dmg"; break;
         case HsFileBrowerFileTypeIPA: typeImageName = @"icon_file_type_ipa"; break;
         case HsFileBrowerFileTypeNumbers: typeImageName = @"icon_file_type_numbers"; break;

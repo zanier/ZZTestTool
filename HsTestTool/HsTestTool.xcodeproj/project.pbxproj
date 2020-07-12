@@ -235,9 +235,9 @@
 		AC8E90A524AC1F5A0086E3A7 /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				AC2A650624B73F4400FF8D6B /* HsFileBrowerHeader.h */,
 				AC8E906924AC1BB30086E3A7 /* HsFileBrowerManager.h */,
 				AC8E907524AC1BB30086E3A7 /* HsFileBrowerManager.m */,
-				AC2A650624B73F4400FF8D6B /* HsFileBrowerHeader.h */,
 			);
 			path = Util;
 			sourceTree = "<group>";
