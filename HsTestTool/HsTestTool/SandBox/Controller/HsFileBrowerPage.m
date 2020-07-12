@@ -70,10 +70,10 @@
     UIImage *moreBtnImage = [NSBundle hs_imageNamed:@"icon_barBtn_more@2x" type:@"png" inDirectory:nil];
     UIButton *barButton = [UIButton buttonWithType:UIButtonTypeSystem];
     barButton.tintColor = [UIColor systemBlueColor];
-    [barButton setImage:moreBtnImage forState:UIControlStateNormal];
     barButton.frame = CGRectMake(200, 200, 25, 25);
+    [barButton setImage:moreBtnImage forState:UIControlStateNormal];
+    [barButton addTarget:self action:@selector(presentPopoverWithRightButton:) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:barButton];
-    
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressAction:)];
     [self.view addGestureRecognizer:longPress];
     [self.view addSubview:self.collectionView];
@@ -348,6 +348,36 @@
     }
 }
 
+/// MARK: - right barbutton action
+
+- (void)presentPopoverWithRightButton:(UIButton *)button {
+    NSArray *dataSource = @[
+        @[
+            HsFileBrowerActionPage_Paste,
+            HsFileBrowerActionPage_Copy,
+            HsFileBrowerActionPage_Move,
+            HsFileBrowerActionPage_Delete,
+        ],
+        @[
+            HsFileBrowerActionPage_Brief,
+            HsFileBrowerActionPage_Rename,
+        ],
+        @[
+            HsFileBrowerActionPage_Share,
+        ],
+    ];
+    HsFileBrowerActionPage *testVC = [[HsFileBrowerActionPage alloc] initWithItem:_item actionNames:dataSource sourceView:button];
+    testVC.delegate = self;
+    testVC.modalPresentationStyle = UIModalPresentationPopover;
+    testVC.popoverPresentationController.delegate = self;
+    testVC.popoverPresentationController.sourceView = button;
+    testVC.popoverPresentationController.sourceRect = button.bounds;
+    testVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionAny;
+    //testVC.popoverPresentationController.backgroundColor = [UIColor redColor];
+    testVC.popoverPresentationController.canOverlapSourceViewRect = NO;
+    [self presentViewController:testVC animated:YES completion:nil];
+}
+
 /// MARK: - item long press action
 
 - (void)presentFileActionWithItem:(HsFileBrowerItem *)item fromCell:(HsFileBrowerItemCell *)cell {
@@ -377,8 +407,6 @@
     }
     HsFileBrowerActionPage *testVC = [[HsFileBrowerActionPage alloc] initWithItem:item actionNames:dataSource sourceView:cell];
     testVC.delegate = self;
-    //testVC.preferredContentSize = testVC.preferredContentSize;
-    //testVC.preferredContentSize = CGSizeMake(180, 300);
     testVC.modalPresentationStyle = UIModalPresentationPopover;
     testVC.popoverPresentationController.delegate = self;
     testVC.popoverPresentationController.sourceView = cell.imageView;

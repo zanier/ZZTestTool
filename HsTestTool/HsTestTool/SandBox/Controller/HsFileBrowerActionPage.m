@@ -56,62 +56,69 @@
 //    }
 //
 //    [self.view addSubview:self.blurEffectView];
+    ////    [self.view addSubview:self.imageView];
     
     [self setupItem];
-    CGFloat tableWidth = 240.0f;
-    CGFloat headerHeight = [self tableView:self.tableView heightForHeaderInSection:1];
-//    headerHeight = 0;
-    CGFloat tableHeight = _rowCount * self.tableView.rowHeight + (_dataSource.count - 1) * headerHeight;
-    //self.tableView.frame = CGRectMake(0, 0, tableWidth, tableHeight);
-    self.preferredContentSize = CGSizeMake(tableWidth, tableHeight);
-//    [self.view addSubview:self.imageView];
+//    CGFloat tableWidth = 240.0f;
+//    CGFloat headerHeight = [self tableView:self.tableView heightForHeaderInSection:1];
+////    headerHeight = 0;
+//    CGFloat tableHeight = _rowCount * self.tableView.rowHeight + (_dataSource.count - 1) * headerHeight;
+//    //self.tableView.frame = CGRectMake(0, 0, tableWidth, tableHeight);
+//    CGRect frame = self.view.frame;
+//    if (self.popoverPresentationController.permittedArrowDirections == UIPopoverArrowDirectionDown) {
+//        frame.origin.y = 16;
+//    }
+//    self.tableView.frame = frame;
+//
+//    self.preferredContentSize = CGSizeMake(tableWidth, tableHeight);
     [self.view addSubview:self.tableView];
-//    [self.tableView reloadData];
 }
 
-//- (CGSize)preferredContentSize {
-////    return self.tableView.bounds.size;
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    CGFloat tableWidth = 240.0f;
+    CGFloat headerHeight = [self tableView:self.tableView heightForHeaderInSection:1];
+    CGFloat tableHeight = _rowCount * self.tableView.rowHeight + (_dataSource.count - 1) * headerHeight;
+    CGRect frame = self.view.frame;
+    if (self.popoverPresentationController.arrowDirection == UIPopoverArrowDirectionUp) {
+        frame.origin.y = 14;
+    }
+    self.tableView.frame = frame;
+    self.preferredContentSize = CGSizeMake(tableWidth, tableHeight);
+    return;
+        
+    
+//    self.tableView.frame = self.view.bounds;
+//    return;
+//    CGFloat perH = UIScreen.mainScreen.bounds.size.width / 3;
+//    CGFloat perV = UIScreen.mainScreen.bounds.size.height / 2;
+//    NSInteger locH = 0, locV = 0;
+//    if (_sourceView) {
+//        locH = (CGRectGetMidX(_sourceView.frame) / perH);
+//        locV = (CGRectGetMidY(_sourceView.frame) / perV);
+//    }
+//
+//    CGFloat imageTop;
+//    CGFloat imageWidth = 65.0f;
+//    if (locV <= 0) imageTop = 100.0f;
+//    else imageTop = CGRectGetHeight(self.view.frame) - 88 - imageWidth;
+//    CGFloat imageLeft = perH * (locH + 0.5) - imageWidth / 2;
+//    _imageView.frame = CGRectMake(imageLeft, imageTop, imageWidth, imageWidth);
+//
 //    CGFloat tableWidth = 240.0f;
 //    CGFloat headerHeight = [self tableView:_tableView heightForHeaderInSection:1];
 //    CGFloat tableHeight = _rowCount * _tableView.rowHeight + (_dataSource.count - 1) * headerHeight;
 //
-//    return CGSizeMake(tableWidth, tableHeight);
-//}
-
-- (void)viewWillLayoutSubviews {
-    [super viewWillLayoutSubviews];
-//    return;
-    self.tableView.frame = self.view.bounds;
-    return;
-    CGFloat perH = UIScreen.mainScreen.bounds.size.width / 3;
-    CGFloat perV = UIScreen.mainScreen.bounds.size.height / 2;
-    NSInteger locH = 0, locV = 0;
-    if (_sourceView) {
-        locH = (CGRectGetMidX(_sourceView.frame) / perH);
-        locV = (CGRectGetMidY(_sourceView.frame) / perV);
-    }
-    
-    CGFloat imageTop;
-    CGFloat imageWidth = 65.0f;
-    if (locV <= 0) imageTop = 100.0f;
-    else imageTop = CGRectGetHeight(self.view.frame) - 88 - imageWidth;
-    CGFloat imageLeft = perH * (locH + 0.5) - imageWidth / 2;
-    _imageView.frame = CGRectMake(imageLeft, imageTop, imageWidth, imageWidth);
-    
-    CGFloat tableWidth = 240.0f;
-    CGFloat headerHeight = [self tableView:_tableView heightForHeaderInSection:1];
-    CGFloat tableHeight = _rowCount * _tableView.rowHeight + (_dataSource.count - 1) * headerHeight;
-    
-    CGFloat left = perH * (locH + 0.5) - tableWidth / 2;
-    CGFloat minLeft = 32;
-    CGFloat maxLeft = CGRectGetWidth(self.view.bounds) - minLeft - tableWidth;
-    if (left < minLeft) left = minLeft;
-    if (left > maxLeft) left = maxLeft;
-    CGFloat top;
-    if (locV <= 0) top = CGRectGetMaxY(_imageView.frame) + 20;
-    else top = CGRectGetMinY(_imageView.frame) - 20 - tableHeight;
-
-    _tableView.frame = CGRectMake(left, top, tableWidth, tableHeight);
+//    CGFloat left = perH * (locH + 0.5) - tableWidth / 2;
+//    CGFloat minLeft = 32;
+//    CGFloat maxLeft = CGRectGetWidth(self.view.bounds) - minLeft - tableWidth;
+//    if (left < minLeft) left = minLeft;
+//    if (left > maxLeft) left = maxLeft;
+//    CGFloat top;
+//    if (locV <= 0) top = CGRectGetMaxY(_imageView.frame) + 20;
+//    else top = CGRectGetMinY(_imageView.frame) - 20 - tableHeight;
+//
+//    _tableView.frame = CGRectMake(left, top, tableWidth, tableHeight);
 }
 
 - (void)setupItem {
@@ -181,9 +188,12 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:(UITableViewCellStyleValue1) reuseIdentifier:@"cell"];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
         cell.backgroundColor = UIColor.whiteColor;
         cell.separatorInset = UIEdgeInsetsZero;
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 21, 21)];
+        cell.accessoryView = imageView;
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
     }
     NSString *text = _dataSource[indexPath.section][indexPath.row];
     cell.textLabel.text = text;
@@ -191,6 +201,19 @@
         cell.textLabel.textColor = UIColor.redColor;
     } else {
         cell.textLabel.textColor = UIColor.darkTextColor;
+    }
+    
+    UIImageView *imageView = cell.accessoryView;
+    if ([HsFileBrowerActionPage_Delete isEqualToString:text]) {
+        imageView.image = [NSBundle hs_imageNamed:@"delete" type:@"png" inDirectory:@"ActionIcon"];
+    } else if ([HsFileBrowerActionPage_Brief isEqualToString:text]) {
+        imageView.image = [NSBundle hs_imageNamed:@"brief" type:@"png" inDirectory:@"ActionIcon"];
+    } else if ([HsFileBrowerActionPage_Copy isEqualToString:text]) {
+        imageView.image = [NSBundle hs_imageNamed:@"share" type:@"png" inDirectory:@"ActionIcon"];
+    } else if ([HsFileBrowerActionPage_Paste isEqualToString:text]) {
+        imageView.image = [NSBundle hs_imageNamed:@"share" type:@"png" inDirectory:@"ActionIcon"];
+    } else if ([HsFileBrowerActionPage_Rename isEqualToString:text]) {
+        imageView.image = [NSBundle hs_imageNamed:@"share" type:@"png" inDirectory:@"ActionIcon"];
     }
     return cell;
 }
