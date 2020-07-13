@@ -30,16 +30,40 @@
 
 @implementation HsFileBrowerController
 
+/// MARK: - init
+
++ (instancetype)createPage:(NSDictionary *)params {
+    NSString *rootPath = nil;
+    if (params && params[HsFileBrowerControllerRootPathKey]) {
+        rootPath = params[HsFileBrowerControllerRootPathKey];
+    }
+    HsFileBrowerController *page = [[HsFileBrowerController alloc] initWithRootPath:rootPath];
+    return page;
+}
+
+/// 初始化方法
+/// @param rootPath 根目录文件路径
+- (instancetype)initWithRootPath:(NSString *)rootPath {
+    if (self = [super init]) {
+        _rootPath = [rootPath copy];
+    }
+    return self;
+}
+
+/// MARK: - life cycle
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     [self.view addSubview:self.headerToolBar];
     [self.headerToolBar addSubview:self.scrollHeader];
-    
     self.navigationController.navigationBar.hidden = YES;
-    
-    [self enterSandBox];
-//    [self enterMainBundle];
+    /// 进入根目录
+    if (_rootPath) {
+        [self loadRootPath:_rootPath];
+    } else {
+        [self enterSandBox];
+        //[self enterMainBundle];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -53,13 +77,24 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+/// MARK: - root path
+
+- (void)setRootPath:(NSString *)rootPath {
+    if (![_rootPath isEqualToString:rootPath]) {
+        _rootPath = [rootPath copy];
+        [self loadRootPath:_rootPath];
+    }
+}
+
 - (void)enterMainBundle {
-    NSString *homeDirectory = [[NSBundle mainBundle] bundlePath];
-    [self loadRootPath:homeDirectory];
+    NSString *bundlePath = [[NSBundle mainBundle] bundlePath];
+    _rootPath = bundlePath;
+    [self loadRootPath:bundlePath];
 }
 
 - (void)enterSandBox {
     NSString *homeDirectory = NSHomeDirectory();
+    _rootPath = homeDirectory;
     [self loadRootPath:homeDirectory];
 }
 
@@ -67,24 +102,27 @@
     NSLog(@"Root Path: \n%@", rootPath);
     NSError *error = nil;
     NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:rootPath error:&error];
-    if (error) {
-        return;
-    }
+    if (error) return;
     _currentItem = [[HsFileBrowerItem alloc] initWithPath:rootPath];
     _currentItem.attributes = attributes;
-    
     // root page
     _rootPage = [[HsFileBrowerPage alloc] init];
     _rootPage.delegate = self;
     [_rootPage reloadAtDirectoryWithItem:_currentItem];
     _rootPage.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(pop)];
+    _rootPage.navigationItem.leftBarButtonItem.tintColor = UIColor.systemBlueColor;
     // push
     self.navigation = [[UINavigationController alloc] initWithRootViewController:_rootPage];
     self.navigation.delegate = self;
     [self addChildViewController:_navigation];
     [self.navigation.navigationBar setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
+    self.navigation.navigationBar.tintColor = UIColor.systemBlueColor;
+    self.navigation.navigationItem.titleView.backgroundColor = UIColor.darkTextColor;
     self.navigation.navigationBar.shadowImage = [[UIImage alloc] init];
-    [self.view addSubview:_navigation.view];
+    [self.view addSubview:self.navigation.view];
+    [self.navigation.navigationBar setTitleTextAttributes:@{
+        NSForegroundColorAttributeName : UIColor.darkTextColor,
+    }];
     // 进入下级目录
     [self.pathNavigation addObject:_currentItem];
     // 移动到当前目录

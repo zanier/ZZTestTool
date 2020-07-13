@@ -28,10 +28,12 @@
 
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
+    CGPoint topPoint = [self.view convertPoint:CGPointZero toView:[UIApplication sharedApplication].windows.firstObject];
     CGFloat searBarBottom = HsFileBrower_StatusBarHeight + HsFileBrower_SearchBarHeight;
     if (self.navigationController.isBeingPresented) {
         searBarBottom = HsFileBrower_SearchBarHeight;
     }
+    searBarBottom -= topPoint.y;
     self.browerTableView.frame = CGRectMake(0, searBarBottom, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - searBarBottom);
 }
 

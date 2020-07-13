@@ -10,15 +10,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// `createPage:` 参数中基本类型对象的key
-static NSString *const HsPlistBrowerPageObjectCreateKey = @"HsPlistBrowerPageObjectCreateKey";
-/// `createPage:` 参数中Plist文件路径的key
-static NSString *const HsPlistBrowerPagePlsitFilePathCreateKey = @"HsPlistBrowerPagePlsitFilePathCreateKey";
-
 /// Plist 浏览界面，用于调试查看 Info.plist、JF-info.plist 等文件
 @interface HsPlistBrowerPage : HsTestBaseViewController
 
-+ (id)createPage:(NSDictionary*)params;
+/// 初始化方法
+- (instancetype)init;
 
 /// 初始化方法
 /// @param anObject 基本类型数据，如NSArray、NSDictionary、NSString、NSNumber、NSData等
@@ -28,8 +24,11 @@ static NSString *const HsPlistBrowerPagePlsitFilePathCreateKey = @"HsPlistBrower
 /// @param path plist文件路径
 - (instancetype)initWithPlistFilePath:(NSString *)path;
 
-/// plist 根节点数据
-@property (nonatomic, strong) id object;
+/// plist 根结点数据
+@property (nonatomic, nullable, strong) id object;
+
+/// 根结点文件（.plist）路径
+@property (nonatomic, nullable, copy) NSString *path;
 
 @end
 

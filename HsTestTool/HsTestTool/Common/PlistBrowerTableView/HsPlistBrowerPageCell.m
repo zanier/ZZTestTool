@@ -11,15 +11,12 @@
 
 @interface HsPlistBrowerPageCell ()
 
-//@property (nonatomic, strong) UILabel *typeLabel;
-
 @end
 
 @implementation HsPlistBrowerPageCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-        //self.accessoryView = self.typeLabel;
         self.detailTextLabel.textColor = UIColor.grayColor;
     }
     return self;
@@ -36,8 +33,6 @@
     _node = node;
     // 设置缩进
     self.indentationLevel = node.depth;
-    // 类型
-    //self.typeLabel.text = node.typeString;
     id value = node.value;
     NSString *valueString = nil;
     if ([value isKindOfClass:[NSArray class]]) {
@@ -45,13 +40,13 @@
         // text:    key
         // detail:  (0 item)
         NSInteger count = ((NSArray *)value).count;
-        valueString =  [NSString stringWithFormat:@"(%li %@)", count, (count == 1) ? @"item" : @"items"];
+        valueString =  [NSString stringWithFormat:@"(%li %@)", (long)count, (count == 1) ? @"item" : @"items"];
     } else if ([value isKindOfClass:[NSDictionary class]]) {
         // 字典
         // text:    key
         // detail:  (0 item)
         NSInteger count = ((NSDictionary *)value).count;
-        valueString =  [NSString stringWithFormat:@"(%li %@)", count, (count == 1) ? @"item" : @"items"];
+        valueString =  [NSString stringWithFormat:@"(%li %@)", (long)count, (count == 1) ? @"item" : @"items"];
     } else if ([value isKindOfClass:[NSNumber class]]) {
         // 数字
         // text:    0
@@ -66,7 +61,7 @@
         // 数据
         // text:    key
         // detail:  (0 B)
-        valueString = [NSString stringWithFormat:@"(%li B)", ((NSData *)value).length];
+        valueString = [NSString stringWithFormat:@"(%lu B)", (unsigned long)((NSData *)value).length];
     }
     
     if (node.key) {

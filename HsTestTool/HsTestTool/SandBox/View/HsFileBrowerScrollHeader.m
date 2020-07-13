@@ -18,8 +18,6 @@ static CGFloat const HsFileBrowerScrollHeaderHeight = 49.0f;
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) NSMutableArray<NSString *> *mutableTextArray;
 
-//@property (nonatomic, nullable, copy) NSArray<NSString *> *textArray;
-//@property (nonatomic, nullable, copy) NSArray<NSString *> *imageArray;
 @property (nonatomic, strong) NSMutableArray<UIButton *> *buttonArray;
 @property (nonatomic, strong) NSMutableArray<UIView *> *nextImgArray;
 
@@ -27,7 +25,7 @@ static CGFloat const HsFileBrowerScrollHeaderHeight = 49.0f;
 
 @implementation HsFileBrowerScrollHeader
 
-//@dynamic textArray;
+/// MARK: - init
 
 + (instancetype)viewWithextArray:(NSArray<NSString *> *)textArray imageArray:(NSArray<UIImage *> *)imageArray {
     CGFloat width = [UIScreen mainScreen].bounds.size.width;
@@ -56,7 +54,7 @@ static CGFloat const HsFileBrowerScrollHeaderHeight = 49.0f;
     return self;
 }
 
-/// MARK: -
+/// MARK: - setter
 
 - (void)setTextArray:(NSArray<NSString *> *)textArray {
     if (![_mutableTextArray isEqualToArray:textArray]) {
@@ -75,10 +73,6 @@ static CGFloat const HsFileBrowerScrollHeaderHeight = 49.0f;
         }];
         [self reloadAnimated:YES];
     }
-}
-
-- (NSArray<NSString *> *)textArray {
-    return [_mutableTextArray copy];
 }
 
 /*
@@ -210,12 +204,12 @@ static CGFloat const HsFileBrowerScrollHeaderHeight = 49.0f;
 
 /// MARK: - 清除所有层级
 - (void)clear {
-    NSArray *buttonArray = self.buttonArray;
+    NSArray *buttonArray = self.buttonArray.copy;
     [buttonArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(UIButton * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [obj removeFromSuperview];
         [self.buttonArray removeObject:obj];
     }];
-    NSArray *nextImgArray = self.nextImgArray;
+    NSArray *nextImgArray = self.nextImgArray.copy;
     [nextImgArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(UIImageView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [obj removeFromSuperview];
         [self.nextImgArray removeObject:obj];
@@ -243,6 +237,10 @@ static CGFloat const HsFileBrowerScrollHeaderHeight = 49.0f;
 
 /// MARK: - getter
 
+- (NSArray<NSString *> *)textArray {
+    return [_mutableTextArray copy];
+}
+
 + (CGFloat)defaultHeight {
     return HsFileBrowerScrollHeaderHeight;
 }
@@ -256,9 +254,6 @@ static CGFloat const HsFileBrowerScrollHeaderHeight = 49.0f;
     [button setImage:image forState:UIControlStateNormal];
     button.imageView.contentMode = UIViewContentModeScaleAspectFit;
     [button setImageEdgeInsets:UIEdgeInsetsMake(15, 0, 15, 0)]; //上左下右
-//    CGRect frame = button.imageView.frame;
-//    frame.size.width = HsFileBrowerScrollHeaderHeight - 15 * 2;
-//    button.imageView.frame = frame;
     CGSize fitedSize = [button sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width, HsFileBrowerScrollHeaderHeight)];
     button.frame = CGRectMake(0, 0, fitedSize.width, CGRectGetHeight(self.bounds));
     [button addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];

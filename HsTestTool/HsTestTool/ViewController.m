@@ -10,6 +10,7 @@
 #import "HsFileBrowerPage.h"
 #import "HsPlistBrowerPage.h"
 #import "HsFileBrowerController.h"
+#import "HsConfigBrowerPage.h"
 
 @interface ViewController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -22,7 +23,8 @@
 
 static NSString *const ViewController_Plist = @"Plist";
 static NSString *const ViewController_Sandbox = @"Sand box";
-static NSString *const ViewController_testFile = @"测试文件";
+static NSString *const ViewController_ConfigReader = @"HsConfig";
+static NSString *const ViewController_testFile =  @"测试文件";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -30,6 +32,7 @@ static NSString *const ViewController_testFile = @"测试文件";
     _dataSource = @[
         ViewController_Plist,
         ViewController_Sandbox,
+        ViewController_ConfigReader,
         ViewController_testFile,
     ];
 }
@@ -67,21 +70,6 @@ static NSString *const ViewController_testFile = @"测试文件";
     return cell;
 }
 
-///MARK: - <UITableViewDelegate>
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    NSString *title = _dataSource[indexPath.row];
-    if ([ViewController_Plist isEqualToString:title]) {
-        NSString *path = [[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"];
-        [self.navigationController pushViewController:[[HsPlistBrowerPage alloc] initWithPlistFilePath:path] animated:YES];
-    } else if ([ViewController_Sandbox isEqualToString:title]) {
-        [self.navigationController pushViewController:[[HsFileBrowerController alloc] init] animated:YES];
-    } else if ([ViewController_testFile isEqualToString:title]) {
-        [self move];
-    }
-}
-
 - (void)move {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     // 获取document目录
@@ -103,5 +91,40 @@ static NSString *const ViewController_testFile = @"测试文件";
     }
     
 }
+
+///MARK: - <UITableViewDelegate>
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    NSString *title = _dataSource[indexPath.row];
+    if ([ViewController_Plist isEqualToString:title]) {
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"];
+        [self.navigationController pushViewController:[[HsPlistBrowerPage alloc] initWithPlistFilePath:path] animated:YES];
+    } else if ([ViewController_Sandbox isEqualToString:title]) {
+        [self.navigationController pushViewController:[[HsFileBrowerController alloc] init] animated:YES];
+    } else if ([ViewController_testFile isEqualToString:title]) {
+        [self move];
+    } else if ([ViewController_ConfigReader isEqualToString:title]) {
+        NSMutableArray *array1 = [NSMutableArray array];
+        NSMutableArray *array2 = [NSMutableArray array];
+        NSMutableArray *array3 = [NSMutableArray array];
+        NSMutableArray *array4 = [NSMutableArray array];
+        NSString *str;
+        for (int i = 0; i < 25; i++) {
+            str = [NSString stringWithFormat:@"NSString %i", i];
+            [array1 addObject:str];
+            if (i % 2 == 0) [array2 addObject:str];
+            if (i % 4 != 0) [array3 addObject:str];
+            if (i % 5 == 0) [array4 addObject:str];
+        }
+        [self.navigationController pushViewController:[[HsConfigBrowerPage alloc] initWithObjectsDictionary:@{
+            @"system Dict" : array1,
+            @"file Dict" : array2,
+            @"cache Dict" : array3,
+            @"whatever" : array4,
+        }] animated:YES];
+    }
+}
+
 
 @end

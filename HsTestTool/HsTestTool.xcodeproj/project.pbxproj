@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		3A60914A24B2FC5F009D5BB1 /* HsPlistBrowerEditPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A60914924B2FC5F009D5BB1 /* HsPlistBrowerEditPage.m */; };
 		3A60914E24B30C13009D5BB1 /* swift.gif in Resources */ = {isa = PBXBuildFile; fileRef = 3A60914D24B30C13009D5BB1 /* swift.gif */; };
+		AC14DFEC24BC51BC00195606 /* HsConfigBrowerPage.m in Sources */ = {isa = PBXBuildFile; fileRef = AC14DFEB24BC51BC00195606 /* HsConfigBrowerPage.m */; };
+		AC14DFF224BC55FF00195606 /* HsConfigBrowerHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = AC14DFF124BC55FF00195606 /* HsConfigBrowerHeaderView.m */; };
+		AC14DFF524BC5DDE00195606 /* HsConfigBrowerPlistPage.m in Sources */ = {isa = PBXBuildFile; fileRef = AC14DFF424BC5DDE00195606 /* HsConfigBrowerPlistPage.m */; };
 		AC2A650024B6A65900FF8D6B /* TestPlist.plist in Resources */ = {isa = PBXBuildFile; fileRef = AC2A64FF24B6A65900FF8D6B /* TestPlist.plist */; };
 		AC2A650524B71BF100FF8D6B /* TestBundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = AC2A650424B71BF100FF8D6B /* TestBundle.bundle */; };
 		AC2A650B24B8082B00FF8D6B /* HsFileBrowerPreviewPage.m in Sources */ = {isa = PBXBuildFile; fileRef = AC2A650A24B8082B00FF8D6B /* HsFileBrowerPreviewPage.m */; };
@@ -45,6 +48,12 @@
 		3A60914924B2FC5F009D5BB1 /* HsPlistBrowerEditPage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HsPlistBrowerEditPage.m; sourceTree = "<group>"; };
 		3A60914C24B30C05009D5BB1 /* image01.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = image01.psd; sourceTree = "<group>"; };
 		3A60914D24B30C13009D5BB1 /* swift.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = swift.gif; sourceTree = "<group>"; };
+		AC14DFEA24BC51BC00195606 /* HsConfigBrowerPage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HsConfigBrowerPage.h; sourceTree = "<group>"; };
+		AC14DFEB24BC51BC00195606 /* HsConfigBrowerPage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HsConfigBrowerPage.m; sourceTree = "<group>"; };
+		AC14DFF024BC55FF00195606 /* HsConfigBrowerHeaderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HsConfigBrowerHeaderView.h; sourceTree = "<group>"; };
+		AC14DFF124BC55FF00195606 /* HsConfigBrowerHeaderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HsConfigBrowerHeaderView.m; sourceTree = "<group>"; };
+		AC14DFF324BC5DDE00195606 /* HsConfigBrowerPlistPage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HsConfigBrowerPlistPage.h; sourceTree = "<group>"; };
+		AC14DFF424BC5DDE00195606 /* HsConfigBrowerPlistPage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HsConfigBrowerPlistPage.m; sourceTree = "<group>"; };
 		AC2A64FF24B6A65900FF8D6B /* TestPlist.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = TestPlist.plist; path = HsTestTool/TestPlist.plist; sourceTree = SOURCE_ROOT; };
 		AC2A650424B71BF100FF8D6B /* TestBundle.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TestBundle.bundle; sourceTree = "<group>"; };
 		AC2A650624B73F4400FF8D6B /* HsFileBrowerHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HsFileBrowerHeader.h; sourceTree = "<group>"; };
@@ -124,9 +133,42 @@
 			path = testFile;
 			sourceTree = "<group>";
 		};
+		AC14DFED24BC55B400195606 /* PlistBrowerTableView */ = {
+			isa = PBXGroup;
+			children = (
+				AC8E907D24AC1BB30086E3A7 /* HsPlistBrowerTableView.h */,
+				AC8E908424AC1BB30086E3A7 /* HsPlistBrowerTableView.m */,
+				AC8E908124AC1BB30086E3A7 /* HsPlistBrowerPageCell.h */,
+				AC8E908524AC1BB30086E3A7 /* HsPlistBrowerPageCell.m */,
+			);
+			path = PlistBrowerTableView;
+			sourceTree = "<group>";
+		};
+		AC14DFEE24BC55DA00195606 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				AC14DFEA24BC51BC00195606 /* HsConfigBrowerPage.h */,
+				AC14DFEB24BC51BC00195606 /* HsConfigBrowerPage.m */,
+				AC14DFF324BC5DDE00195606 /* HsConfigBrowerPlistPage.h */,
+				AC14DFF424BC5DDE00195606 /* HsConfigBrowerPlistPage.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		AC14DFEF24BC55E700195606 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				AC14DFF024BC55FF00195606 /* HsConfigBrowerHeaderView.h */,
+				AC14DFF124BC55FF00195606 /* HsConfigBrowerHeaderView.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		AC2A650124B6A76000FF8D6B /* ConfigReader */ = {
 			isa = PBXGroup;
 			children = (
+				AC14DFEF24BC55E700195606 /* View */,
+				AC14DFEE24BC55DA00195606 /* Controller */,
 			);
 			path = ConfigReader;
 			sourceTree = "<group>";
@@ -267,10 +309,6 @@
 		AC8E90A824AC1F9F0086E3A7 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				AC8E907D24AC1BB30086E3A7 /* HsPlistBrowerTableView.h */,
-				AC8E908424AC1BB30086E3A7 /* HsPlistBrowerTableView.m */,
-				AC8E908124AC1BB30086E3A7 /* HsPlistBrowerPageCell.h */,
-				AC8E908524AC1BB30086E3A7 /* HsPlistBrowerPageCell.m */,
 				AC8E907E24AC1BB30086E3A7 /* HsPlistBrowerNodeView.h */,
 				AC8E908324AC1BB30086E3A7 /* HsPlistBrowerNodeView.m */,
 			);
@@ -280,9 +318,10 @@
 		AC8E90AC24AC23990086E3A7 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				AC14DFED24BC55B400195606 /* PlistBrowerTableView */,
+				ACE2A78E24AF226E00107E27 /* HsTestToolDefine.h */,
 				AC8E909D24AC1C690086E3A7 /* HsTestBaseViewController.h */,
 				AC8E909E24AC1C6A0086E3A7 /* HsTestBaseViewController.m */,
-				ACE2A78E24AF226E00107E27 /* HsTestToolDefine.h */,
 				AC8E90AD24AC23B50086E3A7 /* NSBundle+HsTestTool.h */,
 				AC8E90AE24AC23B50086E3A7 /* NSBundle+HsTestTool.m */,
 				AC8E90B024AC24B20086E3A7 /* HsTestTool.bundle */,
@@ -368,11 +407,13 @@
 				AC8E909C24AC1BB40086E3A7 /* HsHiddenFunctionPage.m in Sources */,
 				AC8E908F24AC1BB40086E3A7 /* HsFileBrowerItem.m in Sources */,
 				ACE2A79424B0E05700107E27 /* HsFileBrowerController.m in Sources */,
+				AC14DFF524BC5DDE00195606 /* HsConfigBrowerPlistPage.m in Sources */,
 				AC8E909F24AC1C6A0086E3A7 /* HsTestBaseViewController.m in Sources */,
 				AC8E909824AC1BB40086E3A7 /* HsPlistBrowerSearchResultPage.m in Sources */,
 				AC8E905424AC1B340086E3A7 /* ViewController.m in Sources */,
 				AC8E909624AC1BB40086E3A7 /* HsPlistBrowerPage.m in Sources */,
 				AC8E909124AC1BB40086E3A7 /* HsFileBrowerActionPage.m in Sources */,
+				AC14DFF224BC55FF00195606 /* HsConfigBrowerHeaderView.m in Sources */,
 				AC8E909B24AC1BB40086E3A7 /* HsPlistBrowerPageCell.m in Sources */,
 				AC8E908D24AC1BB40086E3A7 /* HsFileBrowerAnimatedTransitioning.m in Sources */,
 				AC8E909724AC1BB40086E3A7 /* HsPlistBrowerNode.m in Sources */,
@@ -386,6 +427,7 @@
 				AC8E908A24AC1BB40086E3A7 /* HsFileBrowerPage.m in Sources */,
 				AC8E909924AC1BB40086E3A7 /* HsPlistBrowerNodeView.m in Sources */,
 				AC8E909A24AC1BB40086E3A7 /* HsPlistBrowerTableView.m in Sources */,
+				AC14DFEC24BC51BC00195606 /* HsConfigBrowerPage.m in Sources */,
 				AC8E905F24AC1B370086E3A7 /* main.m in Sources */,
 				AC2A650B24B8082B00FF8D6B /* HsFileBrowerPreviewPage.m in Sources */,
 			);

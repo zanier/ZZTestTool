@@ -18,7 +18,6 @@
     HsPlistBrowerNode *_focusNode;
 }
 
-@property (nonatomic, copy) NSString *path;
 @property (nonatomic, strong) UISearchController *searchController;
 @property (nonatomic, strong) HsPlistBrowerSearchResultPage *searchResultController;
 
@@ -32,16 +31,9 @@
 
 /// MARK: - init
 
-+ (id)createPage:(NSDictionary*)params {
-    HsPlistBrowerPage *page = nil;
-    if (params[HsPlistBrowerPageObjectCreateKey]) {
-        page = [[HsPlistBrowerPage alloc] initWithObject:params[HsPlistBrowerPageObjectCreateKey]];
-    } else if (params[HsPlistBrowerPagePlsitFilePathCreateKey]) {
-        page = [[HsPlistBrowerPage alloc] initWithPlistFilePath:params[HsPlistBrowerPagePlsitFilePathCreateKey]];
-    } else {
-        page = [[HsPlistBrowerPage alloc] init];
-    }
-    return page;
+- (instancetype)init {
+    if (self = [super init]) {}
+    return self;
 }
 
 /// 初始化方法
@@ -54,14 +46,10 @@
 }
 
 /// 初始化方法
-/// @param path plist文件路径
+/// @param path 根结点文件（.plist）路径
 - (instancetype)initWithPlistFilePath:(NSString *)path {
     if (self == [super init]) {
-        _path = [path copy];
-        if ([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:nil]) {
-            id userList = [NSDictionary dictionaryWithContentsOfFile:_path];
-            [self setObject:userList];
-        }
+        [self setPath:path];
     }
     return self;
 }
@@ -88,11 +76,13 @@
 
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
+    CGPoint topPoint = [self.view convertPoint:CGPointZero toView:[UIApplication sharedApplication].windows.firstObject];
     CGFloat navigationBarBottom = HsFileBrower_NavBarBottom;
     if (self.navigationController.isBeingPresented) {
         navigationBarBottom = 56;
     }
     CGFloat searBarBottom = navigationBarBottom + 52.0f;
+    searBarBottom -= topPoint.y;
     self.browerTableView.frame = CGRectMake(0, searBarBottom, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - searBarBottom);
 }
 
@@ -146,6 +136,17 @@
     _rootNode = [[HsPlistBrowerNode alloc] initWithKey:@"Root" value:_object];
     self.browerTableView.rootNode = _rootNode;
     [self.browerTableView reloadData];
+}
+
+- (void)setPath:(NSString *)path {
+    if ([_path isEqualToString:path]) {
+        return;
+    }
+    _path = [path copy];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:nil]) {
+        id userList = [NSDictionary dictionaryWithContentsOfFile:_path];
+        [self setObject:userList];
+    }
 }
 
 /// MARK: - getter
@@ -280,8 +281,5 @@
 - (void)_showBrief:(UIMenuController *)menu {
     
 }
-
-
-
 
 @end

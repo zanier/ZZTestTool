@@ -18,7 +18,7 @@
 #import "HsFileBrowerNavigateTransitioning.h"
 #import <AudioToolBox/AudioServices.h>
 
-@interface HsFileBrowerPage () <HsFileBrowerScrollHeaderDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UIViewControllerTransitioningDelegate, UIPopoverPresentationControllerDelegate, HsFileBrowerItemCellDelegate, HsFileBrowerActionPageDelegate, UINavigationControllerDelegate> {
+@interface HsFileBrowerPage () <UICollectionViewDataSource, UICollectionViewDelegate, UIViewControllerTransitioningDelegate, UIPopoverPresentationControllerDelegate, HsFileBrowerItemCellDelegate, HsFileBrowerActionPageDelegate, UINavigationControllerDelegate> {
     
 //    UIView *_sourceViewInPresentation;
 //    NSIndexPath *_indexPathInEditing;
@@ -30,8 +30,8 @@
 @property (nonatomic, strong) NSMutableArray<HsFileBrowerItem *> *dataSource;
 @property (nonatomic, strong) NSMutableArray<HsFileBrowerItem *> *pathNavigation;
 
-@property (nonatomic, strong) UIToolbar *headerToolBar; // 顶部滑动父视图
-@property (nonatomic, strong) HsFileBrowerScrollHeader *scrollHeader; // 顶部滑动视图
+//@property (nonatomic, strong) UIToolbar *headerToolBar; // 顶部滑动父视图
+//@property (nonatomic, strong) HsFileBrowerScrollHeader *scrollHeader; // 顶部滑动视图
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) UIView *emptyView;
 @property (nonatomic, strong) UILabel *emptylabel;
@@ -41,11 +41,6 @@
 @implementation HsFileBrowerPage
 
 /// MARK: - init
-
-+ (id)createPage:(NSDictionary *)params {
-    HsFileBrowerPage *page = [[HsFileBrowerPage alloc] init];
-    return page;
-}
 
 - (instancetype)initWithItem:(HsFileBrowerItem *)item delegate:(id <HsFileBrowerPageDelegate>)delegate {
     if (self = [super init]) {
@@ -86,7 +81,9 @@
 
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
+    CGPoint topPoint = [self.view convertPoint:CGPointZero toView:[UIApplication sharedApplication].windows.firstObject];
     CGFloat scrollBottom = HsFileBrower_NavBarBottom + [HsFileBrowerScrollHeader defaultHeight];
+    scrollBottom -= topPoint.y;
     self.collectionView.frame = CGRectMake(0, scrollBottom, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - scrollBottom);
     _emptyView.frame = self.collectionView.bounds;
     _emptylabel.center = _emptyView.center;
