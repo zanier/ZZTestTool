@@ -55,7 +55,7 @@
 //        self.imageView.image = [UIImage imageNamed:[HsFileBrowerUtil imageNameWithType:_item.typeString]];
 //    }
 //
-//    [self.view addSubview:self.blurEffectView];
+    [self.view addSubview:self.blurEffectView];
     ////    [self.view addSubview:self.imageView];
     
     [self setupItem];
@@ -81,10 +81,11 @@
     CGFloat tableHeight = _rowCount * self.tableView.rowHeight + (_dataSource.count - 1) * headerHeight;
     CGRect frame = self.view.frame;
     if (self.popoverPresentationController.arrowDirection == UIPopoverArrowDirectionUp) {
-        frame.origin.y = 14;
+        frame.origin.y = 13;
     }
     self.tableView.frame = frame;
     self.preferredContentSize = CGSizeMake(tableWidth, tableHeight);
+    self.blurEffectView.frame = self.view.bounds;
     return;
         
     
@@ -165,7 +166,7 @@
     _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     _tableView.dataSource = self;
     _tableView.delegate = self;
-    _tableView.backgroundColor = UIColor.groupTableViewBackgroundColor;
+    _tableView.backgroundColor = UIColor.clearColor;
     _tableView.tableFooterView = [[UIView alloc] init];
     _tableView.bounces = NO;
     _tableView.rowHeight = 45.0f;
@@ -189,11 +190,11 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
-        cell.backgroundColor = UIColor.whiteColor;
+        cell.backgroundColor = UIColor.clearColor;
         cell.separatorInset = UIEdgeInsetsZero;
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 21, 21)];
-        cell.accessoryView = imageView;
         imageView.contentMode = UIViewContentModeScaleAspectFit;
+        cell.accessoryView = imageView;
     }
     NSString *text = _dataSource[indexPath.section][indexPath.row];
     cell.textLabel.text = text;
@@ -203,18 +204,8 @@
         cell.textLabel.textColor = UIColor.darkTextColor;
     }
     
-    UIImageView *imageView = cell.accessoryView;
-    if ([HsFileBrowerActionPage_Delete isEqualToString:text]) {
-        imageView.image = [NSBundle hs_imageNamed:@"delete" type:@"png" inDirectory:@"ActionIcon"];
-    } else if ([HsFileBrowerActionPage_Brief isEqualToString:text]) {
-        imageView.image = [NSBundle hs_imageNamed:@"brief" type:@"png" inDirectory:@"ActionIcon"];
-    } else if ([HsFileBrowerActionPage_Copy isEqualToString:text]) {
-        imageView.image = [NSBundle hs_imageNamed:@"share" type:@"png" inDirectory:@"ActionIcon"];
-    } else if ([HsFileBrowerActionPage_Paste isEqualToString:text]) {
-        imageView.image = [NSBundle hs_imageNamed:@"share" type:@"png" inDirectory:@"ActionIcon"];
-    } else if ([HsFileBrowerActionPage_Rename isEqualToString:text]) {
-        imageView.image = [NSBundle hs_imageNamed:@"share" type:@"png" inDirectory:@"ActionIcon"];
-    }
+    UIImageView *imageView = (UIImageView *)cell.accessoryView;
+    imageView.image = [HsFileBrowerManager imageWithActionText:text];
     return cell;
 }
 
@@ -230,7 +221,9 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     CGFloat height = [self tableView:tableView heightForHeaderInSection:section];
-    return [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, height)];
+    UIView *header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(tableView.bounds), height)];
+    header.backgroundColor = UIColor.groupTableViewBackgroundColor;
+    return header;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
@@ -294,7 +287,7 @@
      } else {
          self.actionDataSource = @[
              @[
-                 HsFileBrowerActionPage_Paste,
+                 HsFileBrowerActionPage_Duplicate,
                  HsFileBrowerActionPage_Copy,
                  HsFileBrowerActionPage_Move,
                  HsFileBrowerActionPage_Delete,

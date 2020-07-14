@@ -24,12 +24,9 @@ static HsFileBrowerManager *manager;
 static dispatch_once_t onceToken;
 
 + (instancetype)manager {
-    printf("1 %ld\n", onceToken);
     dispatch_once(&onceToken, ^{
-        printf("2 %ld\n", onceToken);
         manager = [[HsFileBrowerManager alloc] init];
     });
-    printf("3 %ld\n", onceToken);
     return manager;
 }
 
@@ -167,23 +164,20 @@ static NSString *const HsFileBrowerErrorDomin = @"HsFileBrowerErrorDomin";
     [HsFileBrowerManager manager].dealtPath = path;
 }
 
-/// 粘贴待处理文件
-/// @param toPath 目标路径
-/// @param error 错误
-+ (void)pasteToPath:(NSString *)toPath error:(NSError **)error {
-    NSString *path = [HsFileBrowerManager manager].dealtPath;
-    if (![self isLegalPath:path]) return;
-    [[NSFileManager defaultManager] copyItemAtPath:path toPath:toPath error:error];
-}
-
 /// 复制文件
-/// @param path 原路径
+/// @param atPath 原文件路径
 /// @param toPath 目标路径
 /// @param error 错误
-+ (void)copyAtPath:(NSString *)path toPath:(NSString *)toPath error:(NSError **)error {
-    [self dealWithPath:path];
-    if (![self isLegalPath:path]) return;
-    [self pasteToPath:path error:error];
++ (void)copyItemAtPath:(NSString *)atPath toPath:(NSString *)toPath error:(NSError **)error {
+    if (![self isLegalPath:atPath]) {
+        *error = [self error_invalidFilePath:atPath];
+        return;
+    }
+    if (![self isLegalPath:toPath]) {
+        *error = [self error_invalidFilePath:toPath];
+        return;
+    }
+    [[NSFileManager defaultManager] copyItemAtPath:atPath toPath:toPath error:error];
 }
 
 /// 移动待处理文件
@@ -208,17 +202,17 @@ static NSString *const HsFileBrowerErrorDomin = @"HsFileBrowerErrorDomin";
 
 /// MARK: deal with item
 
-+ (void)removeItem:(HsFileBrowerItem *)item error:(NSError **)error {
-    [self removeItemAtPath:item.path error:error];
-}
+//+ (void)removeItem:(HsFileBrowerItem *)item error:(NSError **)error {
+//    [self removeItemAtPath:item.path error:error];
+//}
+//
+//+ (void)renameItem:(HsFileBrowerItem *)item name:(NSString *)name error:(NSError **)error {
+//    [self renameItemAtPath:item.path name:name error:error];
+//}
 
-+ (void)renameItem:(HsFileBrowerItem *)item name:(NSString *)name error:(NSError **)error {
-    [self renameItemAtPath:item.path name:name error:error];
-}
-
-+ (void)copyItem:(HsFileBrowerItem *)item {
-    [self dealWithPath:item.path];
-}
+//+ (void)copyItem:(HsFileBrowerItem *)item {
+//    [self dealWithPath:item.path];
+//}
 
 /// MARK: - date formatter
 
@@ -246,17 +240,52 @@ static NSString *const HsFileBrowerErrorDomin = @"HsFileBrowerErrorDomin";
 
 /// MARK: - other
 
-+ (NSString *)sizeStringFromSize:(long long)size {
-    static const long long rank = 1024;
-    long long s = size;
-    int i = -1;
-    while (s) {
-        i++;
-        s /= rank;
+/// 获取复制文件的名称
+/// @param name 源文件的名称
+/// @param items 源文件所在文件夹的所有文件
++ (NSString *)duplicateNameWithOriginName:(NSString *)name amongItems:(NSArray<HsFileBrowerItem *> *)items {
+    NSString *duplicateName;
+    NSString *noComponentName = name;
+    NSString *extension = nil;
+    if ([name rangeOfString:@"."].location != NSNotFound) {
+        noComponentName = [name stringByDeletingLastPathComponent];
+        extension = name.pathExtension;
     }
-    if (i == -1) i = 0;
+    for (int i = 0; i < INT32_MAX; i++) {
+        duplicateName = noComponentName;
+        if (i > 0) {
+            duplicateName = [duplicateName stringByAppendingFormat:@" %d", i];
+        }
+        BOOL exist = NO;
+        for (HsFileBrowerItem *child in items) {
+            if ([duplicateName isEqualToString:child.name]) {
+                exist = YES;
+                break;
+            }
+        }
+        if (!exist) {
+            if (extension) {
+                duplicateName = [duplicateName stringByAppendingPathExtension:extension];
+            }
+            return duplicateName;
+        }
+    }
+    return nil;
+}
+
+/// 文件大小转换为字符串
+/// @param size 文件大小，单位字节
++ (NSString *)sizeStringFromSize:(long long)size {
+    float rank = 1024.0;
+    float s = (float)size;
+    int i = 0;
+    while (s > rank) {
+        s /= rank;
+        i++;
+    }
     static char *array[] = {"B", "KB", "MB", "GB", "TB", nil};
-    return [NSString stringWithFormat:@"%lld %s", s, array[i]];
+    s = ((int)(s * 100)) / 100.0;
+    return [NSString stringWithFormat:@"%.1f %s", s, array[i]];
 }
 
 + (NSString *)contentTypeForImageData:(NSData *)data {
@@ -323,6 +352,16 @@ static NSString *const HsFileBrowerErrorDomin = @"HsFileBrowerErrorDomin";
             image = [NSBundle hs_imageNamed:x3ImageName type:@"png" inDirectory:@"FileType"];
             if (image) return image;
     }
+    return image;
+}
+
+
+/// 操作栏目图标
+/// @param text 操作名称
++ (UIImage *)imageWithActionText:(NSString *)text {
+    NSString *imageName = HsActionImageNameWithActionText(text);
+    UIImage *image = [NSBundle hs_imageNamed:imageName type:@"png" inDirectory:@"ActionIcon"];
+
     return image;
 }
 

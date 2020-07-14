@@ -14,14 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class HsFileBrowerItem;
 
-static NSString *const HsFileBrowerActionPage_Copy      = @"复制";
-static NSString *const HsFileBrowerActionPage_Paste     = @"粘贴";
-static NSString *const HsFileBrowerActionPage_Move      = @"移动";
-static NSString *const HsFileBrowerActionPage_Delete    = @"删除";
-static NSString *const HsFileBrowerActionPage_Rename    = @"重命名";
-static NSString *const HsFileBrowerActionPage_Brief     = @"简介";
-static NSString *const HsFileBrowerActionPage_Share     = @"共享";
-
 @interface HsFileBrowerManager : NSObject
 
 + (instancetype)manager;
@@ -30,12 +22,12 @@ static NSString *const HsFileBrowerActionPage_Share     = @"共享";
 
 @property (readonly) BOOL hasDealtPath;
 
-////+ (NSString *)imageNameWithType:(NSString *)typeString;
-//+ (HsFileBrowerFileType)fileTypeWithExtension:(NSString *)extension;
-//+ (NSString *)imageNameWithType:(HsFileBrowerFileType)type;
-//+ (UIImage *)imageNameWithItem:(HsFileBrowerItem *)item;
 + (UIImage *)imageWithFileType:(HsFileBrowerFileType)type;
 + (UIImage *)imageWithFileType:(HsFileBrowerFileType)type scale:(NSInteger)scale;
+
+/// 操作栏目图标
+/// @param text 操作名称
++ (UIImage *)imageWithActionText:(NSString *)text;
 
 /// 检查路径是否有效
 /// @param path 文件路径
@@ -76,37 +68,32 @@ static NSString *const HsFileBrowerActionPage_Share     = @"共享";
 /// @param path 文件路径
 + (void)dealWithPath:(NSString *)path;
 
-/// 粘贴待处理文件
-/// @param toPath 目标路径
-/// @param error 错误
-+ (void)pasteToPath:(NSString *)toPath error:(NSError **)error;
-
 /// 复制文件
-/// @param path 原路径
+/// @param atPath 原文件路径
 /// @param toPath 目标路径
 /// @param error 错误
-+ (void)copyAtPath:(NSString *)path toPath:(NSString *)toPath error:(NSError **)error;
++ (void)copyItemAtPath:(NSString *)atPath toPath:(NSString *)toPath error:(NSError **)error;
 
 /// 移动待处理文件
 /// @param toPath 目标路径
 /// @param error 错误
 + (void)moveToPath:(NSString *)toPath error:(NSError **)error;
 
-/// 移动文件
-/// @param path 原路径
-/// @param toPath 目标路径
-/// @param error 错误
-+ (void)moveAtPath:(NSString *)path toPath:(NSString *)toPath error:(NSError **)error;
+/// MARK: - other
+
+/// 获取复制文件的名称
+/// @param name 源文件的名称
+/// @param items 源文件所在文件夹的所有文件
++ (NSString *)duplicateNameWithOriginName:(NSString *)name amongItems:(NSArray<HsFileBrowerItem *> *)items;
 
 /// 文件大小转换为字符串
-/// @param size 文件大小
+/// @param size 文件大小，单位字节
 + (NSString *)sizeStringFromSize:(long long)size;
 
 /// 日期格式化字符串
 + (NSString *)stringFromDateByDateAndTime:(NSDate *)date;
 + (NSString *)stringFromDateByDate:(NSDate *)date;
 + (NSString *)stringFromDateByTime:(NSDate *)date;
-
 
 @end
 

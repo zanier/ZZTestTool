@@ -19,19 +19,12 @@
 #import <AudioToolBox/AudioServices.h>
 
 @interface HsFileBrowerPage () <UICollectionViewDataSource, UICollectionViewDelegate, UIViewControllerTransitioningDelegate, UIPopoverPresentationControllerDelegate, HsFileBrowerItemCellDelegate, HsFileBrowerActionPageDelegate, UINavigationControllerDelegate> {
-    
-//    UIView *_sourceViewInPresentation;
-//    NSIndexPath *_indexPathInEditing;
-//    NSInteger _actionRowCount;
     BOOL _isSelecting;
     UICollectionViewFlowLayout *_layout;
 }
 
-@property (nonatomic, strong) NSMutableArray<HsFileBrowerItem *> *dataSource;
 @property (nonatomic, strong) NSMutableArray<HsFileBrowerItem *> *pathNavigation;
 
-//@property (nonatomic, strong) UIToolbar *headerToolBar; // 顶部滑动父视图
-//@property (nonatomic, strong) HsFileBrowerScrollHeader *scrollHeader; // 顶部滑动视图
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) UIView *emptyView;
 @property (nonatomic, strong) UILabel *emptylabel;
@@ -61,14 +54,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = UIColor.whiteColor;
-    UIImage *moreBtnImage = [NSBundle hs_imageNamed:@"icon_barBtn_more@2x" type:@"png" inDirectory:nil];
-    UIButton *barButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    barButton.tintColor = [UIColor systemBlueColor];
-    barButton.frame = CGRectMake(200, 200, 25, 25);
-    [barButton setImage:moreBtnImage forState:UIControlStateNormal];
-    [barButton addTarget:self action:@selector(presentPopoverWithRightButton:) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:barButton];
+    [self setupNaviBarItem];
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressAction:)];
     [self.view addGestureRecognizer:longPress];
     [self.view addSubview:self.collectionView];
@@ -96,6 +82,20 @@
     }
 }
 
+- (void)setupNaviBarItem {
+    if (!_isSelecting) {
+        UIImage *moreBtnImage = [NSBundle hs_imageNamed:@"icon_barBtn_more@2x" type:@"png" inDirectory:nil];
+        UIButton *barButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        barButton.tintColor = [UIColor systemBlueColor];
+        barButton.frame = CGRectMake(200, 200, 25, 25);
+        [barButton setImage:moreBtnImage forState:UIControlStateNormal];
+        [barButton addTarget:self action:@selector(presentPopoverWithRightButton:) forControlEvents:UIControlEventTouchUpInside];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:barButton];
+    } else {
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(_selectDone)];
+    }
+}
+
 /// 刷新显示指定文件夹下的文件，返回是否刷新
 /// @param item 文件夹数据
 - (void)reloadAtDirectoryWithItem:(HsFileBrowerItem *)item {
@@ -104,13 +104,11 @@
     NSString *path = item.path;
     BOOL isDir = NO;
     if ([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]) {
-        if (isDir) {
-            _item.children = [HsFileBrowerManager contentItemsOfItem:_item];
-            _dataSource = _item.children.mutableCopy;
-            [self.collectionView reloadData];
-        }
+        if (!isDir) return;
+        _item.children = [HsFileBrowerManager contentItemsOfItem:_item].mutableCopy;
+        [self.collectionView reloadData];
     }
-    BOOL isEmptyDataSource = (!_dataSource || _dataSource.count == 0);
+    BOOL isEmptyDataSource = (!_item.children || _item.children == 0);
     if (isEmptyDataSource) {
         if (!self.emptyView.superview) {
             [self.collectionView addSubview:self.emptyView];
@@ -131,11 +129,11 @@
 - (void)showMenuControllerAtPoint:(CGPoint)location {
     [self becomeFirstResponder];
     UIMenuController *menu = [UIMenuController sharedMenuController];
-    UIMenuItem *pasteItem = [[UIMenuItem alloc] initWithTitle:@"粘贴" action:@selector(_paste:)];
-    UIMenuItem *createDirItem = [[UIMenuItem alloc] initWithTitle:@"新建文件夹" action:@selector(_createDirectory:)];
-    UIMenuItem *selectAllItem = [[UIMenuItem alloc] initWithTitle:@"全选" action:@selector(_selectAll:)];
-    UIMenuItem *briefItem = [[UIMenuItem alloc] initWithTitle:@"简介" action:@selector(_showBrief:)];
-    UIMenuItem *reloadItem = [[UIMenuItem alloc] initWithTitle:@"刷新" action:@selector(_reload:)];
+    UIMenuItem *pasteItem = [[UIMenuItem alloc] initWithTitle:@"粘贴" action:@selector(_paste)];
+    UIMenuItem *createDirItem = [[UIMenuItem alloc] initWithTitle:@"新建文件夹" action:@selector(_createDirectory)];
+    UIMenuItem *selectAllItem = [[UIMenuItem alloc] initWithTitle:@"全选" action:@selector(_selectAll)];
+    UIMenuItem *briefItem = [[UIMenuItem alloc] initWithTitle:@"简介" action:@selector(_showBrief)];
+    UIMenuItem *reloadItem = [[UIMenuItem alloc] initWithTitle:@"刷新" action:@selector(_reload)];
     menu.menuItems = @[pasteItem, createDirItem, selectAllItem, briefItem, reloadItem];
     if (@available(iOS 13.0, *)) {
         [menu showMenuFromView:self.view rect:CGRectMake(location.x, location.y, 0, 0)];
@@ -150,52 +148,41 @@
 }
 
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender {
-    if (action == @selector(_paste:) ||
-        action == @selector(_selectAll:) ||
-        action == @selector(_showBrief:) ||
-        action == @selector(_reload:) ||
-        action == @selector(_createDirectory:)) {
+    if (action == @selector(_paste) ||
+        action == @selector(_selectAll) ||
+        action == @selector(_showBrief) ||
+        action == @selector(_reload) ||
+        action == @selector(_createDirectory)) {
         return YES;
     }
     return NO;
 }
 
-- (void)_paste:(UIMenuController *)menu {
-    
-}
+/// MARK: - action
 
-- (void)_selectAll:(UIMenuController *)menu {
-    
-}
-
-- (void)_reload:(UIMenuController *)menu {
-    [self reloadAtDirectoryWithItem:_item];
-}
-
-- (NSString *)newDirectoryName {
-    NSString *dirName;
-    for (int i = 0; i < INT32_MAX; i++) {
-        dirName = @"新建文件夹";
-        if (i > 0) {
-            dirName = [dirName stringByAppendingFormat:@" %d", i];
-        }
-        BOOL exist = NO;
-        for (HsFileBrowerItem *child in _item.children) {
-            if ([dirName isEqualToString:child.name]) {
-                exist = YES;
-                break;
-            }
-        }
-        if (!exist) {
-            return dirName;
-        }
+- (void)_paste {
+    NSString *dealPath = [HsFileBrowerManager manager].dealtPath;
+    if (!dealPath) {
+        return;
     }
-    return dirName;
+    NSError *error;
+    [HsFileBrowerManager copyItemAtPath:dealPath toPath:_item.path error:&error];
+    if (error) {
+        NSLog(@"%@", error);
+        [self alertWithTitle:@"粘贴失败" message:error.description];
+        return;
+    }
 }
 
-- (void)_createDirectory:(UIMenuController *)menu {
+- (void)_reload {
+    [self reloadAtDirectoryWithItem:_item];
+    
+}
+
+- (void)_createDirectory {
     [self resignFirstResponder];
-    NSString *dirName = [self newDirectoryName];
+    NSString *dirName = [HsFileBrowerManager duplicateNameWithOriginName:@"新建文件夹" amongItems:_item.children];
+    if (!dirName) return;
     NSString *dirPath = [_item.path stringByAppendingPathComponent:dirName];
     NSError *error;
     [HsFileBrowerManager createDirectoryAtPath:dirPath error:&error];
@@ -207,7 +194,7 @@
     }
 }
 
-- (void)_showBrief:(UIMenuController *)menu {
+- (void)_showBrief {
     [self presentFileBriefWithItem:_item];
 }
 
@@ -219,8 +206,8 @@
         [self alertWithTitle:@"删除失败" message:error.description];
         return;
     }
-    NSUInteger idx = [_dataSource indexOfObject:item];
-    [_dataSource removeObjectAtIndex:idx];
+    NSUInteger idx = [_item.children indexOfObject:item];
+    [_item.children removeObjectAtIndex:idx];
     [self.collectionView performBatchUpdates:^{
         [self.collectionView deleteItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:idx inSection:0]]];
     } completion:nil];
@@ -230,14 +217,79 @@
     
 }
 
-/// MARK: - getter
+/// MARK: select
 
-- (NSMutableArray<HsFileBrowerItem *> *)dataSource {
-    if (!_dataSource) {
-        _dataSource = [NSMutableArray array];
-    }
-    return _dataSource;
+- (void)_selecting {
+    _isSelecting = YES;
+    [self setupNaviBarItem];
+    [self _reload];
 }
+
+- (void)_selectDone {
+    _isSelecting = NO;
+    [self setupNaviBarItem];
+    [self _reload];
+}
+
+- (void)_selectAll {
+    [_item.children enumerateObjectsUsingBlock:^(HsFileBrowerItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        obj.selected = YES;
+    }];
+    [self _reload];
+}
+
+- (void)_deselectAll {
+    [_item.children enumerateObjectsUsingBlock:^(HsFileBrowerItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        obj.selected = NO;
+    }];
+    [self _reload];
+}
+
+/// MARK: sort
+
+- (void)_reloadWithNewChildren:(NSArray<HsFileBrowerItem *> *)newChildren {
+    NSArray *children = _item.children.copy;
+    _item.children = newChildren.mutableCopy;
+    [self.collectionView performBatchUpdates:^{
+        for (NSUInteger i = 0; i < _item.children.count; i++) {
+            HsFileBrowerItem *item = _item.children[i];
+            NSUInteger j = [children indexOfObject:item];
+            NSIndexPath *fromIndexPath = [NSIndexPath indexPathForRow:j inSection:0];
+            NSIndexPath *toIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
+            [self.collectionView moveItemAtIndexPath:fromIndexPath toIndexPath:toIndexPath];
+        }
+    } completion:nil];
+}
+
+- (void)_sortByName {
+    NSArray *newChildren = [_item.children sortedArrayUsingComparator:^NSComparisonResult(HsFileBrowerItem * _Nonnull obj1, HsFileBrowerItem * _Nonnull obj2) {
+        return [obj1.name compare:obj2.name];
+    }];
+    [self _reloadWithNewChildren:newChildren];
+}
+
+- (void)_sortByDate {
+    NSArray *newChildren = [_item.children sortedArrayUsingComparator:^NSComparisonResult(HsFileBrowerItem * _Nonnull obj1, HsFileBrowerItem * _Nonnull obj2) {
+        return [obj1.modifyDateString compare:obj2.modifyDateString];
+    }];
+    [self _reloadWithNewChildren:newChildren];
+}
+
+- (void)_sortBySize {
+    NSArray *newChildren = [_item.children sortedArrayUsingComparator:^NSComparisonResult(HsFileBrowerItem * _Nonnull obj1, HsFileBrowerItem * _Nonnull obj2) {
+        return [obj1.sizeString compare:obj2.sizeString];
+    }];
+    [self _reloadWithNewChildren:newChildren];
+}
+
+- (void)_sortByType {
+    NSArray *newChildren = [_item.children sortedArrayUsingComparator:^NSComparisonResult(HsFileBrowerItem * _Nonnull obj1, HsFileBrowerItem * _Nonnull obj2) {
+        return [obj1.extension compare:obj2.extension];
+    }];
+    [self _reloadWithNewChildren:newChildren];
+}
+
+/// MARK: - getter
 
 - (NSMutableArray<HsFileBrowerItem *> *)pathNavigation {
     if (!_pathNavigation) {
@@ -293,20 +345,20 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return self.dataSource.count;
+    return _item.children.count;
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     HsFileBrowerItemCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
     cell.delegate = self;
-    cell.item = self.dataSource[indexPath.row];
+    cell.item = self.item.children[indexPath.row];
     return cell;
 }
 
 /// MARK: - <UICollectionViewDelegate>
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    HsFileBrowerItem *item = self.dataSource[indexPath.row];
+    HsFileBrowerItem *item = self.item.children[indexPath.row];
     [self didSelectItem:item];
 }
 
@@ -350,29 +402,25 @@
 - (void)presentPopoverWithRightButton:(UIButton *)button {
     NSArray *dataSource = @[
         @[
-            HsFileBrowerActionPage_Paste,
-            HsFileBrowerActionPage_Copy,
-            HsFileBrowerActionPage_Move,
-            HsFileBrowerActionPage_Delete,
+            HsFileBrowerActionPage_Select,
+            HsFileBrowerActionPage_Mkdir,
         ],
         @[
-            HsFileBrowerActionPage_Brief,
-            HsFileBrowerActionPage_Rename,
-        ],
-        @[
-            HsFileBrowerActionPage_Share,
+            HsFileBrowerActionPage_SortByName,
+            HsFileBrowerActionPage_SortByDate,
+            HsFileBrowerActionPage_SortBySize,
+            HsFileBrowerActionPage_SortByType,
         ],
     ];
-    HsFileBrowerActionPage *testVC = [[HsFileBrowerActionPage alloc] initWithItem:_item actionNames:dataSource sourceView:button];
-    testVC.delegate = self;
-    testVC.modalPresentationStyle = UIModalPresentationPopover;
-    testVC.popoverPresentationController.delegate = self;
-    testVC.popoverPresentationController.sourceView = button;
-    testVC.popoverPresentationController.sourceRect = button.bounds;
-    testVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionAny;
-    //testVC.popoverPresentationController.backgroundColor = [UIColor redColor];
-    testVC.popoverPresentationController.canOverlapSourceViewRect = NO;
-    [self presentViewController:testVC animated:YES completion:nil];
+    HsFileBrowerActionPage *actionPage = [[HsFileBrowerActionPage alloc] initWithItem:_item actionNames:dataSource sourceView:button];
+    actionPage.delegate = self;
+    actionPage.modalPresentationStyle = UIModalPresentationPopover;
+    actionPage.popoverPresentationController.delegate = self;
+    actionPage.popoverPresentationController.sourceView = button;
+    actionPage.popoverPresentationController.sourceRect = button.bounds;
+    actionPage.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionAny;
+    actionPage.popoverPresentationController.canOverlapSourceViewRect = NO;
+    [self presentViewController:actionPage animated:YES completion:nil];
 }
 
 /// MARK: - item long press action
@@ -388,8 +436,8 @@
     } else {
         dataSource = @[
             @[
-                HsFileBrowerActionPage_Paste,
                 HsFileBrowerActionPage_Copy,
+                HsFileBrowerActionPage_Duplicate,
                 HsFileBrowerActionPage_Move,
                 HsFileBrowerActionPage_Delete,
             ],
@@ -402,38 +450,71 @@
             ],
         ];
     }
-    HsFileBrowerActionPage *testVC = [[HsFileBrowerActionPage alloc] initWithItem:item actionNames:dataSource sourceView:cell];
-    testVC.delegate = self;
-    testVC.modalPresentationStyle = UIModalPresentationPopover;
-    testVC.popoverPresentationController.delegate = self;
-    testVC.popoverPresentationController.sourceView = cell.imageView;
-    testVC.popoverPresentationController.sourceRect = cell.imageView.bounds;
-    testVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionAny;
-    //testVC.popoverPresentationController.backgroundColor = [UIColor redColor];
-    testVC.popoverPresentationController.canOverlapSourceViewRect = NO;
-    [self presentViewController:testVC animated:YES completion:nil];
+    HsFileBrowerActionPage *actionPage = [[HsFileBrowerActionPage alloc] initWithItem:item actionNames:dataSource sourceView:cell];
+    actionPage.delegate = self;
+    actionPage.modalPresentationStyle = UIModalPresentationPopover;
+    actionPage.popoverPresentationController.delegate = self;
+    actionPage.popoverPresentationController.sourceView = cell.imageView;
+    actionPage.popoverPresentationController.sourceRect = cell.imageView.bounds;
+    actionPage.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionAny;
+    actionPage.popoverPresentationController.canOverlapSourceViewRect = NO;
+    [self presentViewController:actionPage animated:YES completion:nil];
 }
 
 /// MARK: <HsFileBrowerActionPageDelegate>
 
 - (void)actionPage:(HsFileBrowerActionPage *)actionPage didSelectAction:(NSString *)actionName {
-    HsFileBrowerItem *item = actionPage.item;
-    UIView *sourceView = actionPage.sourceView;
-    if ([HsFileBrowerActionPage_Copy isEqualToString:actionName]) {
-        [HsFileBrowerManager dealWithPath:item.path];
-    } else if ([HsFileBrowerActionPage_Paste isEqualToString:actionName]) {
-        return;
-    } else if ([HsFileBrowerActionPage_Move isEqualToString:actionName]) {
-        [HsFileBrowerManager dealWithPath:item.path];
-    } else if ([HsFileBrowerActionPage_Delete isEqualToString:actionName]) {
-        [self _deleteItem:item];
-    } else if ([HsFileBrowerActionPage_Rename isEqualToString:actionName]) {
-        HsFileBrowerItemCell *cell = (HsFileBrowerItemCell *)sourceView;
-        [cell beginRenamingItem];
-    } else if ([HsFileBrowerActionPage_Brief isEqualToString:actionName]) {
-        [self presentFileBriefWithItem:item];
-    } else if ([HsFileBrowerActionPage_Share isEqualToString:actionName]) {
-        
+    if (actionPage.item == _item) {
+        /// 点击导航栏弹出菜单
+        if ([HsFileBrowerActionPage_Select isEqualToString:actionName]) {
+            // 选择
+            _isSelecting = !_isSelecting;
+            
+        } else if ([HsFileBrowerActionPage_Mkdir isEqualToString:actionName]) {
+            // 新建文件夹
+            [self _createDirectory];
+        } else if ([HsFileBrowerActionPage_SortByName isEqualToString:actionName]) {
+            // 名字排序
+            [self _sortByName];
+        } else if ([HsFileBrowerActionPage_SortByDate isEqualToString:actionName]) {
+            // 日期排序
+            [self _sortByDate];
+        } else if ([HsFileBrowerActionPage_SortBySize isEqualToString:actionName]) {
+            // 大小排序
+            [self _sortBySize];
+        } else if ([HsFileBrowerActionPage_SortByType isEqualToString:actionName]) {
+            // 类型排序
+            [self _sortByType];
+        }
+    } else {
+        /// 长按单元格弹出菜单
+        HsFileBrowerItem *item = actionPage.item;
+        UIView *sourceView = actionPage.sourceView;
+        if ([HsFileBrowerActionPage_Copy isEqualToString:actionName]) {
+            // 拷贝
+            [HsFileBrowerManager dealWithPath:item.path];
+        } else if ([HsFileBrowerActionPage_Duplicate isEqualToString:actionName]) {
+            // 复制
+            NSString *duplicateName = [HsFileBrowerManager duplicateNameWithOriginName:item.name amongItems:_item.children];
+            NSString *toPath = [[_item.path stringByDeletingLastPathComponent] stringByAppendingPathComponent:duplicateName];
+            [HsFileBrowerManager copyItemAtPath:item.path toPath:toPath error:nil];
+        } else if ([HsFileBrowerActionPage_Move isEqualToString:actionName]) {
+            // 移动
+            [HsFileBrowerManager dealWithPath:item.path];
+        } else if ([HsFileBrowerActionPage_Delete isEqualToString:actionName]) {
+            // 删除
+            [self _deleteItem:item];
+        } else if ([HsFileBrowerActionPage_Rename isEqualToString:actionName]) {
+            // 重命名
+            HsFileBrowerItemCell *cell = (HsFileBrowerItemCell *)sourceView;
+            [cell beginRenamingItem];
+        } else if ([HsFileBrowerActionPage_Brief isEqualToString:actionName]) {
+            // 简介
+            [self presentFileBriefWithItem:item];
+        } else if ([HsFileBrowerActionPage_Share isEqualToString:actionName]) {
+            // 分享
+            
+        }
     }
 }
 

@@ -39,6 +39,21 @@ typedef NS_ENUM(NSUInteger, HsFileBrowerFileType) {
     HsFileBrowerFileTypeTTF, HsFileBrowerFileTypeTorrent,
 };
 
+static NSString *const HsFileBrowerActionPage_Select    = @"选择";
+static NSString *const HsFileBrowerActionPage_Mkdir     = @"新建文件夹";
+static NSString *const HsFileBrowerActionPage_SortByName    = @"名称";
+static NSString *const HsFileBrowerActionPage_SortByDate    = @"日期";
+static NSString *const HsFileBrowerActionPage_SortBySize    = @"大小";
+static NSString *const HsFileBrowerActionPage_SortByType    = @"种类";
+
+static NSString *const HsFileBrowerActionPage_Copy      = @"拷贝";
+static NSString *const HsFileBrowerActionPage_Duplicate = @"复制";
+static NSString *const HsFileBrowerActionPage_Move      = @"移动";
+static NSString *const HsFileBrowerActionPage_Delete    = @"删除";
+static NSString *const HsFileBrowerActionPage_Rename    = @"重命名";
+static NSString *const HsFileBrowerActionPage_Brief     = @"简介";
+static NSString *const HsFileBrowerActionPage_Share     = @"共享";
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-function"
 
@@ -264,6 +279,34 @@ static NSString *HsImageNameWithType(HsFileBrowerFileType type) {
         case HsFileBrowerFileTypeTorrent: typeImageName = @"icon_file_type_torrent"; break;
     }
     return typeImageName;
+}
+
+static NSString *HsActionImageNameWithActionText(NSString *text) {
+    NSString *imageName = nil;
+    if ([HsFileBrowerActionPage_Copy isEqualToString:text]) {
+        imageName = @"share@2x";
+    } else if ([HsFileBrowerActionPage_Duplicate isEqualToString:text]) {
+        imageName = @"share@2x";
+    } else if ([HsFileBrowerActionPage_Move isEqualToString:text]) {
+        imageName = @"share@2x";
+    } else if ([HsFileBrowerActionPage_Delete isEqualToString:text]) {
+        imageName = @"delete@2x";
+    } else if ([HsFileBrowerActionPage_Brief isEqualToString:text]) {
+        imageName = @"share@2x";
+    } else if ([HsFileBrowerActionPage_Rename isEqualToString:text]) {
+        imageName = @"share@2x";
+    } else if ([HsFileBrowerActionPage_Share isEqualToString:text]) {
+        imageName = @"share@2x";
+    } else if ([HsFileBrowerActionPage_Select isEqualToString:text]) {
+        imageName = @"share@2x";
+    } else if ([HsFileBrowerActionPage_Mkdir isEqualToString:text]) {
+        imageName = @"share@2x";
+    } else if ([HsFileBrowerActionPage_SortByName isEqualToString:text]) {
+    } else if ([HsFileBrowerActionPage_SortByDate isEqualToString:text]) {
+    } else if ([HsFileBrowerActionPage_SortBySize isEqualToString:text]) {
+    } else if ([HsFileBrowerActionPage_SortByType isEqualToString:text]) {
+    }
+    return imageName;
 }
 
 #pragma clang diagnostic pop

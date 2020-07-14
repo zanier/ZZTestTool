@@ -8,37 +8,34 @@
 
 #import <Foundation/Foundation.h>
 #import "HsFileBrowerHeader.h"
-#import <QuickLook/QuickLook.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HsFileBrowerItem : NSObject <QLPreviewItem>
+@interface HsFileBrowerItem : NSObject
 
+- (instancetype)initWithPath:(NSString *)path;
+
+/// readonly
 @property (nonatomic, strong, readonly) NSString *name;
 @property (nonatomic, strong, readonly) NSString *path;
-@property (nonatomic, copy, readonly) NSString *extension;
 @property (nonatomic, assign, readonly) HsFileBrowerFileType type;
-@property (nonatomic, strong) NSDictionary *attributes;
+@property (nonatomic, copy, readonly) NSString *extension;
+/// readonly getter
 @property (readonly) BOOL isDir;
 @property (readonly) BOOL isImage;
-
 @property (nullable, readonly) NSURL *url;
 @property (nullable, readonly) NSString *sizeString;
 @property (nullable, readonly) NSString *createDateString;
 @property (nullable, readonly) NSString *modifyDateString;
 @property (nullable, readonly) NSString *lastOpenDateString;
-
+@property (nullable, readonly) NSString *accessoryType;
+//@property (nullable, readonly) NSString *modificationDate;
+/// readwrite
+@property (nonatomic, strong) NSDictionary *attributes;
 @property (nonatomic, nullable, weak) HsFileBrowerItem *parent;
-@property (nonatomic, nullable, copy) NSArray<HsFileBrowerItem *> *children;
+@property (nonatomic, nullable, copy) NSMutableArray<HsFileBrowerItem *> *children;
 @property (nonatomic, assign) NSUInteger childrenCount;
-
-@property (readonly) NSString *accessoryType;
-@property (readonly) NSString *modificationDate;
-
-@property(readonly, nullable, nonatomic) NSURL *previewItemURL;
-@property(readonly, nullable, nonatomic) NSString *previewItemTitle;
-
-- (instancetype)initWithPath:(NSString *)path;
+@property (nonatomic, assign, getter=isSelected) BOOL selected;
 
 @end
 

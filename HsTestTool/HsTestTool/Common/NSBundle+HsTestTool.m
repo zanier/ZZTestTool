@@ -20,7 +20,8 @@
 }
 
 + (UIImage *)hs_imageNamed:(NSString *)imageName type:(NSString *)type inDirectory:(NSString *)directory {
-    return [[UIImage imageWithContentsOfFile:[[self hs_testToolBundle] pathForResource:imageName ofType:type inDirectory:directory]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    UIImage *image = [[UIImage imageWithContentsOfFile:[[self hs_testToolBundle] pathForResource:imageName ofType:type inDirectory:directory]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    return image;
 }
 
 @end

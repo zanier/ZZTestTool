@@ -44,7 +44,7 @@
         self.detailLabel.text = [NSString stringWithFormat:@"%@", _item.sizeString];
     } else {
         self.imageView.image = [HsFileBrowerManager imageWithFileType:_item.type];
-        self.detailLabel.text = [NSString stringWithFormat:@"%@", _item.modificationDate];
+        self.detailLabel.text = [NSString stringWithFormat:@"%@", _item.modifyDateString];
     }
 }
 

@@ -74,17 +74,6 @@
     return nil;
 }
 
-- (NSString *)modificationDate {
-    NSDate *date = _attributes[NSFileModificationDate];
-    NSString *dateString = date.description;
-    if (!dateString) {
-        dateString = @"";
-    } else if (dateString.length > 19) {
-        dateString = [dateString substringToIndex:19];
-    }
-    return dateString;
-}
-
 - (NSString *)imageName {
     return HsImageNameWithType(_type);
 }
@@ -103,16 +92,6 @@
 
 - (NSString *)lastOpenDateString {
     return [HsFileBrowerManager stringFromDateByDateAndTime:_attributes.fileModificationDate];
-}
-
-/// MARK: - <QLPreviewItem>
-
-- (NSURL *)previewItemURL {
-    return self.url;
-}
-
-- (NSString *)previewItemTitle {
-    return self.name;
 }
 
 @end
