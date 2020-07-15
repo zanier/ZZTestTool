@@ -11,6 +11,8 @@
 
 @interface HsFileBrowerItem ()
 
+@property (nonatomic, assign) HsFileBrowerItemSortType sortType;
+
 @end
 
 @implementation HsFileBrowerItem
@@ -33,21 +35,6 @@
         _type = HsFileBrowerFileTypeDirectory;
     }
 }
-
-//- (instancetype)initWithPath:(NSString *)path name:(NSString *)name attributes:(NSDictionary *)attributes {
-//    return [self initWithPath:path name:name attributes:attributes parent:nil];
-//}
-//
-//- (instancetype)initWithPath:(NSString *)path name:(NSString *)name attributes:(NSDictionary *)attributes parent:(HsFileBrowerItem *)parent {
-//    if (self = [super init]) {
-//        _path = [path copy];
-//        _name = [name copy];
-//        _attributes = [attributes copy];
-//        _parent = parent;
-////        _isDir = [NSFileTypeDirectory isEqualToString:_attributes[NSFileType]];
-//    }
-//    return self;
-//}
 
 /// MARK: -
 
@@ -92,6 +79,42 @@
 
 - (NSString *)lastOpenDateString {
     return [HsFileBrowerManager stringFromDateByDateAndTime:_attributes.fileModificationDate];
+}
+
+/// MARK: - sort
+
+- (void)sortChildrenWithType:(HsFileBrowerItemSortType)sortType {
+    _sortType = sortType;
+    switch (sortType) {
+        case HsFileBrowerItemSortByName: [self sortByName]; break;
+        case HsFileBrowerItemSortByDate: [self sortByDate]; break;
+        case HsFileBrowerItemSortBySize: [self sortBySize]; break;
+        case HsFileBrowerItemSortByType: [self sortByType]; break;
+    }
+}
+
+- (void)sortByName {
+    self.children = [self.children sortedArrayUsingComparator:^NSComparisonResult(HsFileBrowerItem * _Nonnull obj1, HsFileBrowerItem * _Nonnull obj2) {
+        return [obj1.name compare:obj2.name];
+    }].mutableCopy;
+}
+
+- (void)sortByDate {
+    self.children = [self.children sortedArrayUsingComparator:^NSComparisonResult(HsFileBrowerItem * _Nonnull obj1, HsFileBrowerItem * _Nonnull obj2) {
+        return [obj1.modifyDateString compare:obj2.modifyDateString];
+    }].mutableCopy;
+}
+
+- (void)sortBySize {
+    self.children = [self.children sortedArrayUsingComparator:^NSComparisonResult(HsFileBrowerItem * _Nonnull obj1, HsFileBrowerItem * _Nonnull obj2) {
+        return [obj1.sizeString compare:obj2.sizeString];
+    }].mutableCopy;
+}
+
+- (void)sortByType {
+    self.children = [self.children sortedArrayUsingComparator:^NSComparisonResult(HsFileBrowerItem * _Nonnull obj1, HsFileBrowerItem * _Nonnull obj2) {
+        return [obj1.extension compare:obj2.extension];
+    }].mutableCopy;
 }
 
 @end

@@ -14,6 +14,7 @@
 
 @interface HsFileBrowerActionPage () <UITableViewDataSource, UITableViewDelegate> {
     NSInteger _rowCount;
+    NSDictionary *_sortTextDictionary;
 }
 
 @property (nonatomic, strong) HsFileBrowerItem *item;
@@ -76,7 +77,7 @@
 
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
-    CGFloat tableWidth = 240.0f;
+    CGFloat tableWidth = 220.0f;
     CGFloat headerHeight = [self tableView:self.tableView heightForHeaderInSection:1];
     CGFloat tableHeight = _rowCount * self.tableView.rowHeight + (_dataSource.count - 1) * headerHeight;
     CGRect frame = self.view.frame;
@@ -123,6 +124,12 @@
 }
 
 - (void)setupItem {
+    _sortTextDictionary = @{
+        @(HsFileBrowerItemSortByName) : HsFileBrowerActionPage_SortByName,
+        @(HsFileBrowerItemSortByDate) : HsFileBrowerActionPage_SortByDate,
+        @(HsFileBrowerItemSortBySize) : HsFileBrowerActionPage_SortBySize,
+        @(HsFileBrowerItemSortByType) : HsFileBrowerActionPage_SortByType,
+    };
     _rowCount = 0;
     for (NSArray *array in _dataSource) {
         _rowCount += array.count;
@@ -203,10 +210,29 @@
     } else {
         cell.textLabel.textColor = UIColor.darkTextColor;
     }
-    
     UIImageView *imageView = (UIImageView *)cell.accessoryView;
-    imageView.image = [HsFileBrowerManager imageWithActionText:text];
+    NSInteger idx = [_sortTextDictionary.allValues indexOfObject:text];
+    if (idx != NSNotFound) {
+        HsFileBrowerItemSortType sortType = [_sortTextDictionary.allKeys[idx] integerValue];
+        if (sortType == _item.sortType) {
+            imageView.image = [NSBundle hs_imageNamed:@"icon_action_selected@2x" type:@"png" inDirectory:@"ActionIcon"];
+        } else {
+            imageView.image = nil;
+        }
+    } else {
+        imageView.image = [HsFileBrowerManager imageWithActionText:text];
+    }
     return cell;
+}
+
+- (BOOL)isSortActionText:(NSString *)text {
+    if ([HsFileBrowerActionPage_SortByName isEqualToString:text] ||
+        [HsFileBrowerActionPage_SortByDate isEqualToString:text] ||
+        [HsFileBrowerActionPage_SortBySize isEqualToString:text] ||
+        [HsFileBrowerActionPage_SortByType isEqualToString:text]) {
+        return YES;
+    }
+    return NO;
 }
 
 /// MARK: - <UITableViewDelegate>

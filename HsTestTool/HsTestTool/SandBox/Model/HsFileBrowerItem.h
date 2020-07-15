@@ -11,6 +11,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSInteger, HsFileBrowerItemSortType) {
+    HsFileBrowerItemSortByName = 0,
+    HsFileBrowerItemSortByDate,
+    HsFileBrowerItemSortBySize,
+    HsFileBrowerItemSortByType,
+};
+
 @interface HsFileBrowerItem : NSObject
 
 - (instancetype)initWithPath:(NSString *)path;
@@ -36,6 +43,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable, copy) NSMutableArray<HsFileBrowerItem *> *children;
 @property (nonatomic, assign) NSUInteger childrenCount;
 @property (nonatomic, assign, getter=isSelected) BOOL selected;
+
+/// MARK: - sort
+
+@property (readonly) HsFileBrowerItemSortType sortType;
+
+- (void)sortChildrenWithType:(HsFileBrowerItemSortType)sortType;
 
 @end
 

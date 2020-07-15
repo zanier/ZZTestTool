@@ -22,12 +22,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (readonly) BOOL hasDealtPath;
 
-+ (UIImage *)imageWithFileType:(HsFileBrowerFileType)type;
-+ (UIImage *)imageWithFileType:(HsFileBrowerFileType)type scale:(NSInteger)scale;
++ (nullable UIImage *)imageWithFileType:(HsFileBrowerFileType)type;
++ (nullable UIImage *)imageWithFileType:(HsFileBrowerFileType)type scale:(NSInteger)scale;
 
 /// 操作栏目图标
 /// @param text 操作名称
-+ (UIImage *)imageWithActionText:(NSString *)text;
++ (nullable UIImage *)imageWithActionText:(NSString *)text;
 
 /// 检查路径是否有效
 /// @param path 文件路径

@@ -247,46 +247,40 @@
 
 /// MARK: sort
 
-- (void)_reloadWithNewChildren:(NSArray<HsFileBrowerItem *> *)newChildren {
-    NSArray *children = _item.children.copy;
-    _item.children = newChildren.mutableCopy;
+- (void)_reloadWithNewChildren:(NSArray<HsFileBrowerItem *> *)newChildren oldChildren:(NSArray<HsFileBrowerItem *> *)oldChildren {
     [self.collectionView performBatchUpdates:^{
-        for (NSUInteger i = 0; i < _item.children.count; i++) {
-            HsFileBrowerItem *item = _item.children[i];
-            NSUInteger j = [children indexOfObject:item];
-            NSIndexPath *fromIndexPath = [NSIndexPath indexPathForRow:j inSection:0];
-            NSIndexPath *toIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
+        for (NSUInteger toIdx = 0; toIdx < newChildren.count; toIdx++) {
+            HsFileBrowerItem *item = newChildren[toIdx];
+            NSUInteger fromIdx = [oldChildren indexOfObject:item];
+            NSIndexPath *fromIndexPath = [NSIndexPath indexPathForRow:fromIdx inSection:0];
+            NSIndexPath *toIndexPath = [NSIndexPath indexPathForRow:toIdx inSection:0];
             [self.collectionView moveItemAtIndexPath:fromIndexPath toIndexPath:toIndexPath];
         }
     } completion:nil];
 }
 
 - (void)_sortByName {
-    NSArray *newChildren = [_item.children sortedArrayUsingComparator:^NSComparisonResult(HsFileBrowerItem * _Nonnull obj1, HsFileBrowerItem * _Nonnull obj2) {
-        return [obj1.name compare:obj2.name];
-    }];
-    [self _reloadWithNewChildren:newChildren];
+    NSArray *oldChildrne = _item.children.copy;
+    [_item sortChildrenWithType:HsFileBrowerItemSortByName];
+    [self _reloadWithNewChildren:_item.children oldChildren:oldChildrne];
 }
 
 - (void)_sortByDate {
-    NSArray *newChildren = [_item.children sortedArrayUsingComparator:^NSComparisonResult(HsFileBrowerItem * _Nonnull obj1, HsFileBrowerItem * _Nonnull obj2) {
-        return [obj1.modifyDateString compare:obj2.modifyDateString];
-    }];
-    [self _reloadWithNewChildren:newChildren];
+    NSArray *oldChildrne = _item.children.copy;
+    [_item sortChildrenWithType:HsFileBrowerItemSortByDate];
+    [self _reloadWithNewChildren:_item.children oldChildren:oldChildrne];
 }
 
 - (void)_sortBySize {
-    NSArray *newChildren = [_item.children sortedArrayUsingComparator:^NSComparisonResult(HsFileBrowerItem * _Nonnull obj1, HsFileBrowerItem * _Nonnull obj2) {
-        return [obj1.sizeString compare:obj2.sizeString];
-    }];
-    [self _reloadWithNewChildren:newChildren];
+    NSArray *oldChildrne = _item.children.copy;
+    [_item sortChildrenWithType:HsFileBrowerItemSortBySize];
+    [self _reloadWithNewChildren:_item.children oldChildren:oldChildrne];
 }
 
 - (void)_sortByType {
-    NSArray *newChildren = [_item.children sortedArrayUsingComparator:^NSComparisonResult(HsFileBrowerItem * _Nonnull obj1, HsFileBrowerItem * _Nonnull obj2) {
-        return [obj1.extension compare:obj2.extension];
-    }];
-    [self _reloadWithNewChildren:newChildren];
+    NSArray *oldChildrne = _item.children.copy;
+    [_item sortChildrenWithType:HsFileBrowerItemSortByType];
+    [self _reloadWithNewChildren:_item.children oldChildren:oldChildrne];
 }
 
 /// MARK: - getter

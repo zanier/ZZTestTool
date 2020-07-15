@@ -20,6 +20,7 @@
 }
 
 + (UIImage *)hs_imageNamed:(NSString *)imageName type:(NSString *)type inDirectory:(NSString *)directory {
+    if (!imageName) return nil;
     UIImage *image = [[UIImage imageWithContentsOfFile:[[self hs_testToolBundle] pathForResource:imageName ofType:type inDirectory:directory]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     return image;
 }

@@ -37,7 +37,7 @@
     self.textLabel.text = _item.name;
     if (_item.isDir) {
         self.imageView.image = [HsFileBrowerManager imageWithFileType:_item.type];
-        self.detailLabel.text = [NSString stringWithFormat:@"%li 项", _item.childrenCount];
+        self.detailLabel.text = [NSString stringWithFormat:@"%lu 项", (unsigned long)_item.childrenCount];
     } else if (_item.isImage) {
         NSData *imageData = [NSData dataWithContentsOfFile:_item.path options:NSDataReadingMappedIfSafe error:nil];
         self.imageView.image = [UIImage imageWithData:imageData];
@@ -154,7 +154,7 @@
     [super layoutSubviews];
     CGFloat contentWidth = CGRectGetWidth(self.contentView.bounds);
     CGFloat labelWidth = contentWidth;
-    CGFloat imageWidth = 65.0f;
+    CGFloat imageWidth = 75.0f;
     _imageView.frame = CGRectMake((contentWidth - imageWidth) / 2, 10, imageWidth, imageWidth);
     CGSize fitedSize = [_textLabel sizeThatFits:CGSizeMake(labelWidth, 42)];
     CGSize detailFitedSize = [_detailLabel sizeThatFits:CGSizeMake(labelWidth, 42)];

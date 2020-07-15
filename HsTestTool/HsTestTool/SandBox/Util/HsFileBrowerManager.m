@@ -361,7 +361,6 @@ static NSString *const HsFileBrowerErrorDomin = @"HsFileBrowerErrorDomin";
 + (UIImage *)imageWithActionText:(NSString *)text {
     NSString *imageName = HsActionImageNameWithActionText(text);
     UIImage *image = [NSBundle hs_imageNamed:imageName type:@"png" inDirectory:@"ActionIcon"];
-
     return image;
 }
 

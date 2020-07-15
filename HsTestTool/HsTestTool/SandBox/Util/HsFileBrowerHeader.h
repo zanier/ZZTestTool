@@ -281,26 +281,28 @@ static NSString *HsImageNameWithType(HsFileBrowerFileType type) {
     return typeImageName;
 }
 
+/// 操作图标
+/// @param text 操作字段
 static NSString *HsActionImageNameWithActionText(NSString *text) {
     NSString *imageName = nil;
     if ([HsFileBrowerActionPage_Copy isEqualToString:text]) {
-        imageName = @"share@2x";
+        imageName = @"icon_action_paste@2x";
     } else if ([HsFileBrowerActionPage_Duplicate isEqualToString:text]) {
-        imageName = @"share@2x";
+        imageName = @"icon_action_copy@2x";
     } else if ([HsFileBrowerActionPage_Move isEqualToString:text]) {
-        imageName = @"share@2x";
+        imageName = @"icon_action_move@2x";
     } else if ([HsFileBrowerActionPage_Delete isEqualToString:text]) {
-        imageName = @"delete@2x";
+        imageName = @"icon_action_delete@2x";
     } else if ([HsFileBrowerActionPage_Brief isEqualToString:text]) {
-        imageName = @"share@2x";
+        imageName = @"icon_action_info@2x";
     } else if ([HsFileBrowerActionPage_Rename isEqualToString:text]) {
-        imageName = @"share@2x";
+        imageName = @"icon_action_rename@2x";
     } else if ([HsFileBrowerActionPage_Share isEqualToString:text]) {
-        imageName = @"share@2x";
+        imageName = @"icon_action_out@2x";
     } else if ([HsFileBrowerActionPage_Select isEqualToString:text]) {
-        imageName = @"share@2x";
+        imageName = @"icon_action_select@2x";
     } else if ([HsFileBrowerActionPage_Mkdir isEqualToString:text]) {
-        imageName = @"share@2x";
+        imageName = @"icon_action_mkdir@2x";
     } else if ([HsFileBrowerActionPage_SortByName isEqualToString:text]) {
     } else if ([HsFileBrowerActionPage_SortByDate isEqualToString:text]) {
     } else if ([HsFileBrowerActionPage_SortBySize isEqualToString:text]) {
