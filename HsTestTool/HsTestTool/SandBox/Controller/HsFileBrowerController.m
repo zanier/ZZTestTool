@@ -12,9 +12,8 @@
 #import "HsTestToolDefine.h"
 #import "HsFileBrowerItem.h"
 #import "HsFileBrowerPage.h"
-#import <QuickLook/QuickLook.h>
 
-@interface HsFileBrowerController () <HsFileBrowerScrollHeaderDelegate, HsFileBrowerPageDelegate, UINavigationControllerDelegate, QLPreviewControllerDataSource> {
+@interface HsFileBrowerController () <HsFileBrowerScrollHeaderDelegate, HsFileBrowerPageDelegate, UINavigationControllerDelegate, HsQLPreviewControllerDataSource> {
     HsFileBrowerItem *_currentItem;
 }
 
@@ -183,10 +182,12 @@
         [plistBrowerPage performSelector:initSelector withObject:item.path];
 #pragma clang diagnostic pop
         return plistBrowerPage;
+#ifdef HSTESTTOOL_NEED_QUICKLOOK
     } else if (1 && [QLPreviewController canPreviewItem:item.url]) {
         QLPreviewController *previewController = [[QLPreviewController alloc] init];
         previewController.dataSource = self;
         return previewController;
+#endif
     }
     return nil;
 }
@@ -303,6 +304,8 @@
     [self enterDirectoryWithItem:item];
 }
 
+#ifdef HSTESTTOOL_NEED_QUICKLOOK
+
 /// MARK: - <QLPreviewControllerDataSource>
 
 - (NSInteger)numberOfPreviewItemsInPreviewController:(QLPreviewController *)controller {
@@ -312,5 +315,7 @@
 - (id <QLPreviewItem>)previewController:(QLPreviewController *)controller previewItemAtIndex:(NSInteger)index {
     return _currentItem.url;
 }
+
+#endif
 
 @end

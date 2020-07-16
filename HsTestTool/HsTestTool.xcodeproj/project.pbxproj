@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3A60914A24B2FC5F009D5BB1 /* HsPlistBrowerEditPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A60914924B2FC5F009D5BB1 /* HsPlistBrowerEditPage.m */; };
 		3A60914E24B30C13009D5BB1 /* swift.gif in Resources */ = {isa = PBXBuildFile; fileRef = 3A60914D24B30C13009D5BB1 /* swift.gif */; };
+		3A64D26324C091030081163C /* QuickLook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A64D26224C091030081163C /* QuickLook.framework */; };
 		AC14DFEC24BC51BC00195606 /* HsConfigBrowerPage.m in Sources */ = {isa = PBXBuildFile; fileRef = AC14DFEB24BC51BC00195606 /* HsConfigBrowerPage.m */; };
 		AC14DFF224BC55FF00195606 /* HsConfigBrowerHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = AC14DFF124BC55FF00195606 /* HsConfigBrowerHeaderView.m */; };
 		AC14DFF524BC5DDE00195606 /* HsConfigBrowerPlistPage.m in Sources */ = {isa = PBXBuildFile; fileRef = AC14DFF424BC5DDE00195606 /* HsConfigBrowerPlistPage.m */; };
@@ -48,6 +49,7 @@
 		3A60914924B2FC5F009D5BB1 /* HsPlistBrowerEditPage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HsPlistBrowerEditPage.m; sourceTree = "<group>"; };
 		3A60914C24B30C05009D5BB1 /* image01.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = image01.psd; sourceTree = "<group>"; };
 		3A60914D24B30C13009D5BB1 /* swift.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = swift.gif; sourceTree = "<group>"; };
+		3A64D26224C091030081163C /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
 		AC14DFEA24BC51BC00195606 /* HsConfigBrowerPage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HsConfigBrowerPage.h; sourceTree = "<group>"; };
 		AC14DFEB24BC51BC00195606 /* HsConfigBrowerPage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HsConfigBrowerPage.m; sourceTree = "<group>"; };
 		AC14DFF024BC55FF00195606 /* HsConfigBrowerHeaderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HsConfigBrowerHeaderView.h; sourceTree = "<group>"; };
@@ -116,6 +118,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A64D26324C091030081163C /* QuickLook.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -131,6 +134,14 @@
 				AC2A650424B71BF100FF8D6B /* TestBundle.bundle */,
 			);
 			path = testFile;
+			sourceTree = "<group>";
+		};
+		3A64D26124C091020081163C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3A64D26224C091030081163C /* QuickLook.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		AC14DFED24BC55B400195606 /* PlistBrowerTableView */ = {
@@ -178,6 +189,7 @@
 			children = (
 				AC8E904B24AC1B340086E3A7 /* HsTestTool */,
 				AC8E904A24AC1B340086E3A7 /* Products */,
+				3A64D26124C091020081163C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};

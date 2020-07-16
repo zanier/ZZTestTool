@@ -10,6 +10,9 @@
 #define HsFileBrowerHeader_h
 
 #import <Foundation/Foundation.h>
+#ifdef HSTESTTOOL_NEED_QUICKLOOK
+#import <QuickLook/QuickLook.h>
+#endif
 
 typedef NS_ENUM(NSUInteger, HsFileBrowerFileType) {
     HsFileBrowerFileTypeUnknown = 0,
@@ -312,5 +315,13 @@ static NSString *HsActionImageNameWithActionText(NSString *text) {
 }
 
 #pragma clang diagnostic pop
+
+#ifdef HSTESTTOOL_NEED_QUICKLOOK
+@protocol HsQLPreviewControllerDataSource <QLPreviewControllerDataSource>
+@end
+#else
+@protocol HsQLPreviewControllerDataSource
+@end
+#endif
 
 #endif /* HsFileBrowerHeader_h */

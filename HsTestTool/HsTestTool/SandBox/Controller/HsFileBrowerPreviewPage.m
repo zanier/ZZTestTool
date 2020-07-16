@@ -7,9 +7,9 @@
 //
 
 #import "HsFileBrowerPreviewPage.h"
-#import <QuickLook/QuickLook.h>
+#import "HsFileBrowerHeader.h"
 
-@interface HsFileBrowerPreviewPage () <QLPreviewControllerDataSource>
+@interface HsFileBrowerPreviewPage () <HsQLPreviewControllerDataSource>
 
 @end
 
@@ -20,6 +20,8 @@
     // Do any additional setup after loading the view.
 }
 
+#ifdef HSTESTTOOL_NEED_QUICKLOOK
+
 /// MARK: - <QLPreviewControllerDataSource>
 
 - (NSInteger)numberOfPreviewItemsInPreviewController:(QLPreviewController *)controller {
@@ -29,5 +31,7 @@
 - (id <QLPreviewItem>)previewController:(QLPreviewController *)controller previewItemAtIndex:(NSInteger)index {
     return nil;
 }
+
+#endif
 
 @end
