@@ -20,18 +20,35 @@
 
 /// MARK: - init
 
+/// 工程创建方法
 + (instancetype)createPage:(NSDictionary*)params {
     HsPlistBrowerController *page = [[HsPlistBrowerController alloc] init];
-    if (params[HsPlistBrowerPageObjectCreateKey]) {
+    if (params && params[HsPlistBrowerPageObjectCreateKey]) {
         id obj = params[HsPlistBrowerPageObjectCreateKey];
-        page.plistPage = [[HsPlistBrowerPage alloc] initWithObject:obj];
-    } else if (params[HsPlistBrowerPagePlsitFilePathCreateKey]) {
+        page.object = obj;
+    } else if (params && params[HsPlistBrowerPagePlsitFilePathCreateKey]) {
         NSString *plistFilePath = params[HsPlistBrowerPagePlsitFilePathCreateKey];
-        page.plistPage = [[HsPlistBrowerPage alloc] initWithPlistFilePath:plistFilePath];
-    } else {
-        page.plistPage = [[HsPlistBrowerPage alloc] init];
+        page.path = plistFilePath;
     }
     return page;
+}
+
+/// 初始化方法
+/// @param anObject 基本类型数据，如NSArray、NSDictionary、NSString、NSNumber、NSData等
+- (instancetype)initWithObject:(id)anObject {
+    if (self == [super init]) {
+        _object = anObject;
+    }
+    return self;
+}
+
+/// 初始化方法
+/// @param path 根结点文件（.plist）路径
+- (instancetype)initWithPlistFilePath:(NSString *)path {
+    if (self == [super init]) {
+        _path = path.copy;
+    }
+    return self;
 }
 
 /// MARK: - life cycle
@@ -58,8 +75,17 @@
 }
 
 - (void)setupNavigation {
+    if (!_plistPage) {
+        if (_object) {
+            _plistPage = [[HsPlistBrowerPage alloc] initWithObject:_object];
+        } else if (_path) {
+            _plistPage = [[HsPlistBrowerPage alloc] initWithPlistFilePath:_path];
+        } else  {
+            _plistPage = [[HsPlistBrowerPage alloc] init];
+        }
+    }
     /// done
-    UIViewController *rootVC = self.plistPage;
+    UIViewController *rootVC = _plistPage;
     rootVC.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(pop)];
     rootVC.navigationItem.leftBarButtonItem.tintColor = UIColor.systemBlueColor;
     /// navigation

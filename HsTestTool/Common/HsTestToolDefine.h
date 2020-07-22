@@ -10,9 +10,7 @@
 #define HsTestToolDefine_h
 
 #import "NSBundle+HsTestTool.h"
-
-/// <QuickLook> 框架支持
-#define HSTESTTOOL_NEED_QUICKLOOK    1
+#import "HsTestToolConfig.h"
 
 /// MARK: - 屏幕高度、宽度
 #ifndef kScreenWidth

@@ -8,7 +8,7 @@
 
 #import "ViewController.h"
 #import "HsFileBrowerPage.h"
-#import "HsPlistBrowerPage.h"
+#import "HsPlistBrowerController.h"
 #import "HsFileBrowerController.h"
 #import "HsConfigBrowerPage.h"
 
@@ -99,7 +99,8 @@ static NSString *const ViewController_testFile =  @"测试文件";
     NSString *title = _dataSource[indexPath.row];
     if ([ViewController_Plist isEqualToString:title]) {
         NSString *path = [[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"];
-        [self.navigationController pushViewController:[[HsPlistBrowerPage alloc] initWithPlistFilePath:path] animated:YES];
+        HsPlistBrowerController *plistVC = [[HsPlistBrowerController alloc] initWithPlistFilePath:path];
+        [self.navigationController pushViewController:plistVC animated:YES];
     } else if ([ViewController_Sandbox isEqualToString:title]) {
         [self.navigationController pushViewController:[[HsFileBrowerController alloc] init] animated:YES];
     } else if ([ViewController_testFile isEqualToString:title]) {

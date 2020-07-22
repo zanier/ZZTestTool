@@ -31,6 +31,7 @@
 
 /// MARK: - init
 
+/// 初始化方法
 - (instancetype)init {
     if (self = [super init]) {}
     return self;

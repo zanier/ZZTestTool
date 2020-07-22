@@ -18,11 +18,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 初始化方法
 /// @param anObject 基本类型数据，如NSArray、NSDictionary、NSString、NSNumber、NSData等
-- (instancetype)initWithObject:(id)anObject;
+- (instancetype)initWithObject:(nullable id)anObject;
 
 /// 初始化方法
 /// @param path plist文件路径
-- (instancetype)initWithPlistFilePath:(NSString *)path;
+- (instancetype)initWithPlistFilePath:(nullable NSString *)path;
 
 /// plist 根结点数据
 @property (nonatomic, nullable, strong) id object;

@@ -103,6 +103,7 @@
 		AC4F12B824C70CF00035DE6A /* HsPlistBrowerNodeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HsPlistBrowerNodeView.h; sourceTree = "<group>"; };
 		AC4F12B924C70CF00035DE6A /* HsPlistBrowerNodeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HsPlistBrowerNodeView.m; sourceTree = "<group>"; };
 		AC4F12D524C70F850035DE6A /* TestPlsit.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TestPlsit.plist; sourceTree = "<group>"; };
+		AC4F12D724C7CEC80035DE6A /* HsTestToolConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HsTestToolConfig.h; sourceTree = "<group>"; };
 		AC8E904924AC1B340086E3A7 /* HsTestToolExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HsTestToolExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC8E904C24AC1B340086E3A7 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		AC8E904D24AC1B340086E3A7 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -197,6 +198,7 @@
 				AC4F128524C70CEF0035DE6A /* PlistBrowerTableView */,
 				AC4F128A24C70CEF0035DE6A /* NSBundle+HsTestTool.m */,
 				AC4F128B24C70CEF0035DE6A /* HsTestToolDefine.h */,
+				AC4F12D724C7CEC80035DE6A /* HsTestToolConfig.h */,
 				AC4F128C24C70CEF0035DE6A /* HsTestBaseViewController.h */,
 				AC4F128D24C70CEF0035DE6A /* NSBundle+HsTestTool.h */,
 			);
@@ -238,15 +240,15 @@
 		AC4F129324C70CEF0035DE6A /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				AC4F129C24C70CEF0035DE6A /* HsFileBrowerController.h */,
+				AC4F129624C70CEF0035DE6A /* HsFileBrowerController.m */,
+				AC4F129924C70CEF0035DE6A /* HsFileBrowerPage.h */,
 				AC4F129424C70CEF0035DE6A /* HsFileBrowerPage.m */,
 				AC4F129524C70CEF0035DE6A /* HsFileBrowerPreviewPage.h */,
-				AC4F129624C70CEF0035DE6A /* HsFileBrowerController.m */,
 				AC4F129724C70CEF0035DE6A /* HsFileBrowerActionPage.m */,
 				AC4F129824C70CEF0035DE6A /* HsFileBrowerBriefPage.h */,
-				AC4F129924C70CEF0035DE6A /* HsFileBrowerPage.h */,
 				AC4F129A24C70CEF0035DE6A /* HsFileBrowerPreviewPage.m */,
 				AC4F129B24C70CEF0035DE6A /* HsFileBrowerActionPage.h */,
-				AC4F129C24C70CEF0035DE6A /* HsFileBrowerController.h */,
 				AC4F129D24C70CEF0035DE6A /* HsFileBrowerBriefPage.m */,
 			);
 			path = Controller;
@@ -289,14 +291,14 @@
 		AC4F12AB24C70CF00035DE6A /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				AC4F12AC24C70CF00035DE6A /* HsPlistBrowerPage.m */,
-				AC4F12AD24C70CF00035DE6A /* HsPlistBrowerEditPage.h */,
-				AC4F12AE24C70CF00035DE6A /* HsPlistBrowerController.m */,
-				AC4F12AF24C70CF00035DE6A /* HsPlistBrowerSearchResultPage.m */,
-				AC4F12B024C70CF00035DE6A /* HsPlistBrowerEditPage.m */,
 				AC4F12B124C70CF00035DE6A /* HsPlistBrowerPage.h */,
+				AC4F12AC24C70CF00035DE6A /* HsPlistBrowerPage.m */,
 				AC4F12B224C70CF00035DE6A /* HsPlistBrowerController.h */,
+				AC4F12AE24C70CF00035DE6A /* HsPlistBrowerController.m */,
 				AC4F12B324C70CF00035DE6A /* HsPlistBrowerSearchResultPage.h */,
+				AC4F12AF24C70CF00035DE6A /* HsPlistBrowerSearchResultPage.m */,
+				AC4F12AD24C70CF00035DE6A /* HsPlistBrowerEditPage.h */,
+				AC4F12B024C70CF00035DE6A /* HsPlistBrowerEditPage.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
