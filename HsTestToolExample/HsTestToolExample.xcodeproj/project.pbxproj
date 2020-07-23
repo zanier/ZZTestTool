@@ -209,8 +209,8 @@
 			isa = PBXGroup;
 			children = (
 				AC4F128624C70CEF0035DE6A /* HsPlistBrowerTableView.h */,
-				AC4F128724C70CEF0035DE6A /* HsPlistBrowerPageCell.h */,
 				AC4F128824C70CEF0035DE6A /* HsPlistBrowerTableView.m */,
+				AC4F128724C70CEF0035DE6A /* HsPlistBrowerPageCell.h */,
 				AC4F128924C70CEF0035DE6A /* HsPlistBrowerPageCell.m */,
 			);
 			path = PlistBrowerTableView;

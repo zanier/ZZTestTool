@@ -97,19 +97,6 @@
     return @"";
 }
 
-/*
-- (UILabel *)typeLabel {
-    if (_typeLabel) {
-        return _typeLabel;
-    }
-    _typeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 80, 21)];
-    _typeLabel.textColor = [UIColor grayColor];
-    _typeLabel.font = [UIFont systemFontOfSize:12.0f];
-    _typeLabel.textAlignment = NSTextAlignmentRight;
-    return _typeLabel;
-}
-*/
-
 - (void)highlightSearchText:(NSString *)searchText {
     if (self.textLabel.text) {
         NSRange textRange = [[self.textLabel.text uppercaseString] rangeOfString:[searchText uppercaseString]];
@@ -137,6 +124,7 @@
 
 /// 回执收起展开的小三角
 - (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
     if (self.node.type == HsPlistNodeTypeArray || self.node.type == HsPlistNodeTypeDictionary) {
         CGFloat midX = self.node.depth * self.indentationWidth + 5.0f;
         CGFloat midY = CGRectGetMidY(self.contentView.bounds);
@@ -150,7 +138,8 @@
             CGContextAddLineToPoint(context, midX - 3, midY + 5);
             CGContextAddLineToPoint(context, midX + 3, midY);
         }
-        CGContextSetFillColorWithColor(context, UIColor.grayColor.CGColor);
+        CGContextClosePath(context);
+        CGContextSetFillColorWithColor(context, UIColor.blackColor.CGColor);
         CGContextDrawPath(context, kCGPathFillStroke);
     }
 }
