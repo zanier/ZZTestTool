@@ -2,6 +2,12 @@
 
 2020-07-22，zz
 
+* [介绍](#介绍)
+* [使用](#使用)
+* [App 信息收集](#App 信息收集)
+* [PlistBrower](#PlistBrower)
+* [SandBoxBrower](#SandBoxBrower)
+
 ## 介绍
 
 该项目为xx程序测试工具，以帮助解决开发过程中遇到的部分问题，提高开发质量与效率。
@@ -87,48 +93,51 @@ Common 文件夹下包含基类、通用工具、图片等资源。
 
 Plist 文件浏览工具，页面如下所示：
 
-<img src="/Users/handsome/Desktop/workplace/HsTestTool/pics/plist_brower_01.PNG" alt="plist_brower_01" style="zoom: 25%;" /> <img src="/Users/handsome/Desktop/workplace/HsTestTool/pics/plist_brower_02.PNG" alt="plist_brower_02" style="zoom:25%;" />
+<img src="./pics/plist_brower_01.PNG" alt="plist_brower_01" style="zoom: 25%;" /> 
 
-#### 使用说明
+#### 创建
 
-`HsPlistBrowerController` 是Plist 浏览页面的根页面，头文件声明：
-
-```objective-c
-/// `createPage:` 参数中基本类型对象的key
-static NSString *const HsPlistBrowerPageObjectCreateKey = @"HsPlistBrowerPageObjectCreateKey";
-/// `createPage:` 参数中Plist文件路径的key
-static NSString *const HsPlistBrowerPagePlsitFilePathCreateKey = @"HsPlistBrowerPagePlsitFilePathCreateKey";
-
-/// Plist 文件浏览页面
-@interface HsPlistBrowerController : HsTestBaseViewController
-
-/// 工程创建方法，参数内容参考上面的 key
-+ (instancetype)createPage:(nullable NSDictionary*)params;
-
-/// 初始化方法
-/// @param anObject 基本类型数据，如NSArray、NSDictionary、NSString、NSNumber、NSData等
-- (instancetype)initWithObject:(nullable id)anObject;
-
-/// 初始化方法
-/// @param path plist文件路径
-- (instancetype)initWithPlistFilePath:(nullable NSString *)path;
-
-/// plist 根结点数据
-@property (nonatomic, nullable, strong) id object;
-
-/// 根结点文件（.plist）路径
-@property (nonatomic, nullable, copy) NSString *path;
-
-@end
-```
-
-#### 使用
+普通创建方式
 
 ```objective-c
 NSString *path = [[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"];
 HsPlistBrowerController *plistVC = [[HsPlistBrowerController alloc] initWithPlistFilePath:path];
+//id object = [NSDictionary dictionaryWithContentsOfFile:path];
+//HsPlistBrowerController *plistVC = [[HsPlistBrowerController alloc] initWithObject:object];
 [self.navigationController pushViewController:plistVC animated:YES];
 ```
+
+Light 创建模式
+
+```objective-c
+NSString *path = [[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"];
+//id object = [NSDictionary dictionaryWithContentsOfFile:path];
+HsPlistBrowerController *plistPage = [HsPlistBrowerController createPage:@{
+    HsPlistBrowerPagePlsitFilePathCreateKey : path,
+    //HsPlistBrowerPageObjectCreateKey : object,
+}];
+[self.navigationController pushViewController:plistPage animated:YES];
+```
+
+添加 xml 后通过宏方法
+
+```objective-c
+NSDictionary *params = @{
+		@"HsPlistBrowerPagePlsitFilePathCreateKey" : path,
+		//@"HsPlistBrowerPageObjectCreateKey" : object,
+};
+HsShowPage(@"plistPage", params);
+```
+
+#### 操作
+
+<img src="./pics/plist_brower_02.PNG" alt="plist_brower_02" style="zoom:25%;" /><img src="./pics/plist_brower_03.PNG" alt="plist_brower_02" style="zoom:25%;" />
+
+通过搜索栏进行搜索定位
+
+长按单元格弹出操作菜单，进行拷贝、创建、删除、修改等操作
+
+可通过编辑功能修改本地配置文件，测试时谨慎使用。
 
 
 
@@ -136,29 +145,59 @@ HsPlistBrowerController *plistVC = [[HsPlistBrowerController alloc] initWithPlis
 
 沙盒文件浏览页面，页面如下所示：
 
-<img src="/Users/handsome/Desktop/workplace/HsTestTool/pics/sandbox_brower_01.PNG" alt="sandbox_brower_01" style="zoom:25%;" /><img src="/Users/handsome/Desktop/workplace/HsTestTool/pics/sandbox_brower_02.PNG" alt="sandbox_brower_02" style="zoom:25%;" />
+<img src="./pics/sandbox_brower_01.PNG" alt="sandbox_brower_01" style="zoom:25%;" /><img src="./pics/sandbox_brower_02.PNG" alt="sandbox_brower_02" style="zoom:25%;" />
 
-#### 使用
+#### 创建
 
-主页面头文件声明：
+普通创建方式
 
 ```objective-c
-/// `createPage:` 参数中基本根目录的key
-static NSString *const HsFileBrowerControllerRootPathKey = @"HsFileBrowerControllerRootPathKey";
-
-/// 沙盒文件浏览页面
-@interface HsFileBrowerController : HsTestBaseViewController
-
-/// 工程创建方法，参数内容参考上面的 key
-+ (instancetype)createPage:(nullable NSDictionary*)params;
-
-/// 初始化方法
-/// @param rootPath 根目录文件路径，传 nil 则进入沙盒根目录
-- (instancetype)initWithRootPath:(nullable NSString *)rootPath;
-
-/// 根目录文件路径
-@property (nonatomic, copy) NSString *rootPath;
-
-@end
+/// 不指定路径，则默认进入沙盒根目录 NSHomeDirectory()
+[self.navigationController pushViewController:[[HsFileBrowerController alloc] init] animated:YES];
 ```
+
+进入指定目录
+
+```
+HsFileBrowerController *fileBrowerPage = [[HsFileBrowerController alloc] initWithRootPath:NSHomeDirectory()];
+[self.navigationController pushViewController:fileBrowerPage animated:YES];
+```
+
+Light 创建模式
+
+```objective-c
+NSString *path = [[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"];
+//id object = [NSDictionary dictionaryWithContentsOfFile:path];
+HsPlistBrowerController *plistPage = [HsPlistBrowerController createPage:@{
+    HsPlistBrowerPagePlsitFilePathCreateKey : path,
+}];
+[self.navigationController pushViewController:plistPage animated:YES];
+```
+
+添加 xml 后通过宏方法
+
+```objective-c
+NSDictionary *params = @{
+		@"HsPlistBrowerPagePlsitFilePathCreateKey" : path,
+};
+HsShowPage(@"plistPage", params);
+```
+
+#### 操作
+
+滑动、点击导航栏路径可快速切换当前页面路径
+
+长按文件、文件夹弹出操作菜单
+
+长按页面空白处弹出操作菜单
+
+提供部分常规文件的预览功能
+
+通过共享功能可以将文件通过钉钉、微信、隔空投送等工具传输至电脑
+
+Plist 文件使用 [PlistBrowerPage]() 进行展示。
+
+
+
+## 其他功能
 

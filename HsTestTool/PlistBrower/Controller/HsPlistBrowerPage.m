@@ -215,17 +215,24 @@
 - (void)showMenuControllerAtPoint:(CGPoint)location {
     [self becomeFirstResponder];
     UIMenuController *menu = [UIMenuController sharedMenuController];
+    UIMenuItem *cutItem = [[UIMenuItem alloc] initWithTitle:@"剪切" action:@selector(_copyKey:)];
+    UIMenuItem *copyItem = [[UIMenuItem alloc] initWithTitle:@"粘贴" action:@selector(_copyKey:)];
+    UIMenuItem *addRowItem = [[UIMenuItem alloc] initWithTitle:@"添加" action:@selector(_addRow:)];
+    UIMenuItem *editItem = [[UIMenuItem alloc] initWithTitle:@"编辑" action:@selector(_createDirectory:)];
+    UIMenuItem *deleteItem = [[UIMenuItem alloc] initWithTitle:@"删除" action:@selector(_createDirectory:)];
+    UIMenuItem *copyKeyValueItem = [[UIMenuItem alloc] initWithTitle:@"复制" action:@selector(_copyKey:)];
     UIMenuItem *copyKeyItem = [[UIMenuItem alloc] initWithTitle:@"复制键" action:@selector(_copyKey:)];
     UIMenuItem *copyValueItem = [[UIMenuItem alloc] initWithTitle:@"复制值" action:@selector(_copyValue:)];
     //UIMenuItem *editItem = [[UIMenuItem alloc] initWithTitle:@"编辑" action:@selector(_paste:)];
-    UIMenuItem *addRowItem = [[UIMenuItem alloc] initWithTitle:@"添加" action:@selector(_addRow:)];
-    UIMenuItem *createDirItem = [[UIMenuItem alloc] initWithTitle:@"删除" action:@selector(_createDirectory:)];
     menu.menuItems = @[
+        cutItem,
+        copyItem,
+        addRowItem,
+        editItem,
+        deleteItem,
+        copyKeyValueItem,
         copyKeyItem,
         copyValueItem,
-        //editItem,
-        addRowItem,
-        createDirItem,
     ];
     if (@available(iOS 13.0, *)) {
         [menu showMenuFromView:self.view rect:CGRectMake(location.x, location.y, 0, 0)];
