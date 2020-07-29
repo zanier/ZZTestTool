@@ -1,6 +1,6 @@
 # HSTestTool
 
-2020-07-22，zz
+2020-07-29，zz
 
 * [介绍](#介绍)
 * [使用](#使用)
@@ -69,22 +69,34 @@ Common 文件夹下包含基类、通用工具、图片等资源。
 #define HSTESTTOOL_NEED_RESOURCEBUNDLE
 ```
 
-
-
 ## App 信息收集
 
 该页面展示了手机与 App 的基础信息，以方便信息的收集。
 
 * 系统版本：运行系统的版本，如
+
 * 系统名称：系统的名称，如
+
 * 设备类型：手机的类型
+
 * 设备名称：
-* 应用名称：App 的名称（Display Name）。`[NSBundle mainBundle].infoDictionary[@"CFBundleVersion"]`
+
+* 应用名称：App 的名称（Display Name）
+
+  `[NSBundle mainBundle].infoDictionary[@"CFBundleVersion"]`
+
 * 应用版本：
-* 最新版本：AppStore 的最新版本。从 http://itunes.apple.com/lookup?id=%@ 获取 AppStore 中的应用信息，从中获取最新版本。
+
+* 最新版本：AppStore 的最新版本。
+
+  从 http://itunes.apple.com/lookup?id=%@ 获取 AppStore 中的应用信息，从中获取最新版本。
+
 * 构建版本：当前 App 的构建版本。
+
 * 基线地址：当前项目所属的基线地址名称。
+
 * TCP Host：
+
 * SSL Host：
 
 
@@ -123,8 +135,8 @@ HsPlistBrowerController *plistPage = [HsPlistBrowerController createPage:@{
 
 ```objective-c
 NSDictionary *params = @{
-		@"HsPlistBrowerPagePlsitFilePathCreateKey" : path,
-		//@"HsPlistBrowerPageObjectCreateKey" : object,
+  	@"HsPlistBrowerPagePlsitFilePathCreateKey" : path,
+  	//@"HsPlistBrowerPageObjectCreateKey" : object,
 };
 HsShowPage(@"plistPage", params);
 ```
@@ -133,13 +145,11 @@ HsShowPage(@"plistPage", params);
 
 <img src="./pics/plist_brower_02.PNG" alt="plist_brower_02" height="333.5" /><img src="./pics/plist_brower_03.PNG" alt="plist_brower_02" height="333.5" />
 
-通过搜索栏进行搜索定位
+* 通过搜索栏进行搜索定位
 
-长按单元格弹出操作菜单，进行拷贝、创建、删除、修改等操作
+* 长按单元格弹出操作菜单，进行拷贝、创建、删除、修改等操作
 
-可通过编辑功能修改本地配置文件，测试时谨慎使用。
-
-
+* 可通过编辑功能修改本地配置文件，测试时谨慎使用。
 
 ## SandBoxBrower
 
@@ -169,7 +179,7 @@ Light 创建模式
 NSString *path = [[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"];
 //id object = [NSDictionary dictionaryWithContentsOfFile:path];
 HsPlistBrowerController *plistPage = [HsPlistBrowerController createPage:@{
-    HsPlistBrowerPagePlsitFilePathCreateKey : path,
+  	HsPlistBrowerPagePlsitFilePathCreateKey : path,
 }];
 [self.navigationController pushViewController:plistPage animated:YES];
 ```
@@ -178,26 +188,25 @@ HsPlistBrowerController *plistPage = [HsPlistBrowerController createPage:@{
 
 ```objective-c
 NSDictionary *params = @{
-		@"HsPlistBrowerPagePlsitFilePathCreateKey" : path,
+  	@"HsPlistBrowerPagePlsitFilePathCreateKey" : path,
 };
 HsShowPage(@"plistPage", params);
 ```
 
 #### 操作
 
-滑动、点击导航栏路径可快速切换当前页面路径
+* 滑动、点击导航栏路径可快速切换当前页面路径
 
-长按文件、文件夹弹出操作菜单
+* 长按文件、文件夹弹出操作菜单
 
-长按页面空白处弹出操作菜单
+* 长按页面空白处弹出操作菜单
 
-提供部分常规文件的预览功能
+* 提供部分常规文件的预览功能
 
-通过共享功能可以将文件通过钉钉、微信、隔空投送等工具传输至电脑
+* 通过共享功能可以将文件通过钉钉、微信、隔空投送等工具传输至电脑
 
-Plist 文件使用 [PlistBrowerPage]() 进行展示。
-
-
+* Plist 文件使用 [PlistBrowerPage]() 进行展示。
 
 ## 其他功能
 
+待编辑。
