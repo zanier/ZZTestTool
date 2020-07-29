@@ -93,7 +93,7 @@ Common 文件夹下包含基类、通用工具、图片等资源。
 
 Plist 文件浏览工具，页面如下所示：
 
-<img src="./pics/plist_brower_01.PNG" alt="plist_brower_01" style="zoom: 25%;" /> 
+<img src="./pics/plist_brower_01.PNG" alt="plist_brower_01" height="333.5" /> 
 
 #### 创建
 
@@ -131,7 +131,7 @@ HsShowPage(@"plistPage", params);
 
 #### 操作
 
-<img src="./pics/plist_brower_02.PNG" alt="plist_brower_02" style="zoom:25%;" /><img src="./pics/plist_brower_03.PNG" alt="plist_brower_02" style="zoom:25%;" />
+<img src="./pics/plist_brower_02.PNG" alt="plist_brower_02" height="333.5" /><img src="./pics/plist_brower_03.PNG" alt="plist_brower_02" height="333.5" />
 
 通过搜索栏进行搜索定位
 
@@ -145,7 +145,7 @@ HsShowPage(@"plistPage", params);
 
 沙盒文件浏览页面，页面如下所示：
 
-<img src="./pics/sandbox_brower_01.PNG" alt="sandbox_brower_01" style="zoom:25%;" /><img src="./pics/sandbox_brower_02.PNG" alt="sandbox_brower_02" style="zoom:25%;" />
+<img src="./pics/sandbox_brower_01.PNG" alt="sandbox_brower_01" height="333.5" /><img src="./pics/sandbox_brower_02.PNG" alt="sandbox_brower_02" height="333.5" />
 
 #### 创建
 
