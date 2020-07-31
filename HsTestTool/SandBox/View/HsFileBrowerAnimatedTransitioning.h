@@ -2,8 +2,8 @@
 //  HsFileBrowerAnimatedTransitioning.h
 //  HsBusinessEngine
 //
-//  Created by handsome on 2020/6/30.
-//  Copyright © 2020 tzyj. All rights reserved.
+//  Created by zanier on 2020/6/30.
+//  Copyright © 2020 zanier. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

@@ -2,8 +2,8 @@
 //  HsFileBrowerPreviewPage.m
 //  HsTestTool
 //
-//  Created by handsome on 2020/7/10.
-//  Copyright © 2020 Hundsun. All rights reserved.
+//  Created by zanier on 2020/7/10.
+//  Copyright © 2020 zanier. All rights reserved.
 //
 
 #import "HsFileBrowerPreviewPage.h"
@@ -20,7 +20,7 @@
     // Do any additional setup after loading the view.
 }
 
-#ifdef HSTESTTOOL_NEED_QUICKLOOK
+#ifdef ZZTESTTOOL_NEED_QUICKLOOK
 
 /// MARK: - <QLPreviewControllerDataSource>
 

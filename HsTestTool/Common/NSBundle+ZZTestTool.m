@@ -2,14 +2,14 @@
 //  NSBundle+HsTestTool.m
 //  HsTestTool
 //
-//  Created by handsome on 2020/7/1.
-//  Copyright © 2020 Hundsun. All rights reserved.
+//  Created by zanier on 2020/7/1.
+//  Copyright © 2020 zanier. All rights reserved.
 //
 
-#import "NSBundle+HsTestTool.h"
+#import "NSBundle+ZZTestTool.h"
 #import "HsTestBaseViewController.h"
 
-@implementation NSBundle (HsTestTool)
+@implementation NSBundle (ZZTestTool)
 
 + (instancetype)hs_testToolBundle {
     static NSBundle *testToolBundle = nil;

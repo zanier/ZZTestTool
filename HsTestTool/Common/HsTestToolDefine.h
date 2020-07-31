@@ -1,16 +1,16 @@
 //
-//  HsTestToolDefine.h
+//  ZZTestToolDefine.h
 //  HsTestTool
 //
-//  Created by handsome on 2020/7/3.
-//  Copyright © 2020 Hundsun. All rights reserved.
+//  Created by zanier on 2020/7/3.
+//  Copyright © 2020 zanier. All rights reserved.
 //
 
-#ifndef HsTestToolDefine_h
-#define HsTestToolDefine_h
+#ifndef ZZTestToolDefine_h
+#define ZZTestToolDefine_h
 
-#import "NSBundle+HsTestTool.h"
-#import "HsTestToolConfig.h"
+#import "NSBundle+ZZTestTool.h"
+#import "ZZTestToolConfig.h"
 
 /// MARK: - 屏幕高度、宽度
 #ifndef kScreenWidth
@@ -47,4 +47,4 @@
 #define HsFileBrower_SearchBarHeight 52.0f
 #endif
 
-#endif /* HsTestToolDefine_h */
+#endif /* ZZTestToolDefine_h */

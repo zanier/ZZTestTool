@@ -17,7 +17,7 @@
 		AC4F12BE24C70CF00035DE6A /* HsTestBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AC4F128424C70CEF0035DE6A /* HsTestBaseViewController.m */; };
 		AC4F12BF24C70CF00035DE6A /* HsPlistBrowerTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = AC4F128824C70CEF0035DE6A /* HsPlistBrowerTableView.m */; };
 		AC4F12C024C70CF00035DE6A /* HsPlistBrowerPageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AC4F128924C70CEF0035DE6A /* HsPlistBrowerPageCell.m */; };
-		AC4F12C124C70CF00035DE6A /* NSBundle+HsTestTool.m in Sources */ = {isa = PBXBuildFile; fileRef = AC4F128A24C70CEF0035DE6A /* NSBundle+HsTestTool.m */; };
+		AC4F12C124C70CF00035DE6A /* NSBundle+ZZTestTool.m in Sources */ = {isa = PBXBuildFile; fileRef = AC4F128A24C70CEF0035DE6A /* NSBundle+ZZTestTool.m */; };
 		AC4F12C224C70CF00035DE6A /* HsFileBrowerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AC4F129224C70CEF0035DE6A /* HsFileBrowerManager.m */; };
 		AC4F12C324C70CF00035DE6A /* HsFileBrowerPage.m in Sources */ = {isa = PBXBuildFile; fileRef = AC4F129424C70CEF0035DE6A /* HsFileBrowerPage.m */; };
 		AC4F12C424C70CF00035DE6A /* HsFileBrowerController.m in Sources */ = {isa = PBXBuildFile; fileRef = AC4F129624C70CEF0035DE6A /* HsFileBrowerController.m */; };
@@ -63,10 +63,10 @@
 		AC4F128724C70CEF0035DE6A /* HsPlistBrowerPageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HsPlistBrowerPageCell.h; sourceTree = "<group>"; };
 		AC4F128824C70CEF0035DE6A /* HsPlistBrowerTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HsPlistBrowerTableView.m; sourceTree = "<group>"; };
 		AC4F128924C70CEF0035DE6A /* HsPlistBrowerPageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HsPlistBrowerPageCell.m; sourceTree = "<group>"; };
-		AC4F128A24C70CEF0035DE6A /* NSBundle+HsTestTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+HsTestTool.m"; sourceTree = "<group>"; };
+		AC4F128A24C70CEF0035DE6A /* NSBundle+ZZTestTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+ZZTestTool.m"; sourceTree = "<group>"; };
 		AC4F128B24C70CEF0035DE6A /* HsTestToolDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HsTestToolDefine.h; sourceTree = "<group>"; };
 		AC4F128C24C70CEF0035DE6A /* HsTestBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HsTestBaseViewController.h; sourceTree = "<group>"; };
-		AC4F128D24C70CEF0035DE6A /* NSBundle+HsTestTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+HsTestTool.h"; sourceTree = "<group>"; };
+		AC4F128D24C70CEF0035DE6A /* NSBundle+ZZTestTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+ZZTestTool.h"; sourceTree = "<group>"; };
 		AC4F129024C70CEF0035DE6A /* HsFileBrowerHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HsFileBrowerHeader.h; sourceTree = "<group>"; };
 		AC4F129124C70CEF0035DE6A /* HsFileBrowerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HsFileBrowerManager.h; sourceTree = "<group>"; };
 		AC4F129224C70CEF0035DE6A /* HsFileBrowerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HsFileBrowerManager.m; sourceTree = "<group>"; };
@@ -196,11 +196,11 @@
 				AC4F128324C70CEF0035DE6A /* HsTestTool.bundle */,
 				AC4F128424C70CEF0035DE6A /* HsTestBaseViewController.m */,
 				AC4F128524C70CEF0035DE6A /* PlistBrowerTableView */,
-				AC4F128A24C70CEF0035DE6A /* NSBundle+HsTestTool.m */,
+				AC4F128A24C70CEF0035DE6A /* NSBundle+ZZTestTool.m */,
 				AC4F128B24C70CEF0035DE6A /* HsTestToolDefine.h */,
 				AC4F12D724C7CEC80035DE6A /* HsTestToolConfig.h */,
 				AC4F128C24C70CEF0035DE6A /* HsTestBaseViewController.h */,
-				AC4F128D24C70CEF0035DE6A /* NSBundle+HsTestTool.h */,
+				AC4F128D24C70CEF0035DE6A /* NSBundle+ZZTestTool.h */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -445,7 +445,7 @@
 				AC4F12CB24C70CF00035DE6A /* HsFileBrowerAnimatedTransitioning.m in Sources */,
 				AC4F12C424C70CF00035DE6A /* HsFileBrowerController.m in Sources */,
 				AC4F12C324C70CF00035DE6A /* HsFileBrowerPage.m in Sources */,
-				AC4F12C124C70CF00035DE6A /* NSBundle+HsTestTool.m in Sources */,
+				AC4F12C124C70CF00035DE6A /* NSBundle+ZZTestTool.m in Sources */,
 				AC8E905424AC1B340086E3A7 /* ViewController.m in Sources */,
 				AC4F12C224C70CF00035DE6A /* HsFileBrowerManager.m in Sources */,
 				AC4F12C724C70CF00035DE6A /* HsFileBrowerBriefPage.m in Sources */,

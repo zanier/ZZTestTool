@@ -1,19 +1,18 @@
 //
-//  HsTestToolConfig.h
-//  HsTestToolExample
+//  ZZTestToolConfig.h
+//  ZZTestToolExample
 //
-//  Created by handsome on 2020/7/22.
-//  Copyright © 2020 Hundsun. All rights reserved.
+//  Created by zanier on 2020/7/22.
+//  Copyright © 2020 zanier. All rights reserved.
 //
 
-#ifndef HsTestToolConfig_h
-#define HsTestToolConfig_h
+#ifndef ZZTestToolConfig_h
+#define ZZTestToolConfig_h
 
 /// <QuickLook> 框架支持
-#define HSTESTTOOL_NEED_QUICKLOOK
+#define ZZTESTTOOL_NEED_QUICKLOOK
 
 /// HsTestTool.bundle 图片资源支持
-#define HSTESTTOOL_NEED_RESOURCEBUNDLE
+#define ZZTESTTOOL_NEED_RESOURCEBUNDLE
 
-
-#endif /* HsTestToolConfig_h */
+#endif /* ZZTestToolConfig_h */

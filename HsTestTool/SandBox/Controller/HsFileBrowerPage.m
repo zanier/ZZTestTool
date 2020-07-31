@@ -2,12 +2,12 @@
 //  HsFileBrowerPageViewController.m
 //  HsBusinessEngine
 //
-//  Created by ZZ on 2020/6/4.
-//  Copyright © 2020 tzyj. All rights reserved.
+//  Created by zanier on 2020/6/4.
+//  Copyright © 2020 zanier. All rights reserved.
 //
 
 #import "HsFileBrowerPage.h"
-#import "HsTestToolDefine.h"
+#import "ZZTestToolDefine.h"
 #import "HsFileBrowerManager.h"
 #import "HsFileBrowerScrollHeader.h"
 #import "HsFileBrowerItem.h"
@@ -311,17 +311,17 @@
     if (_collectionView) {
         return _collectionView;
     }
-    CGFloat margin = 16.0f;
+    CGFloat spacing = 16.0f;
     CGFloat column = 3;
-    CGFloat itemWidth = ([UIScreen mainScreen].bounds.size.width - margin * (column + 1)) / column;
+    CGFloat itemWidth = ([UIScreen mainScreen].bounds.size.width - spacing * (column + 1)) / column;
     itemWidth = (CGFloat)((int)itemWidth);
     itemWidth = itemWidth > 125.0f ? 125.0f : itemWidth;
     _layout = [[UICollectionViewFlowLayout alloc] init];
     _layout.itemSize = CGSizeMake(itemWidth, itemWidth * 1.5);
-    _layout.minimumLineSpacing = margin;
-    //_layout.minimumInteritemSpacing = margin;
+    _layout.minimumLineSpacing = spacing;
+    //_layout.minimumInteritemSpacing = spacing;
     _layout.scrollDirection = UICollectionViewScrollDirectionVertical;
-    _layout.sectionInset = UIEdgeInsetsMake(0, margin, 0, margin);
+    _layout.sectionInset = UIEdgeInsetsMake(0, spacing, 0, spacing);
     _collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:_layout];
     _collectionView.dataSource = self;
     _collectionView.delegate = self;

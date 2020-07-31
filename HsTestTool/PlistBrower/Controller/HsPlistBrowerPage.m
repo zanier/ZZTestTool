@@ -2,12 +2,12 @@
 //  HsPlistBrowerPage.m
 //  HsBusinessEngine
 //
-//  Created by ZZ on 2020/6/4.
-//  Copyright © 2020 tzyj. All rights reserved.
+//  Created by zanier on 2020/6/4.
+//  Copyright © 2020 zanier. All rights reserved.
 //
 
 #import "HsPlistBrowerPage.h"
-#import "HsTestToolDefine.h"
+#import "ZZTestToolDefine.h"
 #import "HsPlistBrowerSearchResultPage.h"
 #import "HsPlistBrowerNode.h"
 #import "HsPlistBrowerTableView.h"

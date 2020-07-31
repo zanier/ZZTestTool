@@ -2,8 +2,8 @@
 //  HsPlistBrowerPageCell.h
 //  HsBusinessEngine
 //
-//  Created by ZZ on 2020/6/8.
-//  Copyright © 2020 tzyj. All rights reserved.
+//  Created by zanier on 2020/6/8.
+//  Copyright © 2020 zanier. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

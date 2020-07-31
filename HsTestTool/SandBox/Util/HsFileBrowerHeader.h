@@ -1,327 +1,327 @@
 //
-//  HsFileBrowerHeader.h
-//  HsTestTool
+//  ZZFileBrowerHeader.h
+//  ZZTestTool
 //
-//  Created by handsome on 2020/7/9.
-//  Copyright © 2020 Hundsun. All rights reserved.
+//  Created by zanier on 2020/7/9.
+//  Copyright © 2020 zanier. All rights reserved.
 //
 
-#ifndef HsFileBrowerHeader_h
-#define HsFileBrowerHeader_h
+#ifndef ZZFileBrowerHeader_h
+#define ZZFileBrowerHeader_h
 
 #import <Foundation/Foundation.h>
-#ifdef HSTESTTOOL_NEED_QUICKLOOK
+#ifdef ZZTESTTOOL_NEED_QUICKLOOK
 #import <QuickLook/QuickLook.h>
 #endif
 
-typedef NS_ENUM(NSUInteger, HsFileBrowerFileType) {
-    HsFileBrowerFileTypeUnknown = 0,
-    HsFileBrowerFileTypeDirectory,
+typedef NS_ENUM(NSUInteger, ZZFileBrowerFileType) {
+    ZZFileBrowerFileTypeUnknown = 0,
+    ZZFileBrowerFileTypeDirectory,
     // Image
-    HsFileBrowerFileTypeJPG, HsFileBrowerFileTypePNG, HsFileBrowerFileTypeGIF, HsFileBrowerFileTypeSVG, HsFileBrowerFileTypeBMP, HsFileBrowerFileTypeTIF,
+    ZZFileBrowerFileTypeJPG, ZZFileBrowerFileTypePNG, ZZFileBrowerFileTypeGIF, ZZFileBrowerFileTypeSVG, ZZFileBrowerFileTypeBMP, ZZFileBrowerFileTypeTIF,
     // Audio
-    HsFileBrowerFileTypeMP3, HsFileBrowerFileTypeAAC, HsFileBrowerFileTypeWAV, HsFileBrowerFileTypeOGG,
+    ZZFileBrowerFileTypeMP3, ZZFileBrowerFileTypeAAC, ZZFileBrowerFileTypeWAV, ZZFileBrowerFileTypeOGG,
     // Video
-    HsFileBrowerFileTypeMP4, HsFileBrowerFileTypeAVI, HsFileBrowerFileTypeFLV, HsFileBrowerFileTypeMIDI, HsFileBrowerFileTypeMOV, HsFileBrowerFileTypeMPG, HsFileBrowerFileTypeWMV,
+    ZZFileBrowerFileTypeMP4, ZZFileBrowerFileTypeAVI, ZZFileBrowerFileTypeFLV, ZZFileBrowerFileTypeMIDI, ZZFileBrowerFileTypeMOV, ZZFileBrowerFileTypeMPG, ZZFileBrowerFileTypeWMV,
     // Apple
-    HsFileBrowerFileTypeNSBundle, HsFileBrowerFileTypeDMG, HsFileBrowerFileTypeIPA, HsFileBrowerFileTypeNumbers, HsFileBrowerFileTypePages, HsFileBrowerFileTypeKeynote,
+    ZZFileBrowerFileTypeNSBundle, ZZFileBrowerFileTypeDMG, ZZFileBrowerFileTypeIPA, ZZFileBrowerFileTypeNumbers, ZZFileBrowerFileTypePages, ZZFileBrowerFileTypeKeynote,
     // Google
-    HsFileBrowerFileTypeAPK,
+    ZZFileBrowerFileTypeAPK,
     // Microsoft
-    HsFileBrowerFileTypeWord, HsFileBrowerFileTypeExcel, HsFileBrowerFileTypePPT, HsFileBrowerFileTypeEXE, HsFileBrowerFileTypeDLL,
+    ZZFileBrowerFileTypeWord, ZZFileBrowerFileTypeExcel, ZZFileBrowerFileTypePPT, ZZFileBrowerFileTypeEXE, ZZFileBrowerFileTypeDLL,
     // Document
-    HsFileBrowerFileTypeTXT, HsFileBrowerFileTypeRTF, HsFileBrowerFileTypePDF, HsFileBrowerFileTypeZIP, HsFileBrowerFileType7z, HsFileBrowerFileTypeCVS, HsFileBrowerFileTypeMD,
+    ZZFileBrowerFileTypeTXT, ZZFileBrowerFileTypeRTF, ZZFileBrowerFileTypePDF, ZZFileBrowerFileTypeZIP, ZZFileBrowerFileType7z, ZZFileBrowerFileTypeCVS, ZZFileBrowerFileTypeMD,
     // Programming
-    HsFileBrowerFileTypeSwift, HsFileBrowerFileTypeJava, HsFileBrowerFileTypeC, HsFileBrowerFileTypeCPP, HsFileBrowerFileTypePHP,
-    HsFileBrowerFileTypeJSON, HsFileBrowerFileTypePList, HsFileBrowerFileTypeXML, HsFileBrowerFileTypeDatabase,
-    HsFileBrowerFileTypeJS, HsFileBrowerFileTypeHTML, HsFileBrowerFileTypeCSS,
-    HsFileBrowerFileTypeBIN, HsFileBrowerFileTypeDat, HsFileBrowerFileTypeSQL, HsFileBrowerFileTypeJAR,
+    ZZFileBrowerFileTypeSwift, ZZFileBrowerFileTypeJava, ZZFileBrowerFileTypeC, ZZFileBrowerFileTypeCPP, ZZFileBrowerFileTypePHP,
+    ZZFileBrowerFileTypeJSON, ZZFileBrowerFileTypePList, ZZFileBrowerFileTypeXML, ZZFileBrowerFileTypeDatabase,
+    ZZFileBrowerFileTypeJS, ZZFileBrowerFileTypeHTML, ZZFileBrowerFileTypeCSS,
+    ZZFileBrowerFileTypeBIN, ZZFileBrowerFileTypeDat, ZZFileBrowerFileTypeSQL, ZZFileBrowerFileTypeJAR,
     // Adobe
-    HsFileBrowerFileTypeFlash, HsFileBrowerFileTypePSD, HsFileBrowerFileTypeEPS,
+    ZZFileBrowerFileTypeFlash, ZZFileBrowerFileTypePSD, ZZFileBrowerFileTypeEPS,
     // Other
-    HsFileBrowerFileTypeTTF, HsFileBrowerFileTypeTorrent,
+    ZZFileBrowerFileTypeTTF, ZZFileBrowerFileTypeTorrent,
 };
 
-static NSString *const HsFileBrowerActionPage_Select    = @"选择";
-static NSString *const HsFileBrowerActionPage_Mkdir     = @"新建文件夹";
-static NSString *const HsFileBrowerActionPage_SortByName    = @"名称";
-static NSString *const HsFileBrowerActionPage_SortByDate    = @"日期";
-static NSString *const HsFileBrowerActionPage_SortBySize    = @"大小";
-static NSString *const HsFileBrowerActionPage_SortByType    = @"种类";
+static NSString *const ZZFileBrowerActionPage_Select    = @"选择";
+static NSString *const ZZFileBrowerActionPage_Mkdir     = @"新建文件夹";
+static NSString *const ZZFileBrowerActionPage_SortByName    = @"名称";
+static NSString *const ZZFileBrowerActionPage_SortByDate    = @"日期";
+static NSString *const ZZFileBrowerActionPage_SortBySize    = @"大小";
+static NSString *const ZZFileBrowerActionPage_SortByType    = @"种类";
 
-static NSString *const HsFileBrowerActionPage_Copy      = @"拷贝";
-static NSString *const HsFileBrowerActionPage_Duplicate = @"复制";
-static NSString *const HsFileBrowerActionPage_Move      = @"移动";
-static NSString *const HsFileBrowerActionPage_Delete    = @"删除";
-static NSString *const HsFileBrowerActionPage_Rename    = @"重命名";
-static NSString *const HsFileBrowerActionPage_Brief     = @"简介";
-static NSString *const HsFileBrowerActionPage_Share     = @"共享";
+static NSString *const ZZFileBrowerActionPage_Copy      = @"拷贝";
+static NSString *const ZZFileBrowerActionPage_Duplicate = @"复制";
+static NSString *const ZZFileBrowerActionPage_Move      = @"移动";
+static NSString *const ZZFileBrowerActionPage_Delete    = @"删除";
+static NSString *const ZZFileBrowerActionPage_Rename    = @"重命名";
+static NSString *const ZZFileBrowerActionPage_Brief     = @"简介";
+static NSString *const ZZFileBrowerActionPage_Share     = @"共享";
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-function"
 
 /// 通过文件扩展名获取文件类型
 /// @param extension 文件扩展名
-static HsFileBrowerFileType HsFileTypeWithExtension(NSString *extension) {
-    HsFileBrowerFileType type = HsFileBrowerFileTypeUnknown;
+static ZZFileBrowerFileType ZZFileTypeWithExtension(NSString *extension) {
+    ZZFileBrowerFileType type = ZZFileBrowerFileTypeUnknown;
     if (!extension || ![extension isKindOfClass:[NSString class]] || extension.length == 0) {
         return type;
     }
     // Image
     if ([extension compare:@"jpg" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeJPG;
+        type = ZZFileBrowerFileTypeJPG;
     } else if ([extension compare:@"png" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypePNG;
+        type = ZZFileBrowerFileTypePNG;
     } else if ([extension compare:@"gif" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeGIF;
+        type = ZZFileBrowerFileTypeGIF;
     } else if ([extension compare:@"svg" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeSVG;
+        type = ZZFileBrowerFileTypeSVG;
     } else if ([extension compare:@"bmp" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeBMP;
+        type = ZZFileBrowerFileTypeBMP;
     } else if ([extension compare:@"tif" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeTIF;
+        type = ZZFileBrowerFileTypeTIF;
     }
     /// - Audio
     else if ([extension compare:@"mp3" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeMP3;
+        type = ZZFileBrowerFileTypeMP3;
     } else if ([extension compare:@"aac" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeAAC;
+        type = ZZFileBrowerFileTypeAAC;
     } else if ([extension compare:@"wav" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeWAV;
+        type = ZZFileBrowerFileTypeWAV;
     } else if ([extension compare:@"ogg" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeOGG;
+        type = ZZFileBrowerFileTypeOGG;
     }
     /// - Video
     else if ([extension compare:@"mp4" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeMP4;
+        type = ZZFileBrowerFileTypeMP4;
     } else if ([extension compare:@"avi" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeAVI;
+        type = ZZFileBrowerFileTypeAVI;
     } else if ([extension compare:@"flv" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeFLV;
+        type = ZZFileBrowerFileTypeFLV;
     } else if ([extension compare:@"midi" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeMIDI;
+        type = ZZFileBrowerFileTypeMIDI;
     } else if ([extension compare:@"mov" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeMOV;
+        type = ZZFileBrowerFileTypeMOV;
     } else if ([extension compare:@"mpg" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeMPG;
+        type = ZZFileBrowerFileTypeMPG;
     } else if ([extension compare:@"wmv" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeWMV;
+        type = ZZFileBrowerFileTypeWMV;
     }
     /// - Apple
     else if ([extension compare:@"bundle" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeNSBundle;
+        type = ZZFileBrowerFileTypeNSBundle;
     } else if ([extension compare:@"dmg" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeDMG;
+        type = ZZFileBrowerFileTypeDMG;
     } else if ([extension compare:@"ipa" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeIPA;
+        type = ZZFileBrowerFileTypeIPA;
     } else if ([extension compare:@"numbers" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeNumbers;
+        type = ZZFileBrowerFileTypeNumbers;
     } else if ([extension compare:@"pages" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypePages;
+        type = ZZFileBrowerFileTypePages;
     } else if ([extension compare:@"key" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeKeynote;
+        type = ZZFileBrowerFileTypeKeynote;
     }
     /// - Google
     else if ([extension compare:@"apk" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeAPK;
+        type = ZZFileBrowerFileTypeAPK;
     }
     /// - Microsoft
     else if ([extension compare:@"doc" options:NSCaseInsensitiveSearch] == NSOrderedSame ||
              [extension compare:@"docx" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeWord;
+        type = ZZFileBrowerFileTypeWord;
     } else if ([extension compare:@"xls" options:NSCaseInsensitiveSearch] == NSOrderedSame ||
                [extension compare:@"xlsx" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeExcel;
+        type = ZZFileBrowerFileTypeExcel;
     } else if ([extension compare:@"ppt" options:NSCaseInsensitiveSearch] == NSOrderedSame ||
                [extension compare:@"pptx" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypePPT;
+        type = ZZFileBrowerFileTypePPT;
     } else if ([extension compare:@"exe" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeEXE;
+        type = ZZFileBrowerFileTypeEXE;
     } else if ([extension compare:@"dll" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeDLL;
+        type = ZZFileBrowerFileTypeDLL;
     }
     /// - Document
     else if ([extension compare:@"txt" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeTXT;
+        type = ZZFileBrowerFileTypeTXT;
     } else if ([extension compare:@"rtf" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeRTF;
+        type = ZZFileBrowerFileTypeRTF;
     } else if ([extension compare:@"pdf" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypePDF;
+        type = ZZFileBrowerFileTypePDF;
     } else if ([extension compare:@"zip" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeZIP;
+        type = ZZFileBrowerFileTypeZIP;
     } else if ([extension compare:@"7z" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileType7z;
+        type = ZZFileBrowerFileType7z;
     } else if ([extension compare:@"cvs" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeCVS;
+        type = ZZFileBrowerFileTypeCVS;
     } else if ([extension compare:@"md" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeMD;
+        type = ZZFileBrowerFileTypeMD;
     }
     /// - Programming
     else if ([extension compare:@"swift" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeSwift;
+        type = ZZFileBrowerFileTypeSwift;
     } else if ([extension compare:@"java" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeJava;
+        type = ZZFileBrowerFileTypeJava;
     } else if ([extension compare:@"c" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeC;
+        type = ZZFileBrowerFileTypeC;
     } else if ([extension compare:@"cpp" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeCPP;
+        type = ZZFileBrowerFileTypeCPP;
     } else if ([extension compare:@"php" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypePHP;
+        type = ZZFileBrowerFileTypePHP;
     } else if ([extension compare:@"json" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeJSON;
+        type = ZZFileBrowerFileTypeJSON;
     } else if ([extension compare:@"plist" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypePList;
+        type = ZZFileBrowerFileTypePList;
     } else if ([extension compare:@"xml" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeXML;
+        type = ZZFileBrowerFileTypeXML;
     } else if ([extension compare:@"db" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeDatabase;
+        type = ZZFileBrowerFileTypeDatabase;
     } else if ([extension compare:@"js" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeJS;
+        type = ZZFileBrowerFileTypeJS;
     } else if ([extension compare:@"html" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeHTML;
+        type = ZZFileBrowerFileTypeHTML;
     } else if ([extension compare:@"css" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeCSS;
+        type = ZZFileBrowerFileTypeCSS;
     } else if ([extension compare:@"bin" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeBIN;
+        type = ZZFileBrowerFileTypeBIN;
     } else if ([extension compare:@"dat" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeDat;
+        type = ZZFileBrowerFileTypeDat;
     } else if ([extension compare:@"sql" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeSQL;
+        type = ZZFileBrowerFileTypeSQL;
     } else if ([extension compare:@"jar" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeJAR;
+        type = ZZFileBrowerFileTypeJAR;
     }
     /// - Adobe
     else if ([extension compare:@"psd" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypePSD;
+        type = ZZFileBrowerFileTypePSD;
     }
     else if ([extension compare:@"eps" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeEPS;
+        type = ZZFileBrowerFileTypeEPS;
     }
     /// - Other
     else if ([extension compare:@"ttf" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeTTF;
+        type = ZZFileBrowerFileTypeTTF;
     } else if ([extension compare:@"torrent" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-        type = HsFileBrowerFileTypeTorrent;
+        type = ZZFileBrowerFileTypeTorrent;
     }
     return type;
 }
 
 /// 获取文件类型对应的图片名
 /// @param type 文件类型
-static NSString *HsImageNameWithType(HsFileBrowerFileType type) {
+static NSString *ZZImageNameWithType(ZZFileBrowerFileType type) {
     NSString *typeImageName;
     switch (type) {
-        case HsFileBrowerFileTypeUnknown: typeImageName = @"icon_file_type_default"; break;
-        case HsFileBrowerFileTypeDirectory: typeImageName = @"icon_file_type_folder_not_empty"; break;
+        case ZZFileBrowerFileTypeUnknown: typeImageName = @"icon_file_type_default"; break;
+        case ZZFileBrowerFileTypeDirectory: typeImageName = @"icon_file_type_folder_not_empty"; break;
             // Image
-        case HsFileBrowerFileTypeJPG: typeImageName = @"icon_file_type_jpg"; break;
-        case HsFileBrowerFileTypePNG: typeImageName = @"icon_file_type_png"; break;
-        case HsFileBrowerFileTypeGIF: typeImageName = @"icon_file_type_gif"; break;
-        case HsFileBrowerFileTypeSVG: typeImageName = @"icon_file_type_svg"; break;
-        case HsFileBrowerFileTypeBMP: typeImageName = @"icon_file_type_bmp"; break;
-        case HsFileBrowerFileTypeTIF: typeImageName = @"icon_file_type_tif"; break;
+        case ZZFileBrowerFileTypeJPG: typeImageName = @"icon_file_type_jpg"; break;
+        case ZZFileBrowerFileTypePNG: typeImageName = @"icon_file_type_png"; break;
+        case ZZFileBrowerFileTypeGIF: typeImageName = @"icon_file_type_gif"; break;
+        case ZZFileBrowerFileTypeSVG: typeImageName = @"icon_file_type_svg"; break;
+        case ZZFileBrowerFileTypeBMP: typeImageName = @"icon_file_type_bmp"; break;
+        case ZZFileBrowerFileTypeTIF: typeImageName = @"icon_file_type_tif"; break;
             // Audio
-        case HsFileBrowerFileTypeMP3: typeImageName = @"icon_file_type_mp3"; break;
-        case HsFileBrowerFileTypeAAC: typeImageName = @"icon_file_type_aac"; break;
-        case HsFileBrowerFileTypeWAV: typeImageName = @"icon_file_type_wav"; break;
-        case HsFileBrowerFileTypeOGG: typeImageName = @"icon_file_type_ogg"; break;
+        case ZZFileBrowerFileTypeMP3: typeImageName = @"icon_file_type_mp3"; break;
+        case ZZFileBrowerFileTypeAAC: typeImageName = @"icon_file_type_aac"; break;
+        case ZZFileBrowerFileTypeWAV: typeImageName = @"icon_file_type_wav"; break;
+        case ZZFileBrowerFileTypeOGG: typeImageName = @"icon_file_type_ogg"; break;
             // Video
-        case HsFileBrowerFileTypeMP4: typeImageName = @"icon_file_type_mp4"; break;
-        case HsFileBrowerFileTypeAVI: typeImageName = @"icon_file_type_avi"; break;
-        case HsFileBrowerFileTypeFLV: typeImageName = @"icon_file_type_flv"; break;
-        case HsFileBrowerFileTypeMIDI: typeImageName = @"icon_file_type_midi"; break;
-        case HsFileBrowerFileTypeMOV: typeImageName = @"icon_file_type_mov"; break;
-        case HsFileBrowerFileTypeMPG: typeImageName = @"icon_file_type_mpg"; break;
-        case HsFileBrowerFileTypeWMV: typeImageName = @"icon_file_type_wmv"; break;
+        case ZZFileBrowerFileTypeMP4: typeImageName = @"icon_file_type_mp4"; break;
+        case ZZFileBrowerFileTypeAVI: typeImageName = @"icon_file_type_avi"; break;
+        case ZZFileBrowerFileTypeFLV: typeImageName = @"icon_file_type_flv"; break;
+        case ZZFileBrowerFileTypeMIDI: typeImageName = @"icon_file_type_midi"; break;
+        case ZZFileBrowerFileTypeMOV: typeImageName = @"icon_file_type_mov"; break;
+        case ZZFileBrowerFileTypeMPG: typeImageName = @"icon_file_type_mpg"; break;
+        case ZZFileBrowerFileTypeWMV: typeImageName = @"icon_file_type_wmv"; break;
             // Apple
-        case HsFileBrowerFileTypeNSBundle: typeImageName = @"icon_file_type_bundle"; break;
-        case HsFileBrowerFileTypeDMG: typeImageName = @"icon_file_type_dmg"; break;
-        case HsFileBrowerFileTypeIPA: typeImageName = @"icon_file_type_ipa"; break;
-        case HsFileBrowerFileTypeNumbers: typeImageName = @"icon_file_type_numbers"; break;
-        case HsFileBrowerFileTypePages: typeImageName = @"icon_file_type_pages"; break;
-        case HsFileBrowerFileTypeKeynote: typeImageName = @"icon_file_type_keynote"; break;
+        case ZZFileBrowerFileTypeNSBundle: typeImageName = @"icon_file_type_bundle"; break;
+        case ZZFileBrowerFileTypeDMG: typeImageName = @"icon_file_type_dmg"; break;
+        case ZZFileBrowerFileTypeIPA: typeImageName = @"icon_file_type_ipa"; break;
+        case ZZFileBrowerFileTypeNumbers: typeImageName = @"icon_file_type_numbers"; break;
+        case ZZFileBrowerFileTypePages: typeImageName = @"icon_file_type_pages"; break;
+        case ZZFileBrowerFileTypeKeynote: typeImageName = @"icon_file_type_keynote"; break;
             // Google
-        case HsFileBrowerFileTypeAPK: typeImageName = @"icon_file_type_apk"; break;
+        case ZZFileBrowerFileTypeAPK: typeImageName = @"icon_file_type_apk"; break;
             // Microsoft
-        case HsFileBrowerFileTypeWord: typeImageName = @"icon_file_type_doc"; break;
-        case HsFileBrowerFileTypeExcel: typeImageName = @"icon_file_type_xls"; break;
-        case HsFileBrowerFileTypePPT: typeImageName = @"icon_file_type_ppt"; break;
-        case HsFileBrowerFileTypeEXE: typeImageName = @"icon_file_type_exe"; break;
-        case HsFileBrowerFileTypeDLL: typeImageName = @"icon_file_type_dll"; break;
+        case ZZFileBrowerFileTypeWord: typeImageName = @"icon_file_type_doc"; break;
+        case ZZFileBrowerFileTypeExcel: typeImageName = @"icon_file_type_xls"; break;
+        case ZZFileBrowerFileTypePPT: typeImageName = @"icon_file_type_ppt"; break;
+        case ZZFileBrowerFileTypeEXE: typeImageName = @"icon_file_type_exe"; break;
+        case ZZFileBrowerFileTypeDLL: typeImageName = @"icon_file_type_dll"; break;
             // Document
-        case HsFileBrowerFileTypeTXT: typeImageName = @"icon_file_type_txt"; break;
-        case HsFileBrowerFileTypeRTF: typeImageName = @"icon_file_type_rtf"; break;
-        case HsFileBrowerFileTypePDF: typeImageName = @"icon_file_type_pdf"; break;
-        case HsFileBrowerFileTypeZIP: typeImageName = @"icon_file_type_zip"; break;
-        case HsFileBrowerFileType7z: typeImageName = @"icon_file_type_7z"; break;
-        case HsFileBrowerFileTypeCVS: typeImageName = @"icon_file_type_cvs"; break;
-        case HsFileBrowerFileTypeMD: typeImageName = @"icon_file_type_md"; break;
+        case ZZFileBrowerFileTypeTXT: typeImageName = @"icon_file_type_txt"; break;
+        case ZZFileBrowerFileTypeRTF: typeImageName = @"icon_file_type_rtf"; break;
+        case ZZFileBrowerFileTypePDF: typeImageName = @"icon_file_type_pdf"; break;
+        case ZZFileBrowerFileTypeZIP: typeImageName = @"icon_file_type_zip"; break;
+        case ZZFileBrowerFileType7z: typeImageName = @"icon_file_type_7z"; break;
+        case ZZFileBrowerFileTypeCVS: typeImageName = @"icon_file_type_cvs"; break;
+        case ZZFileBrowerFileTypeMD: typeImageName = @"icon_file_type_md"; break;
             // Programming
-        case HsFileBrowerFileTypeSwift: typeImageName = @"icon_file_type_swift"; break;
-        case HsFileBrowerFileTypeJava: typeImageName = @"icon_file_type_java"; break;
-        case HsFileBrowerFileTypeC: typeImageName = @"icon_file_type_c"; break;
-        case HsFileBrowerFileTypeCPP: typeImageName = @"icon_file_type_cpp"; break;
-        case HsFileBrowerFileTypePHP: typeImageName = @"icon_file_type_php"; break;
-        case HsFileBrowerFileTypeJSON: typeImageName = @"icon_file_type_json"; break;
-        case HsFileBrowerFileTypePList: typeImageName = @"icon_file_type_plist"; break;
-        case HsFileBrowerFileTypeXML: typeImageName = @"icon_file_type_xml"; break;
-        case HsFileBrowerFileTypeDatabase: typeImageName = @"icon_file_type_db"; break;
-        case HsFileBrowerFileTypeJS: typeImageName = @"icon_file_type_js"; break;
-        case HsFileBrowerFileTypeHTML: typeImageName = @"icon_file_type_html"; break;
-        case HsFileBrowerFileTypeCSS: typeImageName = @"icon_file_type_css"; break;
-        case HsFileBrowerFileTypeBIN: typeImageName = @"icon_file_type_bin"; break;
-        case HsFileBrowerFileTypeDat: typeImageName = @"icon_file_type_dat"; break;
-        case HsFileBrowerFileTypeSQL: typeImageName = @"icon_file_type_sql"; break;
-        case HsFileBrowerFileTypeJAR: typeImageName = @"icon_file_type_jar"; break;
+        case ZZFileBrowerFileTypeSwift: typeImageName = @"icon_file_type_swift"; break;
+        case ZZFileBrowerFileTypeJava: typeImageName = @"icon_file_type_java"; break;
+        case ZZFileBrowerFileTypeC: typeImageName = @"icon_file_type_c"; break;
+        case ZZFileBrowerFileTypeCPP: typeImageName = @"icon_file_type_cpp"; break;
+        case ZZFileBrowerFileTypePHP: typeImageName = @"icon_file_type_php"; break;
+        case ZZFileBrowerFileTypeJSON: typeImageName = @"icon_file_type_json"; break;
+        case ZZFileBrowerFileTypePList: typeImageName = @"icon_file_type_plist"; break;
+        case ZZFileBrowerFileTypeXML: typeImageName = @"icon_file_type_xml"; break;
+        case ZZFileBrowerFileTypeDatabase: typeImageName = @"icon_file_type_db"; break;
+        case ZZFileBrowerFileTypeJS: typeImageName = @"icon_file_type_js"; break;
+        case ZZFileBrowerFileTypeHTML: typeImageName = @"icon_file_type_html"; break;
+        case ZZFileBrowerFileTypeCSS: typeImageName = @"icon_file_type_css"; break;
+        case ZZFileBrowerFileTypeBIN: typeImageName = @"icon_file_type_bin"; break;
+        case ZZFileBrowerFileTypeDat: typeImageName = @"icon_file_type_dat"; break;
+        case ZZFileBrowerFileTypeSQL: typeImageName = @"icon_file_type_sql"; break;
+        case ZZFileBrowerFileTypeJAR: typeImageName = @"icon_file_type_jar"; break;
             // Adobe
-        case HsFileBrowerFileTypeFlash: typeImageName = @"icon_file_type_fla"; break;
-        case HsFileBrowerFileTypePSD: typeImageName = @"icon_file_type_psd"; break;
-        case HsFileBrowerFileTypeEPS: typeImageName = @"icon_file_type_eps"; break;
+        case ZZFileBrowerFileTypeFlash: typeImageName = @"icon_file_type_fla"; break;
+        case ZZFileBrowerFileTypePSD: typeImageName = @"icon_file_type_psd"; break;
+        case ZZFileBrowerFileTypeEPS: typeImageName = @"icon_file_type_eps"; break;
             // Other
-        case HsFileBrowerFileTypeTTF: typeImageName = @"icon_file_type_ttf"; break;
-        case HsFileBrowerFileTypeTorrent: typeImageName = @"icon_file_type_torrent"; break;
+        case ZZFileBrowerFileTypeTTF: typeImageName = @"icon_file_type_ttf"; break;
+        case ZZFileBrowerFileTypeTorrent: typeImageName = @"icon_file_type_torrent"; break;
     }
     return typeImageName;
 }
 
 /// 操作图标
 /// @param text 操作字段
-static NSString *HsActionImageNameWithActionText(NSString *text) {
+static NSString *ZZActionImageNameWithActionText(NSString *text) {
     NSString *imageName = nil;
-    if ([HsFileBrowerActionPage_Copy isEqualToString:text]) {
+    if ([ZZFileBrowerActionPage_Copy isEqualToString:text]) {
         imageName = @"icon_action_paste@2x";
-    } else if ([HsFileBrowerActionPage_Duplicate isEqualToString:text]) {
+    } else if ([ZZFileBrowerActionPage_Duplicate isEqualToString:text]) {
         imageName = @"icon_action_copy@2x";
-    } else if ([HsFileBrowerActionPage_Move isEqualToString:text]) {
+    } else if ([ZZFileBrowerActionPage_Move isEqualToString:text]) {
         imageName = @"icon_action_move@2x";
-    } else if ([HsFileBrowerActionPage_Delete isEqualToString:text]) {
+    } else if ([ZZFileBrowerActionPage_Delete isEqualToString:text]) {
         imageName = @"icon_action_delete@2x";
-    } else if ([HsFileBrowerActionPage_Brief isEqualToString:text]) {
+    } else if ([ZZFileBrowerActionPage_Brief isEqualToString:text]) {
         imageName = @"icon_action_info@2x";
-    } else if ([HsFileBrowerActionPage_Rename isEqualToString:text]) {
+    } else if ([ZZFileBrowerActionPage_Rename isEqualToString:text]) {
         imageName = @"icon_action_rename@2x";
-    } else if ([HsFileBrowerActionPage_Share isEqualToString:text]) {
+    } else if ([ZZFileBrowerActionPage_Share isEqualToString:text]) {
         imageName = @"icon_action_out@2x";
-    } else if ([HsFileBrowerActionPage_Select isEqualToString:text]) {
+    } else if ([ZZFileBrowerActionPage_Select isEqualToString:text]) {
         imageName = @"icon_action_select@2x";
-    } else if ([HsFileBrowerActionPage_Mkdir isEqualToString:text]) {
+    } else if ([ZZFileBrowerActionPage_Mkdir isEqualToString:text]) {
         imageName = @"icon_action_mkdir@2x";
-    } else if ([HsFileBrowerActionPage_SortByName isEqualToString:text]) {
-    } else if ([HsFileBrowerActionPage_SortByDate isEqualToString:text]) {
-    } else if ([HsFileBrowerActionPage_SortBySize isEqualToString:text]) {
-    } else if ([HsFileBrowerActionPage_SortByType isEqualToString:text]) {
+    } else if ([ZZFileBrowerActionPage_SortByName isEqualToString:text]) {
+    } else if ([ZZFileBrowerActionPage_SortByDate isEqualToString:text]) {
+    } else if ([ZZFileBrowerActionPage_SortBySize isEqualToString:text]) {
+    } else if ([ZZFileBrowerActionPage_SortByType isEqualToString:text]) {
     }
     return imageName;
 }
 
 #pragma clang diagnostic pop
 
-#ifdef HSTESTTOOL_NEED_QUICKLOOK
-@protocol HsQLPreviewControllerDataSource <QLPreviewControllerDataSource>
+#ifdef ZZTESTTOOL_NEED_QUICKLOOK
+@protocol ZZQLPreviewControllerDataSource <QLPreviewControllerDataSource>
 @end
 #else
-@protocol HsQLPreviewControllerDataSource
+@protocol ZZQLPreviewControllerDataSource
 @end
 #endif
 
-#endif /* HsFileBrowerHeader_h */
+#endif /* ZZFileBrowerHeader_h */

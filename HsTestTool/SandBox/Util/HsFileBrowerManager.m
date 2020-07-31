@@ -2,13 +2,13 @@
 //  HsFileBrowerManager.m
 //  HsBusinessEngine
 //
-//  Created by handsome on 2020/6/30.
-//  Copyright © 2020 tzyj. All rights reserved.
+//  Created by zanier on 2020/6/30.
+//  Copyright © 2020 zanier. All rights reserved.
 //
 
 #import "HsFileBrowerManager.h"
 #import "HsFileBrowerItem.h"
-#import "NSBundle+HsTestTool.h"
+#import "NSBundle+ZZTestTool.h"
 
 @interface HsFileBrowerManager ()
 

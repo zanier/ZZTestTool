@@ -2,8 +2,8 @@
 //  HsPlistBrowerEditPage.m
 //  HsTestTool
 //
-//  Created by ZZ on 2020/7/6.
-//  Copyright © 2020 Hundsun. All rights reserved.
+//  Created by zanier on 2020/7/6.
+//  Copyright © 2020 zanier. All rights reserved.
 //
 
 #import "HsPlistBrowerEditPage.h"

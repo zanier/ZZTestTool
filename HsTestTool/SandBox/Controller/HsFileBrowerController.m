@@ -2,14 +2,14 @@
 //  HsFileBrowerController.m
 //  HsTestTool
 //
-//  Created by handsome on 2020/7/5.
-//  Copyright © 2020 Hundsun. All rights reserved.
+//  Created by zanier on 2020/7/5.
+//  Copyright © 2020 zanier. All rights reserved.
 //
 
 #import "HsFileBrowerController.h"
 #import "HsFileBrowerScrollHeader.h"
 #import "HsFileBrowerManager.h"
-#import "HsTestToolDefine.h"
+#import "ZZTestToolDefine.h"
 #import "HsFileBrowerItem.h"
 #import "HsFileBrowerPage.h"
 
@@ -182,7 +182,7 @@
         [plistBrowerPage performSelector:initSelector withObject:item.path];
 #pragma clang diagnostic pop
         return plistBrowerPage;
-#ifdef HSTESTTOOL_NEED_QUICKLOOK
+#ifdef ZZTESTTOOL_NEED_QUICKLOOK
     } else if (1 && [QLPreviewController canPreviewItem:item.url]) {
         QLPreviewController *previewController = [[QLPreviewController alloc] init];
         previewController.dataSource = self;
@@ -304,7 +304,7 @@
     [self enterDirectoryWithItem:item];
 }
 
-#ifdef HSTESTTOOL_NEED_QUICKLOOK
+#ifdef ZZTESTTOOL_NEED_QUICKLOOK
 
 /// MARK: - <QLPreviewControllerDataSource>
 

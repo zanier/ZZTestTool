@@ -1,6 +1,6 @@
 ////
 ////  HsHiddenFunctionPage.h
-////  TZYJ_IPhone
+////  zanier_IPhone
 ////
 ////  Created by yanChengYi(wangyu07901) on 16/5/12.
 ////

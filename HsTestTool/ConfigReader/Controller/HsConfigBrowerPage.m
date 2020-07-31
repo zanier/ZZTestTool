@@ -2,12 +2,12 @@
 //  HsConfigBrowerPage.m
 //  HsTestTool
 //
-//  Created by handsome on 2020/7/13.
-//  Copyright © 2020 Hundsun. All rights reserved.
+//  Created by zanier on 2020/7/13.
+//  Copyright © 2020 zanier. All rights reserved.
 //
 
 #import "HsConfigBrowerPage.h"
-#import "HsTestToolDefine.h"
+#import "ZZTestToolDefine.h"
 #import "HsConfigBrowerPlistPage.h"
 #import "HsConfigBrowerHeaderView.h"
 
