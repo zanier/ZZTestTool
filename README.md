@@ -1,4 +1,4 @@
-# HSTestTool
+# ZZTestTool
 
 2020-07-29，zz
 
@@ -24,7 +24,7 @@
 
 #### 手动导入
 
-1. 下载源码，将 `HSTestTool` 文件夹拖入工程；
+1. 下载源码，将 `ZZTestTool` 文件夹拖入工程；
 2. 导入文件预览库 `QuickLook.framework`；
 3. 在需要设置入口的地方导入测试工具入口页面头文件；
 4. 通过进入测试工具入口页面开始使用工具。
@@ -37,15 +37,15 @@
 
 Common 文件夹下包含基类、通用工具、图片等资源。
 
-`HsTestBaseViewController ` 是工具内所有 ViewController 的基类。鉴于工程中一般包含宏定义`HsGlobalDefine_h`，所以通过该宏定义来决定其父类，使其能够执行工程中通用的页面逻辑，如跳转逻辑 `createPage:`。
+`ZZTestBaseViewController ` 是工具内所有 ViewController 的基类。鉴于工程中一般包含宏定义`ZZGlobalDefine_h`，所以通过该宏定义来决定其父类，使其能够执行工程中通用的页面逻辑，如跳转逻辑 `createPage:`。
 
 ```objective-c
 #import <UIKit/UIKit.h>
-#ifdef HsGlobalDefine_h
-#import <HsBusinessEngine/HsBaseViewController.h>
-@interface HsTestBaseViewController : HsBaseViewController
+#ifdef ZZGlobalDefine_h
+#import <ZZBusinessEngine/ZZBaseViewController.h>
+@interface ZZTestBaseViewController : ZZBaseViewController
 #else
-@interface HsTestBaseViewController : UIViewController
+@interface ZZTestBaseViewController : UIViewController
 #endif
 // ....
 @end
@@ -53,20 +53,20 @@ Common 文件夹下包含基类、通用工具、图片等资源。
 
 #### QuickLook.framework
 
-**`QuickLook.framework`** 是 iOS 提供的文件预览库，例如 `txt`、`PDF`、图片等文件的预览，主要用于沙盒文件浏览工具 `SandBoxBrower`。若不想使用该功能，请移除该框架，并在 `HsTestToolConfig.h` 文件中注释宏定义开关 `HSTESTTOOL_NEED_QUICKLOOK`。默认开启。
+**`QuickLook.framework`** 是 iOS 提供的文件预览库，例如 `txt`、`PDF`、图片等文件的预览，主要用于沙盒文件浏览工具 `SandBoxBrower`。若不想使用该功能，请移除该框架，并在 `ZZTestToolConfig.h` 文件中注释宏定义开关 `ZZTESTTOOL_NEED_QUICKLOOK`。默认开启。
 
 ```c
 /// <QuickLook> 框架支持
-#define HSTESTTOOL_NEED_QUICKLOOK
+#define ZZTESTTOOL_NEED_QUICKLOOK
 ```
 
 #### 图片资源
 
-`HsTestTool.bundle` 包含了工具所需的图片等资源。若考虑到包的体积不想引入图片资源，则移除该 `bundle` 并在 `HsTestToolConfig.h` 文件中注释宏定义开关 `HSTESTTOOL_NEED_RESOURCEBUNDLE`。默认开启。
+`ZZTestTool.bundle` 包含了工具所需的图片等资源。若考虑到包的体积不想引入图片资源，则移除该 `bundle` 并在 `ZZTestToolConfig.h` 文件中注释宏定义开关 `ZZTESTTOOL_NEED_RESOURCEBUNDLE`。默认开启。
 
 ```objective-c
-/// HsTestTool.bundle 图片资源支持
-#define HSTESTTOOL_NEED_RESOURCEBUNDLE
+/// ZZTestTool.bundle 图片资源支持
+#define ZZTESTTOOL_NEED_RESOURCEBUNDLE
 ```
 
 ## App 信息收集
@@ -113,9 +113,9 @@ Plist 文件浏览工具，页面如下所示：
 
 ```objective-c
 NSString *path = [[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"];
-HsPlistBrowerController *plistVC = [[HsPlistBrowerController alloc] initWithPlistFilePath:path];
+ZZPlistBrowerController *plistVC = [[ZZPlistBrowerController alloc] initWithPlistFilePath:path];
 //id object = [NSDictionary dictionaryWithContentsOfFile:path];
-//HsPlistBrowerController *plistVC = [[HsPlistBrowerController alloc] initWithObject:object];
+//ZZPlistBrowerController *plistVC = [[ZZPlistBrowerController alloc] initWithObject:object];
 [self.navigationController pushViewController:plistVC animated:YES];
 ```
 
@@ -124,9 +124,9 @@ Light 创建模式
 ```objective-c
 NSString *path = [[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"];
 //id object = [NSDictionary dictionaryWithContentsOfFile:path];
-HsPlistBrowerController *plistPage = [HsPlistBrowerController createPage:@{
-    HsPlistBrowerPagePlsitFilePathCreateKey : path,
-    //HsPlistBrowerPageObjectCreateKey : object,
+ZZPlistBrowerController *plistPage = [ZZPlistBrowerController createPage:@{
+    ZZPlistBrowerPagePlsitFilePathCreateKey : path,
+    //ZZPlistBrowerPageObjectCreateKey : object,
 }];
 [self.navigationController pushViewController:plistPage animated:YES];
 ```
@@ -135,10 +135,10 @@ HsPlistBrowerController *plistPage = [HsPlistBrowerController createPage:@{
 
 ```objective-c
 NSDictionary *params = @{
-  	@"HsPlistBrowerPagePlsitFilePathCreateKey" : path,
-  	//@"HsPlistBrowerPageObjectCreateKey" : object,
+  	@"ZZPlistBrowerPagePlsitFilePathCreateKey" : path,
+  	//@"ZZPlistBrowerPageObjectCreateKey" : object,
 };
-HsShowPage(@"plistPage", params);
+ZZShowPage(@"plistPage", params);
 ```
 
 #### 操作
@@ -163,13 +163,13 @@ HsShowPage(@"plistPage", params);
 
 ```objective-c
 /// 不指定路径，则默认进入沙盒根目录 NSHomeDirectory()
-[self.navigationController pushViewController:[[HsFileBrowerController alloc] init] animated:YES];
+[self.navigationController pushViewController:[[ZZFileBrowerController alloc] init] animated:YES];
 ```
 
 进入指定目录
 
 ```
-HsFileBrowerController *fileBrowerPage = [[HsFileBrowerController alloc] initWithRootPath:NSHomeDirectory()];
+ZZFileBrowerController *fileBrowerPage = [[ZZFileBrowerController alloc] initWithRootPath:NSHomeDirectory()];
 [self.navigationController pushViewController:fileBrowerPage animated:YES];
 ```
 
@@ -178,8 +178,8 @@ Light 创建模式
 ```objective-c
 NSString *path = [[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"];
 //id object = [NSDictionary dictionaryWithContentsOfFile:path];
-HsPlistBrowerController *plistPage = [HsPlistBrowerController createPage:@{
-  	HsPlistBrowerPagePlsitFilePathCreateKey : path,
+ZZPlistBrowerController *plistPage = [ZZPlistBrowerController createPage:@{
+  	ZZPlistBrowerPagePlsitFilePathCreateKey : path,
 }];
 [self.navigationController pushViewController:plistPage animated:YES];
 ```
@@ -188,9 +188,9 @@ HsPlistBrowerController *plistPage = [HsPlistBrowerController createPage:@{
 
 ```objective-c
 NSDictionary *params = @{
-  	@"HsPlistBrowerPagePlsitFilePathCreateKey" : path,
+  	@"ZZPlistBrowerPagePlsitFilePathCreateKey" : path,
 };
-HsShowPage(@"plistPage", params);
+ZZShowPage(@"plistPage", params);
 ```
 
 #### 操作
