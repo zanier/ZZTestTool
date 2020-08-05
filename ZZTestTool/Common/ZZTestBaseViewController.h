@@ -19,7 +19,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// MARK: - alert
 
-- (void)alertWithTitle:(NSString *)title message:(NSString *)massage;
+- (void)alertWithTitle:(NSString *)title
+               message:(NSString *)massage;
+
+- (void)alertWithTitle:(NSString *)title
+               message:(NSString *)massage
+         confirmAction:(void(^)(void))confirmAction;
 
 @end
 

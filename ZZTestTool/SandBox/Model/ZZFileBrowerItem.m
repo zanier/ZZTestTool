@@ -117,6 +117,14 @@
     }].mutableCopy;
 }
 
+#ifdef DEBUG
+- (void)setChildren:(NSMutableArray<ZZFileBrowerItem *> *)children {
+    NSLog(@"%@", children.class);
+    NSAssert([children isKindOfClass:[NSMutableArray class]], @"Inmutable array is assigned to a mutable array!");
+    _children = children;
+}
+#endif
+
 @end
 
 /*

@@ -37,6 +37,11 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param name 文件名
 + (BOOL)isLegalFileName:(NSString *)name;
 
+/// 生成对应路径下的item
+/// @param path 目标路径
+/// @param error 错误
++ (ZZFileBrowerItem *)createItemAtPath:(NSString *)path error:(NSError **)error;
+
 /// 获取子文件的个数
 /// @param item 文件数据
 + (NSUInteger)contentCountWithDirectoryItem:(ZZFileBrowerItem *)item;

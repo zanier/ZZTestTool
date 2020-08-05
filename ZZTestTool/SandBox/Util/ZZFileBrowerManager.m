@@ -57,6 +57,21 @@ static NSString *const ZZFileBrowerErrorDomin = @"ZZFileBrowerErrorDomin";
 
 /// MARK: - create item
 
+/// 生成对应路径下的item
+/// @param path 目标路径
+/// @param error 错误
++ (ZZFileBrowerItem *)createItemAtPath:(NSString *)path error:(NSError **)error {
+    NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:error];
+    if (*error) {
+        NSLog(@"createItemAtPath<%@> error: %@", path, *error);
+        return nil;
+    }
+    ZZFileBrowerItem *item = [[ZZFileBrowerItem alloc] initWithPath:path];
+    item.attributes = attributes;
+    return item;
+}
+
+
 /// 获取子文件的个数
 /// @param item 文件数据
 + (NSUInteger)contentCountWithDirectoryItem:(ZZFileBrowerItem *)item {
@@ -90,18 +105,6 @@ static NSString *const ZZFileBrowerErrorDomin = @"ZZFileBrowerErrorDomin";
     parent.children = items;
     return items;
 }
-
-+ (ZZFileBrowerItem *)createItemAtPath:(NSString *)path error:(NSError **)error {
-    NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:error];
-    if (error) {
-        NSLog(@"error: %@", *error);
-        return nil;
-    }
-    ZZFileBrowerItem *item = [[ZZFileBrowerItem alloc] initWithPath:path];
-    item.attributes = attributes;
-    return item;
-}
-
 
 /// MARK: deal with path
 

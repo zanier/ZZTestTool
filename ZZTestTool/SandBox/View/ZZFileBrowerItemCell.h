@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @optional
 
-- (void)cellDidLongPressed:(ZZFileBrowerItemCell *)cell;
+- (void)cellDidLongPress:(ZZFileBrowerItemCell *)cell;
 
 - (BOOL)cell:(ZZFileBrowerItemCell *)cell shouldEndRenamingWithName:(NSString *)name;
 

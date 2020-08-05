@@ -9,7 +9,7 @@
 #import "ZZFileBrowerItemCell.h"
 #import "ZZFileBrowerManager.h"
 
-@interface ZZFileBrowerItemCell () <UITextViewDelegate>
+@interface ZZFileBrowerItemCell () <UITextViewDelegate, UIContextMenuInteractionDelegate>
 
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) UILabel *textLabel;
@@ -69,8 +69,8 @@
 /// 长按单元格，代理回调
 - (void)longPressAction:(UILongPressGestureRecognizer *)longPress {
     if (longPress.state == UIGestureRecognizerStateBegan) {
-        if ([_delegate respondsToSelector:@selector(cellDidLongPressed:)]) {
-            [_delegate cellDidLongPressed:self];
+        if ([_delegate respondsToSelector:@selector(cellDidLongPress:)]) {
+            [_delegate cellDidLongPress:self];
         }
     }
 }
@@ -84,28 +84,29 @@
 //    }
 }
 
-- (void)setHighlighted:(BOOL)highlighted {
-    [super setHighlighted:highlighted];
-    if (highlighted) {
-        //self.contentView.backgroundColor = [UIColor grayColor];
-        if ([self.imageView.layer animationForKey:@"animation"]) {
-            return;
-        }
-        CAKeyframeAnimation *keyFrameAniamtion = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
-        keyFrameAniamtion.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-        keyFrameAniamtion.values = @[
-            @(CGSizeMake(1.0, 1.0)),
-            @(CGSizeMake(0.9, 0.9)),
-            @(CGSizeMake(1.0, 1.0)),
-        ];
-        keyFrameAniamtion.repeatCount = 1;
-        keyFrameAniamtion.duration = 0.5;
-        keyFrameAniamtion.removedOnCompletion = YES;
-        [self.imageView.layer addAnimation:keyFrameAniamtion forKey:@"animation"];
-    } else {
-        //self.contentView.backgroundColor = [UIColor lightGrayColor];
-    }
-}
+/// 在高亮时添加长按动画
+//- (void)setHighlighted:(BOOL)highlighted {
+//    [super setHighlighted:highlighted];
+//    if (highlighted) {
+//        //self.contentView.backgroundColor = [UIColor grayColor];
+//        if ([self.imageView.layer animationForKey:@"animation"]) {
+//            return;
+//        }
+//        CAKeyframeAnimation *keyFrameAniamtion = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
+//        keyFrameAniamtion.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+//        keyFrameAniamtion.values = @[
+//            @(CGSizeMake(1.0, 1.0)),
+//            @(CGSizeMake(0.9, 0.9)),
+//            @(CGSizeMake(1.0, 1.0)),
+//        ];
+//        keyFrameAniamtion.repeatCount = 1;
+//        keyFrameAniamtion.duration = 0.5;
+//        keyFrameAniamtion.removedOnCompletion = YES;
+//        [self.imageView.layer addAnimation:keyFrameAniamtion forKey:@"animation"];
+//    } else {
+//        //self.contentView.backgroundColor = [UIColor lightGrayColor];
+//    }
+//}
 
 /// MARK: - <UITextViewDelegate>
 
@@ -145,9 +146,50 @@
     [self.contentView addSubview:self.detailLabel];
     [self.contentView addSubview:self.renameTextView];
     self.renameTextView.hidden = YES;
-    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressAction:)];
-    longPress.minimumPressDuration = 0.3f;
-    [self.contentView addGestureRecognizer:longPress];
+//    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressAction:)];
+//    longPress.minimumPressDuration = 0.3f;
+//    [self.contentView addGestureRecognizer:longPress];
+    if (@available(iOS 13.0, *)) {
+        UIContextMenuInteraction *interaction = [[UIContextMenuInteraction alloc] initWithDelegate:self];
+        self.imageView.userInteractionEnabled = YES;
+        [self.imageView addInteraction:interaction];
+    } else {
+        // Fallback on earlier versions
+    }
+
+}
+
+- (UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction configurationForMenuAtLocation:(CGPoint)location  API_AVAILABLE(ios(13.0)) {
+    UIContextMenuConfiguration *configuration = [UIContextMenuConfiguration configurationWithIdentifier:@"qwe" previewProvider:^UIViewController * _Nullable{
+        
+        return nil;
+    } actionProvider:^UIMenu * _Nullable(NSArray<UIMenuElement *> * _Nonnull suggestedActions) {
+        return [self menumenu];
+    }];
+    return configuration;
+}
+
+- (UIMenu *)menumenu API_AVAILABLE(ios(13.0)) {
+    UIAction *action1 = [UIAction actionWithTitle:@"复制" image:nil identifier:@"qwe" handler:^(__kindof UIAction * _Nonnull action) {
+    
+    }];
+    UIAction *action2 = [UIAction actionWithTitle:@"拷贝" image:nil identifier:@"qwe" handler:^(__kindof UIAction * _Nonnull action) {
+    
+    }];
+    UIAction *action3 = [UIAction actionWithTitle:@"移动" image:nil identifier:@"qwe" handler:^(__kindof UIAction * _Nonnull action) {
+    
+    }];
+    UIAction *action4 = [UIAction actionWithTitle:@"删除" image:nil identifier:@"qwe" handler:^(__kindof UIAction * _Nonnull action) {
+    
+    }];
+
+    UIMenu *menu = [UIMenu menuWithTitle:@"" image:nil identifier:@"hello" options:UIMenuOptionsDestructive children:@[
+        action1,
+        action2,
+        action3,
+        action4,
+    ]];
+    return menu;
 }
 
 - (void)layoutSubviews {

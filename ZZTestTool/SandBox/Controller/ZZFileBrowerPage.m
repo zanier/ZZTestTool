@@ -18,7 +18,7 @@
 #import "ZZFileBrowerNavigateTransitioning.h"
 #import <AudioToolBox/AudioServices.h>
 
-@interface ZZFileBrowerPage () <UICollectionViewDataSource, UICollectionViewDelegate, UIViewControllerTransitioningDelegate, UIPopoverPresentationControllerDelegate, ZZFileBrowerItemCellDelegate, ZZFileBrowerActionPageDelegate, UINavigationControllerDelegate> {
+@interface ZZFileBrowerPage () <UICollectionViewDataSource, UICollectionViewDelegate, UIViewControllerTransitioningDelegate, UIPopoverPresentationControllerDelegate, ZZFileBrowerItemCellDelegate, ZZFileBrowerActionPageDelegate, UINavigationControllerDelegate, UIContextMenuInteractionDelegate> {
     BOOL _isSelecting;
     UICollectionViewFlowLayout *_layout;
 }
@@ -55,8 +55,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupNaviBarItem];
-    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressAction:)];
-    [self.view addGestureRecognizer:longPress];
+//    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressAction:)];
+//    [self.view addGestureRecognizer:longPress];
+    
+
     [self.view addSubview:self.collectionView];
     if (@available(iOS 11.0, *)) {
         self.collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
@@ -96,6 +98,39 @@
     }
 }
 
+- (UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction configurationForMenuAtLocation:(CGPoint)location  API_AVAILABLE(ios(13.0)) {
+    UIContextMenuConfiguration *configuration = [UIContextMenuConfiguration configurationWithIdentifier:@"qwe" previewProvider:^UIViewController * _Nullable{
+        
+        return nil;
+    } actionProvider:^UIMenu * _Nullable(NSArray<UIMenuElement *> * _Nonnull suggestedActions) {
+        return [self menumenu];
+    }];
+    return configuration;
+}
+
+- (UIMenu *)menumenu API_AVAILABLE(ios(13.0)) {
+    UIAction *action1 = [UIAction actionWithTitle:@"复制" image:nil identifier:@"qwe" handler:^(__kindof UIAction * _Nonnull action) {
+    
+    }];
+    UIAction *action2 = [UIAction actionWithTitle:@"拷贝" image:nil identifier:@"qwe" handler:^(__kindof UIAction * _Nonnull action) {
+    
+    }];
+    UIAction *action3 = [UIAction actionWithTitle:@"移动" image:nil identifier:@"qwe" handler:^(__kindof UIAction * _Nonnull action) {
+    
+    }];
+    UIAction *action4 = [UIAction actionWithTitle:@"删除" image:nil identifier:@"qwe" handler:^(__kindof UIAction * _Nonnull action) {
+    
+    }];
+
+    UIMenu *menu = [UIMenu menuWithTitle:@"hello" image:nil identifier:@"hello" options:(UIMenuOptionsDisplayInline) children:@[
+        action1,
+        action2,
+        action3,
+        action4,
+    ]];
+    return menu;
+}
+
 /// 刷新显示指定文件夹下的文件，返回是否刷新
 /// @param item 文件夹数据
 - (void)reloadAtDirectoryWithItem:(ZZFileBrowerItem *)item {
@@ -117,8 +152,40 @@
     _emptyView.hidden = !isEmptyDataSource;
 }
 
-/// MARK: view long press action
+/// MARK: - right barbutton action
 
+- (void)presentPopoverWithRightButton:(UIButton *)button {
+    NSArray *dataSource = @[
+        @[
+            ZZFileBrowerActionPage_Select,
+            ZZFileBrowerActionPage_Mkdir,
+        ],
+        @[
+            ZZFileBrowerActionPage_SortByName,
+            ZZFileBrowerActionPage_SortByDate,
+            ZZFileBrowerActionPage_SortBySize,
+            ZZFileBrowerActionPage_SortByType,
+        ],
+    ];
+    ZZFileBrowerActionPage *actionPage = [[ZZFileBrowerActionPage alloc] initWithItem:_item actionNames:dataSource sourceView:button];
+    actionPage.delegate = self;
+    actionPage.modalPresentationStyle = UIModalPresentationPopover;
+    actionPage.popoverPresentationController.delegate = self;
+    actionPage.popoverPresentationController.sourceView = button;
+    actionPage.popoverPresentationController.sourceRect = button.bounds;
+    actionPage.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionAny;
+    if (@available(iOS 9.0, *)) {
+        actionPage.popoverPresentationController.canOverlapSourceViewRect = NO;
+    } else {
+        // Fallback on earlier versions
+    }
+    [self presentViewController:actionPage animated:YES completion:nil];
+}
+
+
+/// MARK: - view long press action
+
+/// 长按操作
 - (void)longPressAction:(UILongPressGestureRecognizer *)longPress {
     if (longPress.state == UIGestureRecognizerStateBegan) {
         CGPoint location = [longPress locationInView:self.view];
@@ -126,6 +193,7 @@
     }
 }
 
+/// 长按弹出菜单
 - (void)showMenuControllerAtPoint:(CGPoint)location {
     [self becomeFirstResponder];
     UIMenuController *menu = [UIMenuController sharedMenuController];
@@ -158,7 +226,68 @@
     return NO;
 }
 
-/// MARK: - action
+/// MARK: - item long press action
+
+- (void)presentFileActionWithItem:(ZZFileBrowerItem *)item fromCell:(ZZFileBrowerItemCell *)cell {
+    NSArray *dataSource;
+    if (!item.isDir) {
+        dataSource = @[
+            @[
+                ZZFileBrowerActionPage_Copy,
+                ZZFileBrowerActionPage_Duplicate,
+                ZZFileBrowerActionPage_Move,
+                ZZFileBrowerActionPage_Delete,
+            ],
+            @[
+                ZZFileBrowerActionPage_Brief,
+                ZZFileBrowerActionPage_Rename,
+            ],
+            @[
+                ZZFileBrowerActionPage_Share,
+            ],
+        ];
+    } else {
+        dataSource = @[
+            @[
+                ZZFileBrowerActionPage_Copy,
+                ZZFileBrowerActionPage_Duplicate,
+                ZZFileBrowerActionPage_Move,
+                ZZFileBrowerActionPage_Delete,
+            ],
+            @[
+                ZZFileBrowerActionPage_Brief,
+                ZZFileBrowerActionPage_Rename,
+            ],
+            @[
+                ZZFileBrowerActionPage_Share,
+            ],
+        ];
+    }
+    ZZFileBrowerActionPage *actionPage = [[ZZFileBrowerActionPage alloc] initWithItem:item actionNames:dataSource sourceView:cell];
+    actionPage.delegate = self;
+    actionPage.modalPresentationStyle = UIModalPresentationPopover;
+    actionPage.popoverPresentationController.delegate = self;
+    actionPage.popoverPresentationController.sourceView = cell.imageView;
+    actionPage.popoverPresentationController.sourceRect = cell.imageView.bounds;
+    actionPage.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionAny;
+    if (@available(iOS 9.0, *)) {
+        actionPage.popoverPresentationController.canOverlapSourceViewRect = NO;
+    } else {
+        // Fallback on earlier versions
+    }
+    [self presentViewController:actionPage animated:YES completion:nil];
+}
+
+/// MARK: -
+/// MARK: select
+
+- (void)didSelectItem:(ZZFileBrowerItem *)item {
+    if (_delegate && [_delegate respondsToSelector:@selector(filePage:didSlectItem:)]) {
+        [_delegate filePage:self didSlectItem:item];
+    }
+}
+
+/// MARK: action
 
 - (void)_paste {
     NSString *dealPath = [ZZFileBrowerManager manager].dealtPath;
@@ -189,9 +318,21 @@
     if (error) {
         NSLog(@"%@", error);
         [self alertWithTitle:@"新建失败" message:error.description];
-    } else {
-        [self reloadAtDirectoryWithItem:_item];
+        return;
     }
+    // 生成item
+    ZZFileBrowerItem *newItem = [ZZFileBrowerManager createItemAtPath:dirPath error:&error];
+    if (!newItem || error) {
+        NSLog(@"%@", error);
+        [self reloadAtDirectoryWithItem:_item];
+        return;
+    }
+    // 修改当前item
+    NSArray *oldChildrne = _item.children.copy;
+    [_item.children addObject:newItem];
+    // 根据当前排序刷新界面
+    [_item sortChildrenWithType:_item.sortType];
+    [self _reloadWithNewChildren:_item.children oldChildren:oldChildrne];
 }
 
 - (void)_showBrief {
@@ -217,7 +358,7 @@
     
 }
 
-/// MARK: select
+/// MARK: selection
 
 - (void)_selecting {
     _isSelecting = YES;
@@ -249,12 +390,40 @@
 
 - (void)_reloadWithNewChildren:(NSArray<ZZFileBrowerItem *> *)newChildren oldChildren:(NSArray<ZZFileBrowerItem *> *)oldChildren {
     [self.collectionView performBatchUpdates:^{
-        for (NSUInteger toIdx = 0; toIdx < newChildren.count; toIdx++) {
+        NSMutableArray<ZZFileBrowerItem *> *oldChildrenCopy = oldChildren.mutableCopy;
+        NSMutableArray<NSIndexPath *> *insertIndexPaths = [NSMutableArray array];
+        NSMutableArray<NSIndexPath *> *deleteIndexPaths = [NSMutableArray array];
+        // 整理移动与插入项
+        for (NSInteger toIdx = 0; toIdx < newChildren.count; toIdx++) {
             ZZFileBrowerItem *item = newChildren[toIdx];
-            NSUInteger fromIdx = [oldChildren indexOfObject:item];
-            NSIndexPath *fromIndexPath = [NSIndexPath indexPathForRow:fromIdx inSection:0];
             NSIndexPath *toIndexPath = [NSIndexPath indexPathForRow:toIdx inSection:0];
-            [self.collectionView moveItemAtIndexPath:fromIndexPath toIndexPath:toIndexPath];
+            NSUInteger fromIdx = [oldChildren indexOfObject:item];
+            if (fromIdx == NSNotFound) {
+                // 记录插入位置
+                [insertIndexPaths addObject:toIndexPath];
+            } else {
+                // 剩下待删除位置
+                [oldChildrenCopy removeObject:item];
+                // 执行移动动画
+                NSIndexPath *fromIndexPath = [NSIndexPath indexPathForRow:fromIdx inSection:0];
+                [self.collectionView moveItemAtIndexPath:fromIndexPath toIndexPath:toIndexPath];
+            }
+        }
+        // 整理删除项
+        // oldChildrenCopy 剩余待删除项
+        for (NSInteger idx = 0; idx < oldChildrenCopy.count; idx++) {
+            ZZFileBrowerItem *item = newChildren[idx];
+            NSUInteger deleteIdx = [oldChildren indexOfObject:item];
+            NSIndexPath *deleteIndexPath = [NSIndexPath indexPathForRow:deleteIdx inSection:0];
+            [deleteIndexPaths addObject:deleteIndexPath];
+        }
+        // 执行插入动画
+        if (insertIndexPaths.count) {
+            [self.collectionView insertItemsAtIndexPaths:insertIndexPaths];
+        }
+        // 执行删除动画
+        if (deleteIndexPaths.count) {
+            [self.collectionView deleteItemsAtIndexPaths:deleteIndexPaths];
         }
     } completion:nil];
 }
@@ -282,6 +451,174 @@
     [_item sortChildrenWithType:ZZFileBrowerItemSortByType];
     [self _reloadWithNewChildren:_item.children oldChildren:oldChildrne];
 }
+
+/// MARK: other action
+
+/// 弹出简介
+- (void)presentFileBriefWithItem:(ZZFileBrowerItem *)item {
+    ZZFileBrowerBriefPage *briefPage = [[ZZFileBrowerBriefPage alloc] initWithItem:item];
+    UINavigationController *navi = [[UINavigationController alloc] initWithRootViewController:briefPage];
+    __weak typeof(self) weakSelf = self;
+    briefPage.openItem = ^(ZZFileBrowerBriefPage * _Nonnull briefPage, ZZFileBrowerItem * _Nonnull item) {
+        [weakSelf didSelectItem:item];
+    };
+    [self presentViewController:navi animated:YES completion:nil];
+}
+
+
+/// MARK: - <UICollectionViewDataSource>
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+    return 1;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    return _item.children.count;
+}
+
+- (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    ZZFileBrowerItemCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
+    cell.delegate = self;
+    cell.item = self.item.children[indexPath.row];
+    return cell;
+}
+
+/// MARK: - <UICollectionViewDelegate>
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    ZZFileBrowerItem *item = self.item.children[indexPath.row];
+    [self didSelectItem:item];
+}
+
+/// MARK: - <ZZFileBrowerItemCellDelegate>
+
+/// 重命名完成确认
+- (BOOL)cell:(ZZFileBrowerItemCell *)cell shouldEndRenamingWithName:(NSString *)name {
+    NSError *error;
+    [ZZFileBrowerManager renameItemAtPath:cell.item.path name:name error:&error];
+    if (error) {
+        [self alertWithTitle:@"重命名失败" message:error.description];
+        return NO;
+    }
+    [self reloadAtDirectoryWithItem:_item];
+    return YES;
+}
+
+- (void)cellDidLongPress:(ZZFileBrowerItemCell *)cell {
+    if (@available(iOS 10.0, *)) {
+        UIImpactFeedbackGenerator *generator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleMedium];
+        [generator prepare];
+        [generator impactOccurred];
+        //                UISelectionFeedbackGenerator *generator = [[UISelectionFeedbackGenerator alloc] init];
+        //                [generator prepare];
+        //                [generator selectionChanged];
+    } else {
+        // Fallback on earlier versions
+    }
+    [self presentFileActionWithItem:cell.item fromCell:cell];
+}
+
+/// MARK: - <ZZFileBrowerActionPageDelegate>
+
+- (void)actionPage:(ZZFileBrowerActionPage *)actionPage didSelectAction:(NSString *)actionName {
+    if (actionPage.item == _item) {
+        /// 点击导航栏弹出菜单
+        if ([ZZFileBrowerActionPage_Select isEqualToString:actionName]) {
+            // 选择
+            _isSelecting = !_isSelecting;
+            
+        } else if ([ZZFileBrowerActionPage_Mkdir isEqualToString:actionName]) {
+            // 新建文件夹
+            [self _createDirectory];
+        } else if ([ZZFileBrowerActionPage_SortByName isEqualToString:actionName]) {
+            // 名字排序
+            [self _sortByName];
+        } else if ([ZZFileBrowerActionPage_SortByDate isEqualToString:actionName]) {
+            // 日期排序
+            [self _sortByDate];
+        } else if ([ZZFileBrowerActionPage_SortBySize isEqualToString:actionName]) {
+            // 大小排序
+            [self _sortBySize];
+        } else if ([ZZFileBrowerActionPage_SortByType isEqualToString:actionName]) {
+            // 类型排序
+            [self _sortByType];
+        }
+    } else {
+        /// 长按单元格弹出菜单
+        ZZFileBrowerItem *item = actionPage.item;
+        UIView *sourceView = actionPage.sourceView;
+        if ([ZZFileBrowerActionPage_Copy isEqualToString:actionName]) {
+            // 拷贝
+            [ZZFileBrowerManager dealWithPath:item.path];
+        } else if ([ZZFileBrowerActionPage_Duplicate isEqualToString:actionName]) {
+            // 复制
+            NSString *duplicateName = [ZZFileBrowerManager duplicateNameWithOriginName:item.name amongItems:_item.children];
+            NSString *toPath = [[_item.path stringByDeletingLastPathComponent] stringByAppendingPathComponent:duplicateName];
+            [ZZFileBrowerManager copyItemAtPath:item.path toPath:toPath error:nil];
+        } else if ([ZZFileBrowerActionPage_Move isEqualToString:actionName]) {
+            // 移动
+            [ZZFileBrowerManager dealWithPath:item.path];
+        } else if ([ZZFileBrowerActionPage_Delete isEqualToString:actionName]) {
+            // 删除
+            [self alertWithTitle:@"删除" message:@"您确定要删除该文件吗？" confirmAction:^{
+                [self _deleteItem:item];
+            }];
+        } else if ([ZZFileBrowerActionPage_Rename isEqualToString:actionName]) {
+            // 重命名
+            ZZFileBrowerItemCell *cell = (ZZFileBrowerItemCell *)sourceView;
+            [cell beginRenamingItem];
+        } else if ([ZZFileBrowerActionPage_Brief isEqualToString:actionName]) {
+            // 简介
+            [self presentFileBriefWithItem:item];
+        } else if ([ZZFileBrowerActionPage_Share isEqualToString:actionName]) {
+            // 分享
+            
+        }
+    }
+}
+
+///// MARK: - <UIViewControllerTransitioningDelegate>
+//
+///// present
+//- (id <UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source {
+//    if (_sourceViewInPresentation) {
+//        return [[ZZFileBrowerAnimatedTransitioning alloc] initWithSourceView:_sourceViewInPresentation isPresented:YES];
+//    }
+//    return nil;
+//}
+//
+///// dismiss
+//- (id <UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed {
+//    if ([dismissed isKindOfClass:[ZZFileBrowerActionPage class]]) {
+//        UIView *sourceView = ((ZZFileBrowerActionPage *)dismissed).sourceView;
+//        return [[ZZFileBrowerAnimatedTransitioning alloc] initWithSourceView:sourceView isPresented:NO];
+//    }
+//    return nil;
+//}
+
+///// push
+//- (id<UIViewControllerInteractiveTransitioning>)interactionControllerForPresentation:(id<UIViewControllerAnimatedTransitioning>)animator {
+//    return [[ZZFileBrowerNavigateTransitioning alloc] initWithSourceView:self.headerToolBar isPresented:YES];
+//}
+//
+///// pop
+//- (id<UIViewControllerInteractiveTransitioning>)interactionControllerForDismissal:(id<UIViewControllerAnimatedTransitioning>)animator {
+//    return [[ZZFileBrowerNavigateTransitioning alloc] initWithSourceView:self.headerToolBar isPresented:YES];
+//}
+
+/// MARK: - <UIPopoverPresentationControllerDelegate>
+- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller {
+    return UIModalPresentationNone;
+}
+
+//- (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC {
+//    if (operation == UINavigationControllerOperationPush) {
+//        return [[ZZFileBrowerNavigateTransitioning alloc] initWithSourceView:self.headerToolBar isPresented:YES];
+//    } else if (operation == UINavigationControllerOperationPop){
+//        return [[ZZFileBrowerNavigateTransitioning alloc] initWithSourceView:self.headerToolBar isPresented:NO];
+//    }
+//    return [[ZZFileBrowerNavigateTransitioning alloc] initWithSourceView:self.headerToolBar isPresented:NO];
+//}
 
 /// MARK: - getter
 
@@ -331,239 +668,5 @@
     [_collectionView registerClass:[ZZFileBrowerItemCell class] forCellWithReuseIdentifier:@"cell"];
     return _collectionView;
 }
-
-/// MARK: - <UICollectionViewDataSource>
-
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-    return 1;
-}
-
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return _item.children.count;
-}
-
-- (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    ZZFileBrowerItemCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
-    cell.delegate = self;
-    cell.item = self.item.children[indexPath.row];
-    return cell;
-}
-
-/// MARK: - <UICollectionViewDelegate>
-
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    ZZFileBrowerItem *item = self.item.children[indexPath.row];
-    [self didSelectItem:item];
-}
-
-/// MARK: - <ZZFileBrowerItemCellDelegate>
-
-- (BOOL)cell:(ZZFileBrowerItemCell *)cell shouldEndRenamingWithName:(NSString *)name {
-    NSError *error;
-    [ZZFileBrowerManager renameItemAtPath:cell.item.path name:name error:&error];
-    if (error) {
-        [self alertWithTitle:@"重命名失败" message:error.description];
-        return NO;
-    }
-    [self reloadAtDirectoryWithItem:_item];
-    return YES;
-}
-
-- (void)cellDidLongPressed:(ZZFileBrowerItemCell *)cell {
-    if (@available(iOS 10.0, *)) {
-        UIImpactFeedbackGenerator *generator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleMedium];
-        [generator prepare];
-        [generator impactOccurred];
-        //                UISelectionFeedbackGenerator *generator = [[UISelectionFeedbackGenerator alloc] init];
-        //                [generator prepare];
-        //                [generator selectionChanged];
-    } else {
-        // Fallback on earlier versions
-    }
-    [self presentFileActionWithItem:cell.item fromCell:cell];
-}
-
-/// MARK: - selection
-
-- (void)didSelectItem:(ZZFileBrowerItem *)item {
-    if (_delegate && [_delegate respondsToSelector:@selector(filePage:didSlectItem:)]) {
-        [_delegate filePage:self didSlectItem:item];
-    }
-}
-
-/// MARK: - right barbutton action
-
-- (void)presentPopoverWithRightButton:(UIButton *)button {
-    NSArray *dataSource = @[
-        @[
-            ZZFileBrowerActionPage_Select,
-            ZZFileBrowerActionPage_Mkdir,
-        ],
-        @[
-            ZZFileBrowerActionPage_SortByName,
-            ZZFileBrowerActionPage_SortByDate,
-            ZZFileBrowerActionPage_SortBySize,
-            ZZFileBrowerActionPage_SortByType,
-        ],
-    ];
-    ZZFileBrowerActionPage *actionPage = [[ZZFileBrowerActionPage alloc] initWithItem:_item actionNames:dataSource sourceView:button];
-    actionPage.delegate = self;
-    actionPage.modalPresentationStyle = UIModalPresentationPopover;
-    actionPage.popoverPresentationController.delegate = self;
-    actionPage.popoverPresentationController.sourceView = button;
-    actionPage.popoverPresentationController.sourceRect = button.bounds;
-    actionPage.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionAny;
-    actionPage.popoverPresentationController.canOverlapSourceViewRect = NO;
-    [self presentViewController:actionPage animated:YES completion:nil];
-}
-
-/// MARK: - item long press action
-
-- (void)presentFileActionWithItem:(ZZFileBrowerItem *)item fromCell:(ZZFileBrowerItemCell *)cell {
-    NSArray *dataSource;
-    if (!item.isDir) {
-        dataSource = @[
-            @[
-                ZZFileBrowerActionPage_Copy,
-            ],
-        ];
-    } else {
-        dataSource = @[
-            @[
-                ZZFileBrowerActionPage_Copy,
-                ZZFileBrowerActionPage_Duplicate,
-                ZZFileBrowerActionPage_Move,
-                ZZFileBrowerActionPage_Delete,
-            ],
-            @[
-                ZZFileBrowerActionPage_Brief,
-                ZZFileBrowerActionPage_Rename,
-            ],
-            @[
-                ZZFileBrowerActionPage_Share,
-            ],
-        ];
-    }
-    ZZFileBrowerActionPage *actionPage = [[ZZFileBrowerActionPage alloc] initWithItem:item actionNames:dataSource sourceView:cell];
-    actionPage.delegate = self;
-    actionPage.modalPresentationStyle = UIModalPresentationPopover;
-    actionPage.popoverPresentationController.delegate = self;
-    actionPage.popoverPresentationController.sourceView = cell.imageView;
-    actionPage.popoverPresentationController.sourceRect = cell.imageView.bounds;
-    actionPage.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionAny;
-    actionPage.popoverPresentationController.canOverlapSourceViewRect = NO;
-    [self presentViewController:actionPage animated:YES completion:nil];
-}
-
-/// MARK: <ZZFileBrowerActionPageDelegate>
-
-- (void)actionPage:(ZZFileBrowerActionPage *)actionPage didSelectAction:(NSString *)actionName {
-    if (actionPage.item == _item) {
-        /// 点击导航栏弹出菜单
-        if ([ZZFileBrowerActionPage_Select isEqualToString:actionName]) {
-            // 选择
-            _isSelecting = !_isSelecting;
-            
-        } else if ([ZZFileBrowerActionPage_Mkdir isEqualToString:actionName]) {
-            // 新建文件夹
-            [self _createDirectory];
-        } else if ([ZZFileBrowerActionPage_SortByName isEqualToString:actionName]) {
-            // 名字排序
-            [self _sortByName];
-        } else if ([ZZFileBrowerActionPage_SortByDate isEqualToString:actionName]) {
-            // 日期排序
-            [self _sortByDate];
-        } else if ([ZZFileBrowerActionPage_SortBySize isEqualToString:actionName]) {
-            // 大小排序
-            [self _sortBySize];
-        } else if ([ZZFileBrowerActionPage_SortByType isEqualToString:actionName]) {
-            // 类型排序
-            [self _sortByType];
-        }
-    } else {
-        /// 长按单元格弹出菜单
-        ZZFileBrowerItem *item = actionPage.item;
-        UIView *sourceView = actionPage.sourceView;
-        if ([ZZFileBrowerActionPage_Copy isEqualToString:actionName]) {
-            // 拷贝
-            [ZZFileBrowerManager dealWithPath:item.path];
-        } else if ([ZZFileBrowerActionPage_Duplicate isEqualToString:actionName]) {
-            // 复制
-            NSString *duplicateName = [ZZFileBrowerManager duplicateNameWithOriginName:item.name amongItems:_item.children];
-            NSString *toPath = [[_item.path stringByDeletingLastPathComponent] stringByAppendingPathComponent:duplicateName];
-            [ZZFileBrowerManager copyItemAtPath:item.path toPath:toPath error:nil];
-        } else if ([ZZFileBrowerActionPage_Move isEqualToString:actionName]) {
-            // 移动
-            [ZZFileBrowerManager dealWithPath:item.path];
-        } else if ([ZZFileBrowerActionPage_Delete isEqualToString:actionName]) {
-            // 删除
-            [self _deleteItem:item];
-        } else if ([ZZFileBrowerActionPage_Rename isEqualToString:actionName]) {
-            // 重命名
-            ZZFileBrowerItemCell *cell = (ZZFileBrowerItemCell *)sourceView;
-            [cell beginRenamingItem];
-        } else if ([ZZFileBrowerActionPage_Brief isEqualToString:actionName]) {
-            // 简介
-            [self presentFileBriefWithItem:item];
-        } else if ([ZZFileBrowerActionPage_Share isEqualToString:actionName]) {
-            // 分享
-            
-        }
-    }
-}
-
-- (void)presentFileBriefWithItem:(ZZFileBrowerItem *)item {
-    ZZFileBrowerBriefPage *briefPage = [[ZZFileBrowerBriefPage alloc] initWithItem:item];
-    UINavigationController *navi = [[UINavigationController alloc] initWithRootViewController:briefPage];
-    __weak typeof(self) weakSelf = self;
-    briefPage.openItem = ^(ZZFileBrowerBriefPage * _Nonnull briefPage, ZZFileBrowerItem * _Nonnull item) {
-        [weakSelf didSelectItem:item];
-    };
-    [self presentViewController:navi animated:YES completion:nil];
-}
-
-///// MARK: - <UIViewControllerTransitioningDelegate>
-//
-///// present
-//- (id <UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source {
-//    if (_sourceViewInPresentation) {
-//        return [[ZZFileBrowerAnimatedTransitioning alloc] initWithSourceView:_sourceViewInPresentation isPresented:YES];
-//    }
-//    return nil;
-//}
-//
-///// dismiss
-//- (id <UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed {
-//    if ([dismissed isKindOfClass:[ZZFileBrowerActionPage class]]) {
-//        UIView *sourceView = ((ZZFileBrowerActionPage *)dismissed).sourceView;
-//        return [[ZZFileBrowerAnimatedTransitioning alloc] initWithSourceView:sourceView isPresented:NO];
-//    }
-//    return nil;
-//}
-
-///// push
-//- (id<UIViewControllerInteractiveTransitioning>)interactionControllerForPresentation:(id<UIViewControllerAnimatedTransitioning>)animator {
-//    return [[ZZFileBrowerNavigateTransitioning alloc] initWithSourceView:self.headerToolBar isPresented:YES];
-//}
-//
-///// pop
-//- (id<UIViewControllerInteractiveTransitioning>)interactionControllerForDismissal:(id<UIViewControllerAnimatedTransitioning>)animator {
-//    return [[ZZFileBrowerNavigateTransitioning alloc] initWithSourceView:self.headerToolBar isPresented:YES];
-//}
-
-/// MARK: - <UIPopoverPresentationControllerDelegate>
-- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller {
-    return UIModalPresentationNone;
-}
-
-//- (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC {
-//    if (operation == UINavigationControllerOperationPush) {
-//        return [[ZZFileBrowerNavigateTransitioning alloc] initWithSourceView:self.headerToolBar isPresented:YES];
-//    } else if (operation == UINavigationControllerOperationPop){
-//        return [[ZZFileBrowerNavigateTransitioning alloc] initWithSourceView:self.headerToolBar isPresented:NO];
-//    }
-//    return [[ZZFileBrowerNavigateTransitioning alloc] initWithSourceView:self.headerToolBar isPresented:NO];
-//}
-
 
 @end

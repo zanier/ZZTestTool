@@ -40,7 +40,7 @@ typedef NS_ENUM(NSInteger, ZZFileBrowerItemSortType) {
 /// readwrite
 @property (nonatomic, strong) NSDictionary *attributes;
 @property (nonatomic, nullable, weak) ZZFileBrowerItem *parent;
-@property (nonatomic, nullable, copy) NSMutableArray<ZZFileBrowerItem *> *children;
+@property (nonatomic, nullable, strong) NSMutableArray<ZZFileBrowerItem *> *children;
 @property (nonatomic, assign) NSUInteger childrenCount;
 @property (nonatomic, assign, getter=isSelected) BOOL selected;
 
