@@ -1,8 +1,8 @@
 //
-//  ZZMenuController.h
+//  ZZActionViewController.h
 //  ZZTestToolExample
 //
-//  Created by handsome on 2020/8/5.
+//  Created by handsome on 2020/8/6.
 //  Copyright © 2020 Hundsun. All rights reserved.
 //
 
@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ZZMenuController : NSObject
+@interface ZZActionViewController : UIViewController
 
 + (instancetype)menuWithTitle:(NSString *)title
                         image:(nullable UIImage *)image

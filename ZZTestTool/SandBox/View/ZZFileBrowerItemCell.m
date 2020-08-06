@@ -159,39 +159,6 @@
 
 }
 
-- (UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction configurationForMenuAtLocation:(CGPoint)location  API_AVAILABLE(ios(13.0)) {
-    UIContextMenuConfiguration *configuration = [UIContextMenuConfiguration configurationWithIdentifier:@"qwe" previewProvider:^UIViewController * _Nullable{
-        
-        return nil;
-    } actionProvider:^UIMenu * _Nullable(NSArray<UIMenuElement *> * _Nonnull suggestedActions) {
-        return [self menumenu];
-    }];
-    return configuration;
-}
-
-- (UIMenu *)menumenu API_AVAILABLE(ios(13.0)) {
-    UIAction *action1 = [UIAction actionWithTitle:@"复制" image:nil identifier:@"qwe" handler:^(__kindof UIAction * _Nonnull action) {
-    
-    }];
-    UIAction *action2 = [UIAction actionWithTitle:@"拷贝" image:nil identifier:@"qwe" handler:^(__kindof UIAction * _Nonnull action) {
-    
-    }];
-    UIAction *action3 = [UIAction actionWithTitle:@"移动" image:nil identifier:@"qwe" handler:^(__kindof UIAction * _Nonnull action) {
-    
-    }];
-    UIAction *action4 = [UIAction actionWithTitle:@"删除" image:nil identifier:@"qwe" handler:^(__kindof UIAction * _Nonnull action) {
-    
-    }];
-
-    UIMenu *menu = [UIMenu menuWithTitle:@"" image:nil identifier:@"hello" options:UIMenuOptionsDestructive children:@[
-        action1,
-        action2,
-        action3,
-        action4,
-    ]];
-    return menu;
-}
-
 - (void)layoutSubviews {
     [super layoutSubviews];
     CGFloat contentWidth = CGRectGetWidth(self.contentView.bounds);
