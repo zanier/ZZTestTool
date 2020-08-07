@@ -7,9 +7,12 @@
 //
 
 #import "MenuTypeViewController.h"
+#import "ZZMenuController.h"
+#import "NSBundle+ZZTestTool.h"
 
-@interface MenuTypeViewController () <UITableViewDataSource, UITableViewDelegate, UIContextMenuInteractionDelegate> {
+@interface MenuTypeViewController () <UITableViewDataSource, UITableViewDelegate> {
     NSIndexPath *_indexPath;
+    ZZMenuController *_menuController;
 }
 
 @property (nonatomic, copy) NSArray<NSString *> *children;
@@ -28,6 +31,47 @@
     } else {
         // Fallback on earlier versions
     }
+    
+    UIImage *moreBtnImage = [NSBundle hs_imageNamed:@"icon_barBtn_more@2x" type:@"png" inDirectory:nil];
+    
+    ZZAction *action1 = [ZZAction actionWithTitle:@"复制" image:moreBtnImage identifier:@"qwe" handler:^(__kindof ZZAction * _Nonnull action) {
+    
+    }];
+    ZZAction *action2 = [ZZAction actionWithTitle:@"拷贝" image:nil identifier:@"qwe" handler:^(__kindof ZZAction * _Nonnull action) {
+    
+    }];
+    ZZAction *action3 = [ZZAction actionWithTitle:@"移动" image:moreBtnImage identifier:@"qwe" handler:^(__kindof ZZAction * _Nonnull action) {
+    
+    }];
+    ZZAction *action4 = [ZZAction actionWithTitle:@"删除" image:nil identifier:@"qwe" handler:^(__kindof ZZAction * _Nonnull action) {
+    
+    }];
+    ZZAction *action5 = [ZZAction actionWithTitle:@"查看" image:nil identifier:@"qwe" handler:^(__kindof ZZAction * _Nonnull action) {
+    
+    }];
+    ZZAction *action6 = [ZZAction actionWithTitle:@"重命名" image:nil identifier:@"qwe" handler:^(__kindof ZZAction * _Nonnull action) {
+    
+    }];
+    ZZAction *action56 = [ZZAction actionWithTitle:@"查看" image:nil identifier:@"qwe" handler:^(__kindof ZZAction * _Nonnull action) {
+    
+    }];
+    action56.children = @[action5, action6];
+    
+    _menuController = [ZZMenuController menuWithTitle:@"Title" image:moreBtnImage children:@[
+        action1,
+        action2,
+        action3,
+        action4,
+        action56,
+    ]];
+    
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
+    view.backgroundColor = UIColor.cyanColor;
+    [self.view addSubview:view];
+//    [view addInteraction:_menuController.contextMenuInteraction];
+    [_menuController addInteractionOnView:view interaction:NO];
+    //[self.view addInteraction:_menuController.contextMenuInteraction];
+
 }
 
 - (UITableView *)tableView {
@@ -41,7 +85,9 @@
     _tableView.tableFooterView = [[UIView alloc] init];
     _tableView.bounces = NO;
     _tableView.rowHeight = 45.0f;
-    _tableView.scrollEnabled = NO;
+    _tableView.allowsSelection = YES;
+    _tableView.allowsMultipleSelection = YES;
+    //_tableView.scrollEnabled = NO;
     //_tableView.layer.cornerRadius = 10.0f;
     //_tableView.layer.masksToBounds = YES;
     return _tableView;
@@ -61,10 +107,9 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
+        
         if (@available(iOS 13.0, *)) {
-            UIContextMenuInteraction *interaction = [[UIContextMenuInteraction alloc] initWithDelegate:self];
-            cell.userInteractionEnabled = YES;
-            [cell addInteraction:interaction];
+            
         }
     }
     NSString *text = _children[indexPath.row];
@@ -72,51 +117,14 @@
     return cell;
 }
 
-- (void)showMenu {
-    
+/// MARK: - <UITableViewDelegate>
+
+- (BOOL)tableView:(UITableView *)tableView shouldBeginMultipleSelectionInteractionAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;;
 }
 
-//- (UIContextMenuInteraction *)contextMenuInteraction  API_AVAILABLE(ios(13.0)){
-//    UIContextMenuInteraction *interaction = [[UIContextMenuInteraction alloc] initWithDelegate:self];
-//    return interaction;
-//}
-
-- (UIMenu *)menuWithIdentifier:(UIMenuIdentifier)identifier API_AVAILABLE(ios(13.0)) {
-    UIAction *action1 = [UIAction actionWithTitle:@"复制" image:nil identifier:@"qwe" handler:^(__kindof UIAction * _Nonnull action) {
+- (void)tableView:(UITableView *)tableView didBeginMultipleSelectionInteractionAtIndexPath:(NSIndexPath *)indexPath {
     
-    }];
-    UIAction *action2 = [UIAction actionWithTitle:@"拷贝" image:nil identifier:@"qwe" handler:^(__kindof UIAction * _Nonnull action) {
-    
-    }];
-    UIAction *action3 = [UIAction actionWithTitle:@"移动" image:nil identifier:@"qwe" handler:^(__kindof UIAction * _Nonnull action) {
-    
-    }];
-    UIAction *action4 = [UIAction actionWithTitle:@"删除" image:nil identifier:@"qwe" handler:^(__kindof UIAction * _Nonnull action) {
-    
-    }];
-
-    UIMenu *menu = [UIMenu menuWithTitle:identifier image:nil identifier:identifier options:(UIMenuOptionsDisplayInline) children:@[
-        action1,
-        action2,
-        action3,
-        action4,
-    ]];
-    return menu;
-}
-
-/// MARK: - <UIContextMenuInteractionDelegate>
-
-- (UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction configurationForMenuAtLocation:(CGPoint)location  API_AVAILABLE(ios(13.0)) {
-    UITableViewCell *cell = interaction.view;
-    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-    NSString *identifier = _children[indexPath.row];
-    UIContextMenuConfiguration *configuration = [UIContextMenuConfiguration configurationWithIdentifier:@"qwe" previewProvider:^UIViewController * _Nullable{
-        
-        return nil;
-    } actionProvider:^UIMenu * _Nullable(NSArray<UIMenuElement *> * _Nonnull suggestedActions) {
-        return [self menuWithIdentifier:identifier];
-    }];
-    return configuration;
 }
 
 - (NSArray *)menuIdentifiers API_AVAILABLE(ios(13.0)) {

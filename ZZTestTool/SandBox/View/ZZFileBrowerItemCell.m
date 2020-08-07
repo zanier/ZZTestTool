@@ -9,7 +9,7 @@
 #import "ZZFileBrowerItemCell.h"
 #import "ZZFileBrowerManager.h"
 
-@interface ZZFileBrowerItemCell () <UITextViewDelegate, UIContextMenuInteractionDelegate>
+@interface ZZFileBrowerItemCell () <UITextViewDelegate>
 
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) UILabel *textLabel;
@@ -149,13 +149,15 @@
 //    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressAction:)];
 //    longPress.minimumPressDuration = 0.3f;
 //    [self.contentView addGestureRecognizer:longPress];
-    if (@available(iOS 13.0, *)) {
-        UIContextMenuInteraction *interaction = [[UIContextMenuInteraction alloc] initWithDelegate:self];
-        self.imageView.userInteractionEnabled = YES;
-        [self.imageView addInteraction:interaction];
-    } else {
-        // Fallback on earlier versions
-    }
+    
+    
+//    if (@available(iOS 13.0, *)) {
+//        UIContextMenuInteraction *interaction = [[UIContextMenuInteraction alloc] initWithDelegate:self];
+//        self.imageView.userInteractionEnabled = YES;
+//        [self.imageView addInteraction:interaction];
+//    } else {
+//        // Fallback on earlier versions
+//    }
 
 }
 

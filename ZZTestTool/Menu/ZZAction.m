@@ -47,4 +47,19 @@
     return action;
 }
 
+- (UIMenuElement *)toUIMenuElement API_AVAILABLE(ios(13.0)) {
+    if (_children && _children.count) {
+        NSMutableArray *actions = [NSMutableArray arrayWithCapacity:_children.count];
+        for (ZZAction *child in _children) {
+            UIAction *action = child.toUIAction;
+            [actions addObject:action];
+        }
+        UIMenu *menu = [UIMenu menuWithTitle:_title image:_image identifier:_identifier options:UIMenuOptionsDisplayInline children:actions];
+        return menu;
+    } else {
+        return [self toUIAction];
+    }
+}
+
+
 @end

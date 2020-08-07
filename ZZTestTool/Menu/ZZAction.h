@@ -28,6 +28,9 @@ typedef void (^ZZActionHandler)(__kindof ZZAction *action);
 /// This action's identifier.
 @property (nonatomic, readonly) NSString *identifier;
 
+/// .
+@property (nonatomic, nullable, copy) NSArray<ZZAction *> *children;
+
 /// This action's style.
 //@property (nonatomic) UIMenuElementAttributes attributes;
 
@@ -52,7 +55,7 @@ typedef void (^ZZActionHandler)(__kindof ZZAction *action);
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-- (UIAction *)toUIAction API_AVAILABLE(ios(13.0));
+- (UIMenuElement *)toUIMenuElement API_AVAILABLE(ios(13.0));
 
 @end
 

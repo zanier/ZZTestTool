@@ -18,7 +18,7 @@
 #import "ZZFileBrowerNavigateTransitioning.h"
 #import <AudioToolBox/AudioServices.h>
 
-@interface ZZFileBrowerPage () <UICollectionViewDataSource, UICollectionViewDelegate, UIViewControllerTransitioningDelegate, UIPopoverPresentationControllerDelegate, ZZFileBrowerItemCellDelegate, ZZFileBrowerActionPageDelegate, UINavigationControllerDelegate, UIContextMenuInteractionDelegate> {
+@interface ZZFileBrowerPage () <UICollectionViewDataSource, UICollectionViewDelegate, UIViewControllerTransitioningDelegate, UIPopoverPresentationControllerDelegate, ZZFileBrowerItemCellDelegate, ZZFileBrowerActionPageDelegate, UINavigationControllerDelegate> {
     BOOL _isSelecting;
     UICollectionViewFlowLayout *_layout;
 }
@@ -458,6 +458,14 @@
     [self didSelectItem:item];
 }
 
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;;
+}
+
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;;
+}
+
 /// MARK: - <ZZFileBrowerItemCellDelegate>
 
 /// 重命名完成确认
@@ -632,6 +640,8 @@
     _collectionView.delegate = self;
     _collectionView.pagingEnabled = NO;
     _collectionView.alwaysBounceVertical = YES;
+    _collectionView.allowsSelection = YES;
+    _collectionView.allowsMultipleSelection = YES;
     _collectionView.backgroundColor = [UIColor groupTableViewBackgroundColor];
     [_collectionView registerClass:[ZZFileBrowerItemCell class] forCellWithReuseIdentifier:@"cell"];
     return _collectionView;

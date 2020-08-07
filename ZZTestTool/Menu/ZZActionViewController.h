@@ -13,9 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ZZActionViewController : UIViewController
 
-+ (instancetype)menuWithTitle:(NSString *)title
-                        image:(nullable UIImage *)image
-                     children:(NSArray<ZZAction *> *)children;
++ (instancetype)actionViewControllerWithTitle:(NSString *)title image:(nullable UIImage *)image children:(NSArray<NSArray<ZZAction *> *> *)children;
 
 @end
 
