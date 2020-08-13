@@ -18,11 +18,11 @@ typedef NS_ENUM(NSInteger, ZZMenuStyle) {
 
 @interface ZZMenuController : NSObject
 
-+ (instancetype)menuWithTitle:(NSString *)title
-                        image:(nullable UIImage *)image
-                     children:(NSArray<ZZAction *> *)children;
+//+ (instancetype)menuWithTitle:(NSString *)title
+//                        image:(nullable UIImage *)image
+//                     children:(NSArray<ZZAction *> *)children;
 
-@property (nonatomic, weak) __kindof UIView *interactionView;
+//@property (nonatomic, weak) __kindof UIView *interactionView;
 
 - (void)addInteractionOnView:(UIView *)view;
 - (void)addInteractionOnView:(UIView *)view interaction:(BOOL)ttt;
